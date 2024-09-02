@@ -1,0 +1,8 @@
+# Ignore AllAET_JPG and AllAET_PNG directories
+public/AllAET_JPG/
+public/AllAET_PNG/
+
+# Optionally ignore other types of files if needed
+# *.log
+# *.tmp
+# .DS_Store
