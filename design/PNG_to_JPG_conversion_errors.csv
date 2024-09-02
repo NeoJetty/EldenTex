@@ -1,0 +1,5 @@
+filename,error
+AET003_346_v.dds,"Command '['C:\\EldenMod\\Tools\\texconv.exe', '-ft', 'PNG', '-o', 'D:\\EldenMod\\AllAET_PNG', 'D:\\EldenMod\\AllAETs\\AET003_346_v.dds']' returned non-zero exit status 1."
+AET003_346_v_l.dds,"Command '['C:\\EldenMod\\Tools\\texconv.exe', '-ft', 'PNG', '-o', 'D:\\EldenMod\\AllAET_PNG', 'D:\\EldenMod\\AllAETs\\AET003_346_v_l.dds']' returned non-zero exit status 1."
+AET210_453_v.dds,"Command '['C:\\EldenMod\\Tools\\texconv.exe', '-ft', 'PNG', '-o', 'D:\\EldenMod\\AllAET_PNG', 'D:\\EldenMod\\AllAETs\\AET210_453_v.dds']' returned non-zero exit status 1."
+AET210_453_v_l.dds,"Command '['C:\\EldenMod\\Tools\\texconv.exe', '-ft', 'PNG', '-o', 'D:\\EldenMod\\AllAET_PNG', 'D:\\EldenMod\\AllAETs\\AET210_453_v_l.dds']' returned non-zero exit status 1."

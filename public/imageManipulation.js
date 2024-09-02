@@ -1,0 +1,72 @@
+// imageManipulation.js
+
+let zoomLevel = 1;
+let currentImageUrl = ''; // Track the current image URL
+let highResImageUrl = ''; // Track the high-res image URL
+
+// Function to construct high-res PNG URL
+function getHighResImageUrl(jpgUrl) {
+    return jpgUrl.replace('/AllAET_JPG/', '/AllAET_PNG/').replace('.jpg', '.png');
+}
+
+// Function to replace JPEG with PNG
+function replaceWithHighQualityImage() {
+    if (!highResImageUrl) return;
+
+    // Check if PNG exists
+    fetch(highResImageUrl, { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                const imageElement = document.getElementById('random-image');
+                if (imageElement) {
+                    imageElement.src = highResImageUrl;
+                }
+            }
+        })
+        .catch(error => console.error('Error checking PNG image:', error));
+}
+
+// Function to handle zoom actions
+function handleZoom(action) {
+    const imageElement = document.getElementById('random-image');
+    if (imageElement) {
+        // Define zoom factor
+        const zoomFactor = action === 'in' ? 1.2 : 0.8;
+        zoomLevel *= zoomFactor;
+
+        // Apply zoom effect
+        imageElement.style.transform = `scale(${zoomLevel})`;
+
+        // Adjust the container's overflow and positioning to accommodate the zoomed image
+        const container = imageElement.parentElement;
+        container.style.overflow = 'auto';
+
+        // Replace with high-res image when zooming in or out
+        replaceWithHighQualityImage();
+    }
+}
+
+// Function to reset image size
+function resetImageSize() {
+    const imageElement = document.getElementById('random-image');
+    if (imageElement) {
+        zoomLevel = 1; // Reset zoom level
+        imageElement.style.transform = `scale(${zoomLevel})`;
+        imageElement.style.width = '780px';
+        imageElement.style.height = '780px';
+        const container = imageElement.parentElement;
+        container.style.overflow = 'hidden'; // Hide scrollbars when resetting
+    }
+}
+
+// Export functions for use in other scripts
+export { handleZoom, resetImageSize, getHighResImageUrl };
+
+// Setter functions to update URLs
+export function setCurrentImageUrl(url) {
+    currentImageUrl = url;
+}
+
+export function setHighResImageUrl(url) {
+    highResImageUrl = url;
+}

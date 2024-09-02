@@ -1,26 +1,69 @@
-// server/randomTexVote.js
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const sqlite3 = require('sqlite3').verbose();
 
 const router = express.Router();
 
+// Construct the relative path to the database
+const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
+
+// Connect to the SQLite database
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error('Could not connect to database:', err);
+    } else {
+        console.log('Connected to database');
+    }
+});
+
 // Define the route for fetching a random image
 router.get('/', (req, res) => {
-    const directoryPath = path.join(__dirname, '../public/AllAET_JPG');
-
-    fs.readdir(directoryPath, (err, files) => {
+    db.get('SELECT COUNT(*) AS count FROM textures', (err, row) => {
         if (err) {
-            console.error('Error reading directory:', err);
-            return res.status(500).send('Unable to scan directory');
+            console.error('Error querying database:', err);
+            return res.status(500).send('Database error');
         }
 
-        if (files.length === 0) {
-            return res.status(404).send('No images found');
+        const count = row.count;
+        if (count === 0) {
+            return res.status(404).send('No textures found in the database');
         }
 
-        const randomFile = files[Math.floor(Math.random() * files.length)];
-        res.send({ imageUrl: `/AllAET_JPG/${randomFile}` });
+        const randomId = Math.floor(Math.random() * count) + 1;
+
+        db.get('SELECT name FROM textures WHERE id = ?', [randomId], (err, row) => {
+            if (err) {
+                console.error('Error querying database:', err);
+                return res.status(500).send('Database error');
+            }
+
+            if (!row) {
+                return res.status(404).send('No texture found with the given ID');
+            }
+
+            const textureName = row.name;
+            const jpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_n.jpg`);
+            const fallbackJpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_a.jpg`);
+
+            fs.access(jpgPath, fs.constants.F_OK, (err) => {
+                let imagePath;
+                if (err) {
+                    // If _n.jpg does not exist, check for _a.jpg
+                    fs.access(fallbackJpgPath, fs.constants.F_OK, (err) => {
+                        if (err) {
+                            return res.status(404).send('No suitable image found');
+                        }
+                        imagePath = `/AllAET_JPG/${textureName}_a.jpg`;
+                        res.send({ imageUrl: imagePath });
+                    });
+                } else {
+                    // _n.jpg exists
+                    imagePath = `/AllAET_JPG/${textureName}_n.jpg`;
+                    res.send({ imageUrl: imagePath });
+                }
+            });
+        });
     });
 });
 
