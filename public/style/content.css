@@ -1,0 +1,9 @@
+/* Content Section Styles */
+.content {
+    padding: 20px; /* Distance from the top main navbar and left/right browser-edge */
+    display: none; /* Hide content sections by default */
+}
+
+.content.active {
+    display: block; /* Show only the active tab */
+}

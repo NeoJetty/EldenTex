@@ -1,0 +1,32 @@
+/* Zoom Controls */
+.zoom-controls {
+    grid-area: zoom-controls;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9; /* Background color for visibility */
+}
+
+/* Zoom Buttons */
+.zoom-button {
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.zoom-button:hover {
+    background-color: #575757;
+}
+
+/* Future Content Placeholder */
+.future-content {
+    grid-area: future-content;
+    background-color: #f0f0f0; /* Optional: Background color */
+}

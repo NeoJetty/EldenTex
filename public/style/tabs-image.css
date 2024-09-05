@@ -1,0 +1,58 @@
+/* Tab Content Container */
+.tab-content-container {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-areas: 
+        "tabs zoom-controls future-content"
+        "image zoom-controls future-content";
+    height: 800px; /* Adjust as needed */
+}
+
+/* Tabs Container */
+.tabs-container {
+    grid-area: tabs;
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0; /* Background color for tabs */
+    border-bottom: 1px solid #ccc; /* Optional: Border for visual clarity */
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    height: 100%;
+}
+
+/* Tab Items */
+.tab-item {
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    border: 1px solid #ccc; /* Border for visual clarity */
+    margin-right: 2px;
+    background-color: #ddd; /* Background color for tabs */
+    transition: background-color 0.3s;
+}
+
+.tab-item:hover {
+    background-color: #bbb;
+}
+
+/* Image Container */
+.image-container {
+    grid-area: image;
+    overflow: auto; /* Ensure scroll bars appear if needed */
+    border: 1px solid #ccc; /* Optional: Border for visual clarity */
+}
+
+/* Image */
+#random-image {
+    max-width: 100%; /* Adjust to container width */
+    max-height: 100%; /* Adjust to container height */
+    height: auto;
+    width: auto;
+    transform-origin: center center;
+}
