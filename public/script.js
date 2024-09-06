@@ -1,9 +1,39 @@
-// script.js
-
+// Import functions from imageManipulation.js
 import { handleZoom, resetImageSize, getHighResImageUrl, setCurrentImageUrl, setHighResImageUrl } from './imageManipulation.js';
 
-const tabLinks = document.querySelectorAll('.tab-link');
-const contentSections = document.querySelectorAll('.content');
+// Function to load content into a tab
+function loadTabContent(tabId, url) {
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById(tabId).innerHTML = data;
+
+            // After loading content, check if zoom buttons exist and bind events
+            if (tabId === 'tab1') { // Only look for zoom buttons in tab1
+                const zoomInButton = document.querySelector('.zoom-in');
+                const zoomOutButton = document.querySelector('.zoom-out');
+
+                if (zoomInButton) {
+                    zoomInButton.addEventListener('click', () => {
+                        console.log('Zoom In clicked');
+                        handleZoom('in');
+                    });
+                } else {
+                    console.log('Zoom In button not found');
+                }
+
+                if (zoomOutButton) {
+                    zoomOutButton.addEventListener('click', () => {
+                        console.log('Zoom Out clicked');
+                        handleZoom('out');
+                    });
+                } else {
+                    console.log('Zoom Out button not found');
+                }
+            }
+        })
+        .catch(error => console.error('Error loading content:', error));
+}
 
 // Function to fetch and display the random image
 function loadRandomImage() {
@@ -29,35 +59,42 @@ function loadRandomImage() {
 }
 
 // Event listener for tab clicks
-tabLinks.forEach(link => {
+document.querySelectorAll('.tab-link').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
 
         // Remove active class from all content sections
-        contentSections.forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('.content').forEach(section => section.classList.remove('active'));
 
         // Remove active class from all tabs
-        tabLinks.forEach(link => link.classList.remove('active'));
+        document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
 
         // Add active class to the clicked tab and its corresponding content section
         const targetTab = e.target.getAttribute('data-tab');
         document.getElementById(targetTab).classList.add('active');
         e.target.classList.add('active');
 
-        // If the first tab is selected, fetch and display a random image
+        // Load content for the active tab
         if (targetTab === 'tab1') {
-            loadRandomImage();
+            loadTabContent('tab1', 'Tab1_Content.html');
+            loadRandomImage(); // Load random image for tab1
         } else {
+            loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
             resetImageSize(); // Reset image size when switching tabs
         }
     });
 });
 
-// Zoom functionality and replace image on zoom button press
+// Initialize the page on DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.tab-link[data-tab="tab1"]').click();
-    loadRandomImage(); // Load random image on page load
+    console.log('DOM fully loaded and parsed');
 
-    document.querySelector('.zoom-in').addEventListener('click', () => handleZoom('in'));
-    document.querySelector('.zoom-out').addEventListener('click', () => handleZoom('out'));
+    // Load all tab content initially
+    loadTabContent('tab1', 'Tab1_Content.html');
+    loadTabContent('tab2', 'Tab2_Content.html');
+    loadTabContent('tab3', 'Tab3_Content.html');
+    loadTabContent('tab4', 'Tab4_Content.html');
+
+    // Automatically click the first tab to load its content and set it active
+    document.querySelector('.tab-link[data-tab="tab1"]').click();
 });
