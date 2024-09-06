@@ -2,6 +2,8 @@ let zoomLevel = 1;
 let currentImageUrl = ''; // Track the current image URL
 let highResImageUrl = ''; // Track the high-res image URL
 
+import { GSettings } from './GSettings.js';
+
 // Function to construct high-res PNG URL
 function getHighResImageUrl(jpgUrl) {
     return jpgUrl.replace('/AllAET_JPG/', '/AllAET_PNG/').replace('.jpg', '.png');

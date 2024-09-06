@@ -30,15 +30,19 @@
     padding: 10px;
     text-align: center;
     text-decoration: none;
-    color: black;
+    color: white;
     border: 1px solid #ccc; /* Border for visual clarity */
     margin-right: 2px;
-    background-color: #ddd; /* Background color for tabs */
+    background-color: #888; /* Background color for tabs */
     transition: background-color 0.3s;
 }
 
-.tab-item:hover {
-    background-color: #bbb;
+.tab-item.highlighted {
+    background-color: #333; /* Example color, adjust as needed */
+}
+
+.tab-item.highlighted:hover {
+    background-color: #575757;
 }
 
 /* Image Container */
@@ -56,3 +60,5 @@
     width: auto;
     transform-origin: center center;
 }
+
+

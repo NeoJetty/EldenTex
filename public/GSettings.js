@@ -5,6 +5,7 @@ const GSettings = {
         maxZoom: 4.0,
     },
     tab1Image: {
+        imgID: -1,
         jpgURL: '',
         pngURL: '',
         textureTypes: { 
@@ -21,10 +22,10 @@ const GSettings = {
             _van: false,
             _vat: false,
         },
-        defaultImageWidth: 780,
-        defaultImageHeight: 780,
     },
     user: {
+        ID: 1,
+        name: 'NeoJetty',
         theme: 'dark',
         language: 'en',
     },
@@ -32,3 +33,6 @@ const GSettings = {
 
 // Export the settings and the function
 export { GSettings };
+
+// Expose GSettings globally for debugging
+window.GSettings = GSettings;

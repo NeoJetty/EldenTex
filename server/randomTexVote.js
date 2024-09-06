@@ -17,7 +17,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-// Define the route for fetching a random image
+// Define the route for fetching a random image and additional data
 router.get('/', (req, res) => {
     db.get('SELECT COUNT(*) AS count FROM textures', (err, row) => {
         if (err) {
@@ -32,36 +32,69 @@ router.get('/', (req, res) => {
 
         const randomId = Math.floor(Math.random() * count) + 1;
 
-        db.get('SELECT name FROM textures WHERE id = ?', [randomId], (err, row) => {
+        db.get('SELECT * FROM textures WHERE id = ?', [randomId], (err, textureRow) => {
             if (err) {
                 console.error('Error querying database:', err);
                 return res.status(500).send('Database error');
             }
 
-            if (!row) {
+            if (!textureRow) {
                 return res.status(404).send('No texture found with the given ID');
             }
 
-            const textureName = row.name;
-            const jpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_n.jpg`);
-            const fallbackJpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_a.jpg`);
-
-            fs.access(jpgPath, fs.constants.F_OK, (err) => {
-                let imagePath;
+            // Fetch data from texture_subtypes table
+            db.get('SELECT * FROM texture_subtypes WHERE id = ?', [randomId], (err, subtypeRow) => {
                 if (err) {
-                    // If _n.jpg does not exist, check for _a.jpg
-                    fs.access(fallbackJpgPath, fs.constants.F_OK, (err) => {
-                        if (err) {
-                            return res.status(404).send('No suitable image found');
-                        }
-                        imagePath = `/AllAET_JPG/${textureName}_a.jpg`;
-                        res.send({ imageUrl: imagePath });
-                    });
-                } else {
-                    // _n.jpg exists
-                    imagePath = `/AllAET_JPG/${textureName}_n.jpg`;
-                    res.send({ imageUrl: imagePath });
+                    console.error('Error querying database:', err);
+                    return res.status(500).send('Database error');
                 }
+
+                if (!subtypeRow) {
+                    return res.status(404).send('No subtypes found for the given texture ID');
+                }
+
+                const textureName = textureRow.name;
+                const jpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_n.jpg`);
+                const fallbackJpgPath = path.join(__dirname, '../public/AllAET_JPG', `${textureName}_a.jpg`);
+
+                fs.access(jpgPath, fs.constants.F_OK, (err) => {
+                    let imagePath;
+                    if (err) {
+                        // If _n.jpg does not exist, check for _a.jpg
+                        fs.access(fallbackJpgPath, fs.constants.F_OK, (err) => {
+                            if (err) {
+                                return res.status(404).send('No suitable image found');
+                            }
+                            imagePath = `/AllAET_JPG/${textureName}_a.jpg`;
+                            sendResponse();
+                        });
+                    } else {
+                        // _n.jpg exists
+                        imagePath = `/AllAET_JPG/${textureName}_n.jpg`;
+                        sendResponse();
+                    }
+
+                    function sendResponse() {
+                        res.send({
+                            imageUrl: imagePath,
+                            id: randomId,
+                            textureTypes: {
+                                _a: subtypeRow._a,
+                                _n: subtypeRow._n,
+                                _r: subtypeRow._r,
+                                _v: subtypeRow._v,
+                                _d: subtypeRow._d,
+                                _em: subtypeRow._em,
+                                _3m: subtypeRow._3m,
+                                _b: subtypeRow._Billboards_a,
+                                _g: subtypeRow._g,
+                                _1m: subtypeRow._1m,
+                                _van: subtypeRow._van,
+                                _vat: subtypeRow._vat,
+                            }
+                        });
+                    }
+                });
             });
         });
     });

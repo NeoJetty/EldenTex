@@ -40,14 +40,40 @@ function loadRandomImage() {
             if (imageElement) {
                 const imageUrl = data.imageUrl;
                 imageElement.src = imageUrl;
-                setCurrentImageUrl(imageUrl); // Update current image URL
-                const highResUrl = getHighResImageUrl(imageUrl); // Construct high-res URL
-                setHighResImageUrl(highResUrl); // Set high-res image URL
-                resetImageSize(); // Reset image size when a new image is loaded
+                
+                // Update GSettings with the new data
+                GSettings.tab1Image.imgID = data.id;
+                GSettings.tab1Image.jpgURL = imageUrl;
+                GSettings.tab1Image.textureTypes = data.textureTypes; // Use the new textureTypes
+                
+                // Update high-res image URL
+                const highResUrl = getHighResImageUrl(imageUrl);
+                setHighResImageUrl(highResUrl);
+                
+                // Reset image size when a new image is loaded
+                resetImageSize();
+
+                // Populate the navbar based on textureTypes
+                PopulateTextureTypesNavbar();
             }
         })
         .catch(error => console.error('Error fetching random image:', error));
 }
+
+function PopulateTextureTypesNavbar() {
+    const tabs = document.querySelectorAll('.tab-item');
+
+    tabs.forEach(tab => {
+        const type = tab.getAttribute('data-type');
+        if (GSettings.tab1Image.textureTypes[type]) {
+            // Apply a specific class or style to highlight the tab
+            tab.classList.add('highlighted');
+        } else {
+            tab.classList.remove('highlighted');
+        }
+    });
+}
+
 
 function InitMainNavbarListener(){
     // Event listener for tab clicks
@@ -82,8 +108,6 @@ function InitMainNavbarListener(){
 function loadAllTabHTMLs(){
     // Initialize the page on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOM fully loaded and parsed');
-
         // Load all tab content initially
         loadTabContent('tab1', 'Tab1_Content.html');
         loadTabContent('tab2', 'Tab2_Content.html');
