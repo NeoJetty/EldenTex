@@ -1,5 +1,6 @@
 // Import functions from imageManipulation.js
 import { handleZoom, resetImageSize, getHighResImageUrl, setCurrentImageUrl, setHighResImageUrl } from './imageManipulation.js';
+import { GSettings } from './GSettings.js';
 
 // Function to load content into a tab
 function loadTabContent(tabId, url) {
@@ -14,21 +15,11 @@ function loadTabContent(tabId, url) {
                 const zoomOutButton = document.querySelector('.zoom-out');
 
                 if (zoomInButton) {
-                    zoomInButton.addEventListener('click', () => {
-                        console.log('Zoom In clicked');
-                        handleZoom('in');
-                    });
-                } else {
-                    console.log('Zoom In button not found');
+                    zoomInButton.addEventListener('click', () => handleZoom('in'));
                 }
 
                 if (zoomOutButton) {
-                    zoomOutButton.addEventListener('click', () => {
-                        console.log('Zoom Out clicked');
-                        handleZoom('out');
-                    });
-                } else {
-                    console.log('Zoom Out button not found');
+                    zoomOutButton.addEventListener('click', () => handleZoom('out'));
                 }
             }
         })
@@ -58,43 +49,57 @@ function loadRandomImage() {
         .catch(error => console.error('Error fetching random image:', error));
 }
 
-// Event listener for tab clicks
-document.querySelectorAll('.tab-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
+function InitMainNavbarListener(){
+    // Event listener for tab clicks
+    document.querySelectorAll('.tab-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
 
-        // Remove active class from all content sections
-        document.querySelectorAll('.content').forEach(section => section.classList.remove('active'));
+            // Remove active class from all content sections
+            document.querySelectorAll('.content').forEach(section => section.classList.remove('active'));
 
-        // Remove active class from all tabs
-        document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
 
-        // Add active class to the clicked tab and its corresponding content section
-        const targetTab = e.target.getAttribute('data-tab');
-        document.getElementById(targetTab).classList.add('active');
-        e.target.classList.add('active');
+            // Add active class to the clicked tab and its corresponding content section
+            const targetTab = e.target.getAttribute('data-tab');
+            document.getElementById(targetTab).classList.add('active');
+            e.target.classList.add('active');
 
-        // Load content for the active tab
-        if (targetTab === 'tab1') {
-            loadTabContent('tab1', 'Tab1_Content.html');
-            loadRandomImage(); // Load random image for tab1
-        } else {
-            loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
-            resetImageSize(); // Reset image size when switching tabs
-        }
+            // Load content for the active tab
+            if (targetTab === 'tab1') {
+                loadTabContent('tab1', 'Tab1_Content.html');
+                loadRandomImage(); // Load random image for tab1
+            } else {
+                loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
+                resetImageSize(); // Reset image size when switching tabs
+            }
+        });
     });
-});
+};
 
-// Initialize the page on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed');
+// Tabs are seperated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
+function loadAllTabHTMLs(){
+    // Initialize the page on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM fully loaded and parsed');
 
-    // Load all tab content initially
-    loadTabContent('tab1', 'Tab1_Content.html');
-    loadTabContent('tab2', 'Tab2_Content.html');
-    loadTabContent('tab3', 'Tab3_Content.html');
-    loadTabContent('tab4', 'Tab4_Content.html');
+        // Load all tab content initially
+        loadTabContent('tab1', 'Tab1_Content.html');
+        loadTabContent('tab2', 'Tab2_Content.html');
+        loadTabContent('tab3', 'Tab3_Content.html');
+        loadTabContent('tab4', 'Tab4_Content.html');
 
-    // Automatically click the first tab to load its content and set it active
-    document.querySelector('.tab-link[data-tab="tab1"]').click();
-});
+        // Automatically click the first tab to load its content and set it active
+        document.querySelector('.tab-link[data-tab="tab1"]').click();
+    });
+}
+
+
+// readable squence of execution
+function InitInOrder() {
+    loadAllTabHTMLs();
+    InitMainNavbarListener(); // black 4 tabs at the top
+}
+
+InitInOrder();
