@@ -61,18 +61,81 @@ function loadRandomImage() {
 }
 
 function PopulateTextureTypesNavbar() {
-    const tabs = document.querySelectorAll('.tab-item');
+    const tabLinks = document.querySelectorAll('.tab-item');
 
-    tabs.forEach(tab => {
-        const type = tab.getAttribute('data-type');
-        if (GSettings.tab1Image.textureTypes[type]) {
-            // Apply a specific class or style to highlight the tab
-            tab.classList.add('highlighted');
-        } else {
-            tab.classList.remove('highlighted');
+    // Loop through all tabs
+    tabLinks.forEach(tab => {
+        const type = tab.textContent.trim(); // Get the type from the tab text
+
+        // Determine the corresponding data-type ending
+        let typeEnding = '';
+        switch (type) {
+            case 'A':
+                typeEnding = '_a';
+                break;
+            case 'N':
+                typeEnding = '_n';
+                break;
+            case 'R':
+                typeEnding = '_r';
+                break;
+            case 'V':
+                typeEnding = '_v';
+                break;
+            case 'D':
+                typeEnding = '_d';
+                break;
+            case 'EM':
+                typeEnding = '_em';
+                break;
+            case '3M':
+                typeEnding = '_3m';
+                break;
+            case 'Billboards A':
+                typeEnding = '_b'; // Special case
+                break;
+            case 'G':
+                typeEnding = '_g';
+                break;
+            case '1M':
+                typeEnding = '_1m';
+                break;
+            case 'Van':
+                typeEnding = '_van';
+                break;
+            case 'VAT':
+                typeEnding = '_vat';
+                break;
+            default:
+                typeEnding = '';
+        }
+
+        // Highlight the tab if its type is true in textureTypes
+        if (GSettings.tab1Image.textureTypes[typeEnding]) {
+            tab.classList.add('highlighted'); // Add a class to highlight the tab
+
+            // Add click event listener to the tab
+            tab.addEventListener('click', () => {
+                let imageUrl = GSettings.tab1Image.jpgURL;
+
+                if (typeEnding === '_b') {
+                    // Handle the special case for Billboards A
+                    imageUrl = imageUrl.replace(/_n\.jpg$/, '_Billboards_a.jpg');
+                } else {
+                    // Replace _n with the type ending
+                    imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
+                }
+
+                // Update the image source
+                const imageElement = document.getElementById('random-image');
+                if (imageElement) {
+                    imageElement.src = imageUrl;
+                }
+            });
         }
     });
 }
+
 
 
 function InitMainNavbarListener(){
