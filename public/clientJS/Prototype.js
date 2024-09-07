@@ -1,6 +1,10 @@
-// Import functions from imageManipulation.js
-import { handleZoom, resetImageSize } from './clientJS/imageManipulation.js';
-import { loadRandomImage } from './clientJS/requestImageData.js'
+// Prototype.js
+
+// This is the file where all the code is put before refactoring, just the newest functionality. Hopefully
+// this will be refactored into smaller files soon
+
+import { handleZoom, resetImageSize } from './imageManipulation.js';
+import { loadRandomImage } from './requestImageData.js'
 
 // Function to load content into a tab
 function loadTabContent(tabId, url) {

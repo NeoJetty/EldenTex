@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const randomTexVote = require('./server/randomTexVote'); // Updated path to the image-fetching module
+const serveImageDataModule = require('./server/serveImageData'); // Updated path to the image-fetching module
 
 const app = express();
 const port = 3000;
@@ -10,7 +10,7 @@ const port = 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Use the routes defined in randomTexVote.js
-app.use('/random-image', randomTexVote);
+app.use('/random-image', serveImageDataModule);
 
 // Start the server
 app.listen(port, () => {
