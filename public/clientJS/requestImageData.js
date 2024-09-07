@@ -39,35 +39,7 @@ function requestImageData(imageId) {
 
 // Function to fetch and display the random image
 function loadRandomImage() {
-    fetch('/random-image')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const imageElement = document.getElementById('random-image');
-            if (imageElement) {
-                const imageUrl = data.imageUrl;
-                imageElement.src = imageUrl;
-                
-                // Update GSettings with the new data
-                GSettings.tab1Image.imgID = data.id;
-                GSettings.tab1Image.jpgURL = imageUrl;
-                GSettings.tab1Image.textureTypes = data.textureTypes; // Use the new textureTypes
-                
-                // Update high-res image URL
-                GSettings.tab1Image.pngURL = getHighResImageUrl(imageUrl);
-                
-                // Reset image size when a new image is loaded
-                resetImageSize();
-
-                // Populate the navbar based on textureTypes
-                PopulateTextureTypesNavbar();
-            }
-        })
-        .catch(error => console.error('Error fetching random image:', error));
+    requestImageData(-1)
 }
 
 function PopulateTextureTypesNavbar() {

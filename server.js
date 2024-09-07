@@ -10,7 +10,7 @@ const port = 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Use the routes defined in randomTexVote.js
-app.use('/random-image', serveImageDataModule);
+app.use('/imageData', serveImageDataModule);
 
 // Start the server
 app.listen(port, () => {
