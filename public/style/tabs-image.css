@@ -1,5 +1,5 @@
 /* Tab Content Container */
-.tab-content-container {
+.tab1-all-content-container {
     display: grid;
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
     grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
@@ -10,7 +10,7 @@
 }
 
 /* Tabs Container */
-.tabs-container {
+.tex-type-navbar-container {
     grid-area: tabs;
     overflow-x: auto; /* Allow horizontal scrolling if needed */
     display: flex;
@@ -20,7 +20,7 @@
 }
 
 /* Tabs */
-.tabs {
+.tex-type-navbar {
     display: flex;
     height: 100%;
 }

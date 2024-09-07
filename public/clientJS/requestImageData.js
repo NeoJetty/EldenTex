@@ -2,7 +2,6 @@
 import { GSettings } from './GSettings.js';
 import { resetImageSize } from './imageManipulation.js';
 
-
 // Function to fetch and display the image by a specific ID
 function requestImageData(imageId) {
     fetch(`/imageData/${imageId}`)
@@ -48,50 +47,8 @@ function PopulateTextureTypesNavbar() {
 
     // Loop through all tabs
     tabLinks.forEach(tab => {
-        const type = tab.textContent.trim(); // Get the type from the tab text
-
         // Determine the corresponding data-type ending
-        let typeEnding = '';
-        switch (type) {
-            case 'A':
-                typeEnding = '_a';
-                break;
-            case 'N':
-                typeEnding = '_n';
-                break;
-            case 'R':
-                typeEnding = '_r';
-                break;
-            case 'V':
-                typeEnding = '_v';
-                break;
-            case 'D':
-                typeEnding = '_d';
-                break;
-            case 'EM':
-                typeEnding = '_em';
-                break;
-            case '3M':
-                typeEnding = '_3m';
-                break;
-            case 'Billboards A':
-                typeEnding = '_b'; // Special case
-                break;
-            case 'G':
-                typeEnding = '_g';
-                break;
-            case '1M':
-                typeEnding = '_1m';
-                break;
-            case 'Van':
-                typeEnding = '_van';
-                break;
-            case 'VAT':
-                typeEnding = '_vat';
-                break;
-            default:
-                typeEnding = '';
-        }
+        let typeEnding = tab.getAttribute('data-type');
 
         // Highlight the tab if its type is true in textureTypes
         if (GSettings.tab1Image.textureTypes[typeEnding]) {
