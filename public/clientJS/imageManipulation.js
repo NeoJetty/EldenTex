@@ -1,6 +1,5 @@
 let zoomLevel = 1;
 let currentImageUrl = ''; // Track the current image URL
-let highResImageUrl = ''; // Track the high-res image URL
 
 import { GSettings } from './GSettings.js';
 
@@ -67,6 +66,3 @@ export function setCurrentImageUrl(url) {
     currentImageUrl = url;
 }
 
-export function setHighResImageUrl(url) {
-    highResImageUrl = url;
-}
