@@ -1,6 +1,6 @@
 // requestImagedata.js
 import { GSettings } from './GSettings.js';
-import { resetImageSize, getHighResImageUrl } from './imageManipulation.js';
+import { resetImageSize } from './imageManipulation.js';
 
 
 // Function to fetch and display the image by a specific ID
@@ -24,7 +24,8 @@ function requestImageData(imageId) {
                 GSettings.tab1Image.textureTypes = data.textureTypes; // Use the new textureTypes
 
                 // Update high-res image URL
-                GSettings.tab1Image.pngURL = getHighResImageUrl(imageUrl);
+                
+                GSettings.tab1Image.pngURL = GSettings.buildPNGPath(imageUrl);
 
                 // Reset image size when a new image is loaded
                 resetImageSize();

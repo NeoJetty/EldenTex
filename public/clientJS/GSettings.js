@@ -29,6 +29,16 @@ const GSettings = {
         theme: 'dark',
         language: 'en',
     },
+    // ---------------------------------------------
+    //              helper functions
+    // ---------------------------------------------
+
+    // Function to construct high-res PNG URL
+    // example: /AllAET_JPG/AET055_241_n.jpg    to    
+    //          /AllAET_PNG/AET055_241_n.png
+    buildPNGPath: function(jpgUrl) {
+        return jpgUrl.replace('/AllAET_JPG/', '/AllAET_PNG/').replace('.jpg', '.png');
+    }
 };
 
 // Export the settings and the function
