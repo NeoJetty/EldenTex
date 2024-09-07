@@ -28,7 +28,9 @@ CREATE TABLE texture_subtypes (
     _em BOOLEAN DEFAULT 0,
     _3m BOOLEAN DEFAULT 0,
     _Billboards_a BOOLEAN DEFAULT 0,
+    _Billboards_n BOOLEAN DEFAULT 0,
     _g BOOLEAN DEFAULT 0,
+    _m BOOLEAN DEFAULT 0,
     _1m BOOLEAN DEFAULT 0,
     _van BOOLEAN DEFAULT 0,
     _vat BOOLEAN DEFAULT 0,
@@ -40,7 +42,9 @@ CREATE TABLE texture_subtypes (
     _em_l BOOLEAN DEFAULT 0,
     _3m_l BOOLEAN DEFAULT 0,
     _Billboards_a_l BOOLEAN DEFAULT 0,
+    _Billboards_n_l BOOLEAN DEFAULT 0,
     _g_l BOOLEAN DEFAULT 0,
+    _m_l BOOLEAN DEFAULT 0,
     _1m_l BOOLEAN DEFAULT 0,
     _van_l BOOLEAN DEFAULT 0,
     _vat_l BOOLEAN DEFAULT 0,
@@ -55,13 +59,14 @@ textures = cursor.fetchall()
 
 # Define the subtypes corresponding to the column names (all prefixed with _)
 subtypes = [
-    '_a', '_n', '_r', '_v', '_d', '_em', '_3m', '_Billboards_a', '_g', '_1m', '_van', '_vat',
-    '_a_l', '_n_l', '_r_l', '_v_l', '_d_l', '_em_l', '_3m_l', '_Billboards_a_l', '_g_l', '_1m_l', '_van_l', '_vat_l'
+    '_a', '_n', '_r', '_v', '_d', '_em', '_3m', '_Billboards_a', '_Billboards_n', '_g', '_m', '_1m', '_van', '_vat',
+    '_a_l', '_n_l', '_r_l', '_v_l', '_d_l', '_em_l', '_3m_l', '_Billboards_a_l', '_Billboards_n_l', '_g_l', '_m_l', '_1m_l', '_van_l', '_vat_l'
 ]
 
 # Iterate over each texture and populate the texture_subtypes table
 for texture_id, texture_name in textures:
     subtype_values = {subtype: False for subtype in subtypes}  # Initialize all subtypes to False
+    matched = False  # Flag to track if any file matches a subtype
     
     # Look for files matching the texture name and subtypes in the folder
     for filename in os.listdir(folder_path):
@@ -70,7 +75,12 @@ for texture_id, texture_name in textures:
             for subtype in subtypes:
                 if filename.endswith(f'{subtype}.png'):
                     subtype_values[subtype] = True
-                    print(f"File '{filename}' matches subtype '{subtype}' for texture '{texture_name}'.")
+                    matched = True
+                    break  # Stop checking other subtypes for this file
+
+    # If no files matched any subtype, print a message
+    if not matched:
+        print(f"No matching subtype found for file '{filename}' in texture '{texture_name}'.")
 
     # Insert or update the texture_subtypes table with the gathered data
     cursor.execute('''
