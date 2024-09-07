@@ -44,7 +44,7 @@ function loadRandomImage() {
 }
 
 function PopulateTextureTypesNavbar() {
-    const tabLinks = document.querySelectorAll('.tab-item');
+    const tabLinks = document.querySelectorAll('.tex-type-navitem');
 
     // Loop through all tabs
     tabLinks.forEach(tab => {

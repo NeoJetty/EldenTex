@@ -1,5 +1,4 @@
 let zoomLevel = 1;
-let currentImageUrl = ''; // Track the current image URL
 
 import { GSettings } from './GSettings.js';
 
@@ -48,9 +47,4 @@ function resetImageSize() {
 
 // Export functions for use in other scripts
 export { handleZoom, resetImageSize };
-
-// Setter functions to update URLs
-export function setCurrentImageUrl(url) {
-    currentImageUrl = url;
-}
 
