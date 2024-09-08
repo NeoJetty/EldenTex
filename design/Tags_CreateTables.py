@@ -34,10 +34,12 @@ CREATE TABLE IF NOT EXISTS tags_per_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tag_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
+    vote BOOLEAN NOT NULL, 
     FOREIGN KEY(tag_id) REFERENCES tags(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 )
 ''')
+
 
 # Read the CSV file
 df = pd.read_csv(csv_path)

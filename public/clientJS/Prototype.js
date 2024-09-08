@@ -3,6 +3,7 @@
 // This is the file where all the code is put before refactoring, just the newest functionality. Hopefully
 // this will be refactored into smaller files soon
 
+import { populateTags } from './tagContainerBuilder.js';
 import { handleZoom, resetImageSize } from './imageManipulation.js';
 import { loadRandomImage } from './requestImageData.js'
 
@@ -80,6 +81,7 @@ function loadAllTabHTMLs(){
 function InitInOrder() {
     loadAllTabHTMLs();
     InitMainNavbarListener(); // black 4 tabs at the top
+    populateTags('.tag-container');
 }
 
 InitInOrder();
