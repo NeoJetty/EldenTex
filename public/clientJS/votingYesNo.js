@@ -79,7 +79,8 @@ function handleVote(isYes) {
 // Stub function to load the next voting question
 function nextVote() {
     console.log('Next vote triggered');
-    // Future implementation for next vote will go here
+    // Simulate a click on the first tab to reload its content
+    document.querySelector('.tab-link[data-tab="tab1"]').click();
 }
 
 export { createVotingUI, handleVote, nextVote };
