@@ -9,7 +9,7 @@ csv_path = 'design/Tags_InitialTags.csv'
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
-# Create the tables
+# Create the 'tags' table
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS tags (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS tags (
 )
 ''')
 
+# Create the 'tags_aggregate' table
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS tags_aggregate (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,38 +30,61 @@ CREATE TABLE IF NOT EXISTS tags_aggregate (
 )
 ''')
 
+# Create the new 'tags_per_user' table without the 'vote' column
 cursor.execute('''
 CREATE TABLE IF NOT EXISTS tags_per_user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tag_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    vote BOOLEAN NOT NULL, 
     FOREIGN KEY(tag_id) REFERENCES tags(id),
     FOREIGN KEY(user_id) REFERENCES users(id)
 )
 ''')
 
+# Create the new 'tags_by_user_and_image' table with 'image_id' and 'vote'
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS tags_by_user_and_image (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tag_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    image_id INTEGER NOT NULL,
+    vote BOOLEAN NOT NULL,
+    FOREIGN KEY(tag_id) REFERENCES tags(id),
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(image_id) REFERENCES textures(id)
+)
+''')
 
-# Read the CSV file
-df = pd.read_csv(csv_path)
+# Check if the 'tags' table is empty
+cursor.execute('SELECT COUNT(*) FROM tags')
+tag_count = cursor.fetchone()[0]
 
-current_group = None
+# If the 'tags' table is empty, populate it from the CSV
+if tag_count == 0:
+    # Read the CSV file
+    df = pd.read_csv(csv_path)
 
-for index, row in df.iterrows():
-    
-    group = row.iloc[0]
-    name = row.iloc[1]
+    # Insert tags into the 'tags' table
+    current_group = None
 
-    if isinstance(group, str):
-        current_group = group
+    for index, row in df.iterrows():
+        group = row.iloc[0]
+        name = row.iloc[1]
 
-    cursor.execute('''
-        INSERT INTO tags (name, category)
-        VALUES (?, ?)
-    ''', (name, current_group))
+        # Update current group when a new group is encountered
+        if isinstance(group, str):
+            current_group = group
 
-# Commit the changes and close the connection
-conn.commit()
+        cursor.execute('''
+            INSERT INTO tags (name, category)
+            VALUES (?, ?)
+        ''', (name, current_group))
+
+    # Commit the changes
+    conn.commit()
+    print("Tags table populated successfully.")
+else:
+    print("Tags table already contains data. Skipping CSV insertion.")
+
+# Close the connection
 conn.close()
-
-print("Tables created and data populated successfully.")
