@@ -53,7 +53,7 @@ function handleVote(isYes) {
     console.log('Image ID:', imageID);
 
     // Construct the GET request URL
-    const voteValue = isYes ? 1 : 0; // Yes = 1, No = 0
+    const voteValue = isYes ? 'true' : 'false'; // Send 'true' or 'false'
     const url = `/addTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
 
     // Debugging output

@@ -19,7 +19,9 @@ router.get('/', async (req, res) => {
 
     // Ensure vote is correctly interpreted as a boolean
     const voteBool = (vote === 'true');
-
+    // --------------------------------------------------------
+    //  TODO: evil BUGS WHEN SENDING vote = 1 and vote = 0
+    // --------------------------------------------------------
     console.log('Received request:', { user_id, tag_id, image_id, vote, voteBool });
 
     if (!user_id || !tag_id || !image_id || vote === undefined) {
