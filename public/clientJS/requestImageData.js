@@ -14,17 +14,11 @@ function requestImageData(imageId) {
         .then(data => {
             const imageElement = document.getElementById('random-image');
             if (imageElement) {
-                const imageUrl = data.imageUrl;
-                imageElement.src = imageUrl;
+                // Update GSettings using the new helper function
+                GSettings.updateFromImageDataJSON(data);
 
-                // Update GSettings with the new data
-                GSettings.tab1Image.imgID = data.id;
-                GSettings.tab1Image.jpgURL = imageUrl;
-                GSettings.tab1Image.textureTypes = data.textureTypes; // Use the new textureTypes
-
-                // Update high-res image URL
-                
-                GSettings.tab1Image.pngURL = GSettings.buildPNGPath(imageUrl);
+                // Update the image source
+                imageElement.src = GSettings.tab1Image.jpgURL;
 
                 // Reset image size when a new image is loaded
                 resetImageSize();
