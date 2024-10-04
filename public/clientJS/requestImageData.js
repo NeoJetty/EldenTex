@@ -3,7 +3,7 @@ import { GSettings } from './GSettings.js';
 import { resetImageSize } from './imageManipulation.js';
 
 // Function to fetch and display a random untagged texture for the user and tag
-function requestUntaggedImageData(tagID, userID) {
+function requestUntaggedImageData(userID, tagID) {
     fetch(`/untaggedTexture/${userID}/${tagID}`)
         .then(response => {
             if (!response.ok) {
@@ -33,7 +33,7 @@ function requestUntaggedImageData(tagID, userID) {
 // Function to load a random untagged image for the user and tag
 // For now hardcoded IDs for TagID and UserID
 function loadRandomUntaggedImage() {
-    requestUntaggedImageData(3, 1);
+    requestUntaggedImageData(1, 4);
 }
 
 // Function to fetch and display the image by a specific ID

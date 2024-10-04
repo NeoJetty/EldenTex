@@ -4,7 +4,7 @@
 // this will be refactored into smaller files soon
 
 import { handleZoom, resetImageSize } from './imageManipulation.js';
-import { loadRandomImage } from './requestImageData.js'
+import { loadRandomImage, loadRandomUntaggedImage } from './requestImageData.js'
 import { createVotingUI } from './votingYesNo.js';
 
 // Function to load content into a tab
@@ -62,7 +62,8 @@ function InitMainNavbarListener(){
 };
 
 function startJSForTab() {
-    loadRandomImage(); // Load random image for tab1
+    //loadRandomImage(); // Load random image for tab1
+    loadRandomUntaggedImage();
     loadButtons();
     loadTagContent();
 }
