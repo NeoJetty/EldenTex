@@ -2,8 +2,11 @@ const express = require('express');
 const path = require('path');
 const serveImageDataModule = require('./server/serveImageData'); 
 const serveAllTagsModule = require('./server/serveAllTags');
+const serveRandomUntaggedModule = require('./server/serveRandomUntagged');
+
 const addTagToImageModule = require('./server/addTagToImage');
-const addTagToImageAndUserModule = require('./server/addTagToImageAndUser'); // Import the new module
+const addTagToImageAndUserModule = require('./server/addTagToImageAndUser');
+
 
 const app = express();
 const port = 3030;
@@ -14,6 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // serve modules
 app.use('/imageData', serveImageDataModule);
 app.use('/allTags', serveAllTagsModule);
+app.use('/untaggedTexture', serveRandomUntaggedModule);
 
 // db write modules
 app.use('/addTag', addTagToImageModule);
