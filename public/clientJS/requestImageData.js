@@ -18,7 +18,7 @@ function requestUntaggedImageData(userID, tagID) {
                 GSettings.updateFromImageDataJSON(data);
 
                 // Update the image source
-                imageElement.src = data.imageUrl;
+                imageElement.src = GSettings.tab1Image.jpgURL;
 
                 // Reset image size when a new image is loaded
                 resetImageSize();

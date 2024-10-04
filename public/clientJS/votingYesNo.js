@@ -40,6 +40,9 @@ function createVotingUI() {
     // Set up event listeners for buttons
     noButton.addEventListener('click', () => handleVote(false));
     yesButton.addEventListener('click', () => handleVote(true));
+
+    // Set up event listener for arrow key presses
+    document.addEventListener('keydown', handleKeyPress);
 }
 
 // Function to handle the vote (Yes or No)
@@ -76,6 +79,17 @@ function handleVote(isYes) {
         .catch(error => console.error('Error submitting vote:', error));
 }
 
+// Function to handle key presses (left arrow for No, right arrow for Yes)
+function handleKeyPress(event) {
+    if (event.key === 'ArrowRight') {
+        // Right arrow key for "Yes"
+        handleVote(true);
+    } else if (event.key === 'ArrowLeft') {
+        // Left arrow key for "No"
+        handleVote(false);
+    }
+}
+
 // Stub function to load the next voting question
 function nextVote() {
     console.log('Next vote triggered');
@@ -83,4 +97,9 @@ function nextVote() {
     document.querySelector('.tab-link[data-tab="tab1"]').click();
 }
 
-export { createVotingUI, handleVote, nextVote };
+// Clean up the keydown event listener when not needed
+function removeKeyPressListener() {
+    document.removeEventListener('keydown', handleKeyPress);
+}
+
+export { createVotingUI, handleVote, nextVote, removeKeyPressListener };
