@@ -42,9 +42,9 @@ app.use('/serveManyTextures', require('./server/serveManyTextures'));
 // ------------------------------------------------------
 
 // addTag/:user_id/:tag_id
-app.use('/DBaddTag', require('./server/addTagToDatabase'));
-// addTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
-app.use('/DBaddTagToImageAndUser', require('./server/addTagToImageAndUser'));
+app.use('/dbCreateNewTag', require('./server/dbCreateNewTag'));
+// DBaddTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
+app.use('/dbAddTagToImageAndUser', require('./server/dbAddTagToImageAndUser'));
 
 // Start the server
 app.listen(port, () => {

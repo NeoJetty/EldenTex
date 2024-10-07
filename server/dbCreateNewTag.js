@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
+// THIS SEEMS INCOMPLETE
+// a tag is created with tag_id and user_id, but there is no name saved for it? not even passed
+
 // Function to count entries in the database
 function countInDatabase(db, table, user_id, tag_id) {
     return new Promise((resolve, reject) => {

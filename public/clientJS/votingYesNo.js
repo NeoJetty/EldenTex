@@ -57,7 +57,7 @@ function handleVote(isYes) {
 
     // Construct the GET request URL
     const voteValue = isYes ? 'true' : 'false'; // Send 'true' or 'false'
-    const url = `/DBaddTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
+    const url = `/dbAddTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
 
     // Debugging output
     console.log('Constructed URL:', url);
