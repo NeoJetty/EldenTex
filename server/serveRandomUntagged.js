@@ -1,26 +1,11 @@
-// serveRandomUntagged.js
 const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
-
 const router = express.Router();
-
-// Construct the relative path to the database
-const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
-
-// Connect to the SQLite database
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Could not connect to database:', err);
-    } else {
-        console.log('Connected to database');
-    }
-});
 
 // Define the route for fetching an untagged texture for a user and tag
 router.get('/:user_id/:tag_id', (req, res) => {
     const userId = parseInt(req.params.user_id);
     const tagId = parseInt(req.params.tag_id);
+    const db = req.db; // Use the database connection from the request
 
     // Query to find a random texture that is not yet tagged by the user for the given tag
     const sqlQuery = `
@@ -58,7 +43,7 @@ router.get('/:user_id/:tag_id', (req, res) => {
                 return res.status(404).send('No subtypes found for the given texture ID');
             }
 
-            // Send the complete JSON response without performing file existence checks
+            // Send the complete JSON response
             res.send({
                 textureName: row.name,
                 id: row.id,

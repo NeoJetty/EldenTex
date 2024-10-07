@@ -1,19 +1,7 @@
 const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
 
-// Construct the relative path to the database
-const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
-
-function connectToDatabase() {
-    return new sqlite3.Database(dbPath, (err) => {
-        if (err) {
-            console.error('Error connecting to the database:', err.message);
-        }
-    });
-}
-
+// Function to count entries in the database
 function countInDatabase(db, table, user_id, tag_id) {
     return new Promise((resolve, reject) => {
         const sqlQueryCheck = `
@@ -31,6 +19,7 @@ function countInDatabase(db, table, user_id, tag_id) {
     });
 }
 
+// Function to insert entries into the database
 function insertToDatabase(db, table, user_id, tag_id) {
     return new Promise((resolve, reject) => {
         const sqlQuery = `
@@ -47,6 +36,7 @@ function insertToDatabase(db, table, user_id, tag_id) {
     });
 }
 
+// Route handler to check and insert into the database
 router.get('/:user_id/:tag_id', async (req, res) => {
     const { user_id, tag_id } = req.params;
 
@@ -54,23 +44,23 @@ router.get('/:user_id/:tag_id', async (req, res) => {
         return res.status(400).json({ error: 'User ID and Tag ID are required' });
     }
 
-    let db = connectToDatabase();
+    const db = req.db;  // Use the already injected `db` from middleware in server.js
     const table = 'tags_per_user';
 
     try {
+        // Check if the entry exists
         const count = await countInDatabase(db, table, user_id, tag_id);
         if (count > 0) {
             return res.status(400).json({ error: 'Entry already exists', count });
         }
 
+        // Insert into the database
         const lastInsertRowid = await insertToDatabase(db, table, user_id, tag_id);
         return res.json({ message: 'Tag added successfully', id: lastInsertRowid });
 
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: error });
-    } finally {
-        db.close();
     }
 });
 

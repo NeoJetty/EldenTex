@@ -1,11 +1,28 @@
 const express = require('express');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const port = 3030;
 
+// Create a central SQLite database connection
+const dbPath = path.resolve(__dirname, '8a2f6b3c9e4f7ab.db');
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error('Error connecting to the database:', err.message);
+    } else {
+        console.log('Connected to the SQLite database');
+    }
+});
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware to inject the db connection into all routes
+app.use((req, res, next) => {
+    req.db = db;  // Attach the database connection to the request object
+    next();
+});
 
 // ------------------------------------------------------
 // Serve modules
@@ -28,8 +45,6 @@ app.use('/serveManyTextures', require('./server/serveManyTextures'));
 app.use('/DBaddTag', require('./server/addTagToDatabase'));
 // addTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
 app.use('/DBaddTagToImageAndUser', require('./server/addTagToImageAndUser'));
-
-
 
 // Start the server
 app.listen(port, () => {

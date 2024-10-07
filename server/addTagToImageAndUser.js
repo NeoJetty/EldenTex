@@ -1,34 +1,18 @@
 const express = require('express');
-const path = require('path');
-const sqlite3 = require('sqlite3').verbose();
 const router = express.Router();
 
-// Construct the relative path to the database
-const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
-
-function connectToDatabase() {
-    return new sqlite3.Database(dbPath, (err) => {
-        if (err) {
-            console.error('Error connecting to the database:', err.message);
-        }
-    });
-}
-
+// DBaddTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
 router.get('/', async (req, res) => {
     const { user_id, tag_id, image_id, vote } = req.query;
+    const db = req.db; // Use the database connection from the request
 
     // Ensure vote is correctly interpreted as a boolean
     const voteBool = (vote === 'true');
-    // --------------------------------------------------------
-    //  TODO: evil BUGS WHEN SENDING vote = 1 and vote = 0
-    // --------------------------------------------------------
-    console.log('Received request:', { user_id, tag_id, image_id, voteBool });
+    console.log('Received request:', { user_id, tag_id, image_id, vote });
 
     if (!user_id || !tag_id || !image_id || vote === undefined) {
         return res.status(400).json({ error: 'User ID, Tag ID, Image ID, and vote are required' });
     }
-
-    let db = connectToDatabase();
 
     try {
         // Check if the user has already voted for this tag and image
@@ -53,11 +37,10 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error('Error processing vote:', error);
         res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        db.close();
     }
 });
 
+// Check if the user has already voted for a specific tag and image
 function checkExistingVote(db, user_id, tag_id, image_id) {
     return new Promise((resolve, reject) => {
         const query = `
@@ -74,6 +57,7 @@ function checkExistingVote(db, user_id, tag_id, image_id) {
     });
 }
 
+// Insert a new vote into the database
 function insertVote(db, user_id, tag_id, image_id, vote) {
     return new Promise((resolve, reject) => {
         const query = `
@@ -89,6 +73,7 @@ function insertVote(db, user_id, tag_id, image_id, vote) {
     });
 }
 
+// Update the vote in the database
 function updateVote(db, user_id, tag_id, image_id, vote) {
     return new Promise((resolve, reject) => {
         const query = `
