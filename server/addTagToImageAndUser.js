@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     // --------------------------------------------------------
     //  TODO: evil BUGS WHEN SENDING vote = 1 and vote = 0
     // --------------------------------------------------------
-    console.log('Received request:', { user_id, tag_id, image_id, vote, voteBool });
+    console.log('Received request:', { user_id, tag_id, image_id, voteBool });
 
     if (!user_id || !tag_id || !image_id || vote === undefined) {
         return res.status(400).json({ error: 'User ID, Tag ID, Image ID, and vote are required' });
