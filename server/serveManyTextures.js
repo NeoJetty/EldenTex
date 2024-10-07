@@ -1,28 +1,12 @@
 // serveManyTextures.js
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
 const router = express.Router();
-
-// Construct the relative path to the database
-const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
-
-function connectToDatabase() {
-    return new sqlite3.Database(dbPath, (err) => {
-        if (err) {
-            console.error('Error connecting to the database:', err.message);
-        }
-    });
-}
-
-// Connect to the SQLite database
-const db = connectToDatabase();
 
 // Define the route for fetching multiple textures by user and tag
 router.get('/:userID/:tagID', (req, res) => {
     const userID = parseInt(req.params.userID);
     const tagID = parseInt(req.params.tagID);
+    const db = req.db; // Use the database connection from the request
 
     if (isNaN(userID) || isNaN(tagID)) {
         return res.status(400).send('Invalid userID or tagID');
@@ -49,12 +33,12 @@ router.get('/:userID/:tagID', (req, res) => {
 
         // Fetch texture data for each image_id
         const imageIDs = rows.map(row => row.image_id);
-        fetchTexturesDataByIds(imageIDs, res);
+        fetchTexturesDataByIds(imageIDs, db, res);
     });
 });
 
 // Function to fetch texture data for multiple image IDs
-function fetchTexturesDataByIds(imageIDs, res) {
+function fetchTexturesDataByIds(imageIDs, db, res) {
     const placeholders = imageIDs.map(() => '?').join(', ');
     const query = `
         SELECT * 
@@ -73,12 +57,12 @@ function fetchTexturesDataByIds(imageIDs, res) {
         }
 
         // Fetch corresponding subtype data for each image
-        fetchTextureSubtypesData(textureRows, res);
+        fetchTextureSubtypesData(textureRows, db, res);
     });
 }
 
 // Function to fetch texture subtypes data for multiple textures
-function fetchTextureSubtypesData(textureRows, res) {
+function fetchTextureSubtypesData(textureRows, db, res) {
     const imageIDs = textureRows.map(row => row.id);
     const placeholders = imageIDs.map(() => '?').join(', ');
     const query = `
@@ -100,20 +84,20 @@ function fetchTextureSubtypesData(textureRows, res) {
                 textureName: texture.name,
                 id: texture.id,
                 textureTypes: {
-                    _a: subtype._a,
-                    _n: subtype._n,
-                    _r: subtype._r,
-                    _v: subtype._v,
-                    _d: subtype._d,
-                    _em: subtype._em,
-                    _3m: subtype._3m,
-                    _Billboards_a: subtype._Billboards_a,
-                    _Billboards_n: subtype._Billboards_n,
-                    _g: subtype._g,
-                    _m: subtype._m,
-                    _1m: subtype._1m,
-                    _van: subtype._van,
-                    _vat: subtype._vat,
+                    _a: subtype ? subtype._a : null,
+                    _n: subtype ? subtype._n : null,
+                    _r: subtype ? subtype._r : null,
+                    _v: subtype ? subtype._v : null,
+                    _d: subtype ? subtype._d : null,
+                    _em: subtype ? subtype._em : null,
+                    _3m: subtype ? subtype._3m : null,
+                    _Billboards_a: subtype ? subtype._Billboards_a : null,
+                    _Billboards_n: subtype ? subtype._Billboards_n : null,
+                    _g: subtype ? subtype._g : null,
+                    _m: subtype ? subtype._m : null,
+                    _1m: subtype ? subtype._1m : null,
+                    _van: subtype ? subtype._van : null,
+                    _vat: subtype ? subtype._vat : null,
                 }
             };
         });

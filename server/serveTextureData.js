@@ -1,27 +1,11 @@
 // serveTextureData.js
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
-
 const router = express.Router();
-
-// Construct the relative path to the database
-const dbPath = path.resolve(__dirname, '../8a2f6b3c9e4f7ab.db');
-
-function connectToDatabase() {
-    return new sqlite3.Database(dbPath, (err) => {
-        if (err) {
-            console.error('Error connecting to the database:', err.message);
-        }
-    });
-}
-
-// Connect to the SQLite database
-db = connectToDatabase();
 
 // Define the route for fetching image data (random or by ID)
 router.get('/:imageId', (req, res) => {
     const imageId = parseInt(req.params.imageId);
+    const db = req.db; // Use the database connection from the request
 
     // If imageId is -1, fetch a random image
     if (imageId === -1) {
@@ -37,16 +21,16 @@ router.get('/:imageId', (req, res) => {
             }
 
             const randomId = Math.floor(Math.random() * count) + 1;
-            fetchImageDataById(randomId, res);
+            fetchImageDataById(randomId, db, res);
         });
     } else {
         // If a specific imageId is provided, fetch that image
-        fetchImageDataById(imageId, res);
+        fetchImageDataById(imageId, db, res);
     }
 });
 
 // Function to fetch image data by ID
-function fetchImageDataById(imageId, res) {
+function fetchImageDataById(imageId, db, res) {
     db.get('SELECT * FROM textures WHERE id = ?', [imageId], (err, textureRow) => {
         if (err) {
             console.error('Error querying database:', err);
