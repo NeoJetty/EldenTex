@@ -1,8 +1,8 @@
 import { GSettings } from './GSettings.js';
 
 // Set the variables
-let voteTagTheme = 'test';
-let voteTagID = 3;
+let voteTagTheme = 'Symbol';
+let voteTagID = 4;
 
 // Function to create the voting UI
 function createVotingUI() {
@@ -57,7 +57,7 @@ function handleVote(isYes) {
 
     // Construct the GET request URL
     const voteValue = isYes ? 'true' : 'false'; // Send 'true' or 'false'
-    const url = `/addTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
+    const url = `/DBaddTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
 
     // Debugging output
     console.log('Constructed URL:', url);

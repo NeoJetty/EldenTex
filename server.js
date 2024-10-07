@@ -11,13 +11,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Serve modules
 // ------------------------------------------------------
 
-// /imageData/:imageId (GET specific image data by imageId, or random if imageId is -1)
+// imageData/:imageId (GET specific image data by imageId, or random if imageId is -1)
 app.use('/imageData', require('./server/serveTextureData'));
-// /allTags (GET all available tags)
+// allTags
 app.use('/allTags', require('./server/serveAllTags'));
-// /untaggedTexture (GET random untagged texture)
+// untaggedTexture/:user_id/:tag_id
 app.use('/untaggedTexture', require('./server/serveRandomUntagged'));
-// /serveManyTextures/:userID/:tagID (GET textures voted TRUE by userID and tagID)
+// serveManyTextures/:user_id/:tag_id
 app.use('/serveManyTextures', require('./server/serveManyTextures'));
 
 // ------------------------------------------------------
@@ -25,9 +25,9 @@ app.use('/serveManyTextures', require('./server/serveManyTextures'));
 // ------------------------------------------------------
 
 // addTag/:user_id/:tag_id
-app.use('/addTag', require('./server/addTagToDatabase'));
+app.use('/DBaddTag', require('./server/addTagToDatabase'));
 // addTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
-app.use('/addTagToImageAndUser', require('./server/addTagToImageAndUser'));
+app.use('/DBaddTagToImageAndUser', require('./server/addTagToImageAndUser'));
 
 
 
