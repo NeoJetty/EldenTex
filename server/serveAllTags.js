@@ -16,6 +16,7 @@ function connectToDatabase() {
 }
 
 // Get all tags from the database
+// url: localhost:3030/allTags
 router.get('/', (req, res) => {
     let db = connectToDatabase();
 

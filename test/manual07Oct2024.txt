@@ -1,0 +1,543 @@
+localhost:3030/allTags
+
+{
+  "tags": [
+    {
+      "id": 1,
+      "name": "Plant",
+      "category": "General"
+    },
+    {
+      "id": 2,
+      "name": "Creature",
+      "category": "General"
+    },
+    {
+      "id": 3,
+      "name": "Architecture",
+      "category": "General"
+    },
+    {
+      "id": 4,
+      "name": "Symbol",
+      "category": "General"
+    },
+    {
+      "id": 5,
+      "name": "Nature",
+      "category": "General"
+    },
+    {
+      "id": 6,
+      "name": "Flag",
+      "category": "General"
+    },
+    {
+      "id": 7,
+      "name": "Limgrave",
+      "category": "Region"
+    },
+    {
+      "id": 8,
+      "name": "Liurnia of the Lakes",
+      "category": "Region"
+    },
+    {
+      "id": 9,
+      "name": "Caelid",
+      "category": "Region"
+    },
+    {
+      "id": 10,
+      "name": "Altus Plateau",
+      "category": "Region"
+    },
+    {
+      "id": 11,
+      "name": "Mountaintops of the Giants",
+      "category": "Region"
+    },
+    {
+      "id": 12,
+      "name": "Siofra River",
+      "category": "Region"
+    },
+    {
+      "id": 13,
+      "name": "Carian",
+      "category": "Cultures"
+    },
+    {
+      "id": 14,
+      "name": "Banished Knights",
+      "category": "Cultures"
+    },
+    {
+      "id": 15,
+      "name": "Beasts",
+      "category": "Cultures"
+    },
+    {
+      "id": 16,
+      "name": "Dragons",
+      "category": "Cultures"
+    }
+  ]
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+http://localhost:3030/imageData/32
+
+{
+  "textureName": "AET000_075",
+  "id": 32,
+  "textureTypes": {
+    "_a": 1,
+    "_n": 1,
+    "_r": 0,
+    "_v": 0,
+    "_d": 0,
+    "_em": 0,
+    "_3m": 0,
+    "_Billboards_a": 0,
+    "_Billboards_n": 0,
+    "_g": 0,
+    "_m": 0,
+    "_1m": 0,
+    "_van": 0,
+    "_vat": 0
+  }
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+http://localhost:3030/untaggedTexture/1/3
+
+{
+  "textureName": "AET055_603",
+  "id": 2520,
+  "textureTypes": {
+    "_a": 1,
+    "_n": 1,
+    "_r": 0,
+    "_v": 0,
+    "_d": 0,
+    "_em": 0,
+    "_3m": 0,
+    "_Billboards_a": 0,
+    "_Billboards_n": 0,
+    "_g": 0,
+    "_m": 0,
+    "_1m": 0,
+    "_van": 0,
+    "_vat": 0
+  }
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+http://localhost:3030/serveManyTextures/1/3
+
+[
+  {
+    "textureName": "AET003_121",
+    "id": 499,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 1,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET003_600",
+    "id": 802,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET003_710",
+    "id": 896,
+    "textureTypes": {
+      "_a": 0,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 1,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 1,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET003_740",
+    "id": 925,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET007_489",
+    "id": 1419,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET055_410",
+    "id": 2419,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 1,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET055_520",
+    "id": 2487,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET070_148",
+    "id": 2808,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET071_097",
+    "id": 2910,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET220_172",
+    "id": 3884,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET220_298",
+    "id": 3973,
+    "textureTypes": {
+      "_a": 0,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET220_351",
+    "id": 4001,
+    "textureTypes": {
+      "_a": 0,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET220_517",
+    "id": 4023,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET240_070",
+    "id": 5008,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET260_015",
+    "id": 5344,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET260_630",
+    "id": 5557,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET400_030",
+    "id": 5871,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET420_427",
+    "id": 6727,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 0,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET420_431",
+    "id": 6731,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 0,
+      "_3m": 0,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  },
+  {
+    "textureName": "AET468_027",
+    "id": 7414,
+    "textureTypes": {
+      "_a": 1,
+      "_n": 1,
+      "_r": 0,
+      "_v": 0,
+      "_d": 0,
+      "_em": 1,
+      "_3m": 1,
+      "_Billboards_a": 0,
+      "_Billboards_n": 0,
+      "_g": 0,
+      "_m": 1,
+      "_1m": 0,
+      "_van": 0,
+      "_vat": 0
+    }
+  }
+]
