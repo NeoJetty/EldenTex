@@ -28,8 +28,8 @@ app.use((req, res, next) => {
 // Serve modules
 // ------------------------------------------------------
 
-// imageData/:imageId (GET specific image data by imageId, or random if imageId is -1)
-app.use('/imageData', require('./server/serveTextureData'));
+// textureData/:imageId (GET specific image data by imageId, or random if imageId is -1)
+app.use('/textureData', require('./server/serveTextureData'));
 // allTags
 app.use('/allTags', require('./server/serveAllTags'));
 // untaggedTexture/:user_id/:tag_id

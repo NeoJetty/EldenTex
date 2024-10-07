@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
+// localhost:3030/textureData/:imageId
 // Define the route for fetching image data (random or by ID)
 router.get('/:imageId', (req, res) => {
     const imageId = parseInt(req.params.imageId);
