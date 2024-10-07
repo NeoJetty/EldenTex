@@ -55,7 +55,6 @@ function InitMainNavbarListener(){
                 startJSForTab();
             } else {
                 loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
-                resetImageSize(); // Reset image size when switching tabs
             }
         });
     });
