@@ -20,7 +20,6 @@
  */
 class AppConfig {
     constructor() {
-        // Singleton
         if (AppConfig.instance) {
             return AppConfig.instance; // Return the existing instance
         }
@@ -48,8 +47,10 @@ class AppConfig {
                 _d: false,
                 _em: false,
                 _3m: false,
-                _b: false,
+                _Billboards_a: false,
+                _Billboards_n: false,
                 _g: false,
+                _m: false,
                 _1m: false,
                 _van: false,
                 _vat: false,
@@ -75,33 +76,53 @@ class AppConfig {
     // Method to construct JPG URL based on texture type
     buildJPGPath(textureName) {
         let basePath = this.folders.jpgs + textureName;
-
+    
         // Check if the '_n' type is true and append '_n.jpg'
         if (this.tab1Image.textureTypes._n) {
             return basePath + '_n.jpg';
         }
-
-        // If '_n' is false, cycle through texture types and return the first true one
-        for (let key in this.tab1Image.textureTypes) {
+    
+        // If '_n' is false, cycle through texture types
+        for (let key of Object.keys(this.tab1Image.textureTypes)) {
             if (this.tab1Image.textureTypes[key]) {
                 return basePath + key + '.jpg';
             }
         }
-
-        // Default case (if no true texture type is found)
-        return basePath + '.jpg';
+    
+        // If no valid texture types are found, log a 200 error and return a false path
+        console.error(`200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`);
+        return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
     }
+    
 
     // Method to update AppConfig from JSON data
     updateFromImageDataJSON(data) {
-        // Update textureTypes first so buildJPGPath works
-        this.tab1Image.textureTypes = data.textureTypes;
-
-        // Update other fields
+        // Initialize textureTypes based on incoming data
+        this.tab1Image.textureTypes = { 
+            _a: data.textureTypes?._a ?? false,
+            _n: data.textureTypes?._n ?? false,
+            _r: data.textureTypes?._r ?? false,
+            _v: data.textureTypes?._v ?? false,
+            _d: data.textureTypes?._d ?? false,
+            _em: data.textureTypes?._em ?? false,
+            _3m: data.textureTypes?._3m ?? false,
+            _Billboards_a: data.textureTypes?._Billboards_a ?? false,
+            _Billboards_n: data.textureTypes?._Billboards_n ?? false,
+            _g: data.textureTypes?._g ?? false,
+            _m: data.textureTypes?._m ?? false,
+            _1m: data.textureTypes?._1m ?? false,
+            _van: data.textureTypes?._van ?? false,
+            _vat: data.textureTypes?._vat ?? false,
+        };
+    
+        // Update other fields based on incoming data
         this.tab1Image.imgID = data.id;
         this.tab1Image.jpgURL = this.buildJPGPath(data.textureName);
         this.tab1Image.pngURL = this.buildPNGPath(this.tab1Image.jpgURL);
     }
+
+    
+    // Class End
 }
 
 // Exporting the AppConfig instance and exposing it globally for debugging
