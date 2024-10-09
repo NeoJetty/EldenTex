@@ -98,25 +98,26 @@ class AppConfig {
     }
 
     // Method to construct JPG URL based on texture type
-    buildJPGPath(textureName) {
+    buildJPGPath(textureName, textureTypes) {
         let basePath = this.folders.jpgs + textureName;
-    
+
         // Check if the '_n' type is true and append '_n.jpg'
-        if (this.tab1Image.textureTypes._n) {
+        if (textureTypes._n) {
             return basePath + '_n.jpg';
         }
-    
+
         // If '_n' is false, cycle through texture types
-        for (let key of Object.keys(this.tab1Image.textureTypes)) {
-            if (this.tab1Image.textureTypes[key]) {
+        for (let key of Object.keys(textureTypes)) {
+            if (textureTypes[key]) {
                 return basePath + key + '.jpg';
             }
         }
-    
+
         // If no valid texture types are found, log a 200 error and return a false path
         console.error(`200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`);
         return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
     }
+
     
 
     // Method to update AppConfig from JSON data
@@ -141,7 +142,7 @@ class AppConfig {
     
         // Update other fields based on incoming data
         this.tab1Image.imgID = data.id;
-        this.tab1Image.jpgURL = this.buildJPGPath(data.textureName);
+        this.tab1Image.jpgURL = this.buildJPGPath(data.textureName, this.tab1Image.textureTypes);
         this.tab1Image.pngURL = this.buildPNGPath(this.tab1Image.jpgURL);
     }
 }

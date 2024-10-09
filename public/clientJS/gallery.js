@@ -75,29 +75,44 @@ async function populateImages(tagID) {
     console.log(`Populating images for tag ID: ${tagID}`);
 
     // Check if the tagID in the parameter is the same as in AppConfig
-    if (tagID === AppConfig.galleryByTag.tagID) {
-        console.log('No update needed: tagID is the same as the current tagID.');
-        return; // Skip the rest of the function
-    }
+    if (tagID != AppConfig.galleryByTag.tagID) {
+        // if different => update
+        try {
+            // Fetch textures based on the selected tag ID
+            const userId = AppConfig.user.ID;
+            const textures = await fetchManyTextures(userId, tagID);
+            
+            // Update AppConfig with the fetched texture data
+            AppConfig.updateTextureData(textures, tagID);
+            
+            console.log('Fetched textures:', textures);
+            
+        } catch (error) {
+            console.error(`Error fetching textures for tag ID ${tagID}:`, error);
+        }       
+    } 
 
-    try {
-        // Fetch textures based on the selected tag ID
-        const userId = AppConfig.user.ID;
-        const textures = await fetchManyTextures(userId, tagID);
-        
-        // Update AppConfig with the fetched texture data
-        AppConfig.updateTextureData(textures, tagID);
-        
-        console.log('Fetched textures:', textures);
-        
-        // For now, just log the textures
-        // Here you can implement the logic to display the textures on the page
-    } catch (error) {
-        console.error(`Error fetching textures for tag ID ${tagID}:`, error);
-    }
+    populateImageGrid();
 }
 
+function populateImageGrid() {
+    const imageGrid = document.getElementById('imageGrid');
 
+    // Clear existing images in the grid
+    imageGrid.innerHTML = '';
+
+    // Get the first 15 entries from AppConfig.galleryByTag.allTextureData
+    const textures = AppConfig.galleryByTag.allTextureData.slice(0, 21);
+
+    // Loop through the texture data and create image elements
+    textures.forEach(texture => {
+        const img = document.createElement('img');
+        // Build the image path using the textureName and textureTypes from the current texture
+        img.src = AppConfig.buildJPGPath(texture.textureName, texture.textureTypes); 
+        img.alt = `Image for ${texture.textureName}`; // Set an appropriate alt text
+        imageGrid.appendChild(img); // Append the image to the grid
+    });
+}
 
 // Example of fetchAllTags function
 async function fetchAllTags() {
