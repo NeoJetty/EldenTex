@@ -70,6 +70,7 @@ function loadRandomImage() {
     requestImageData(-1)
 }
 
+// Populate the texture types navbar
 function PopulateTextureTypesNavbar() {
     const tabLinks = document.querySelectorAll('.tex-type-navitem');
 
@@ -91,13 +92,8 @@ function PopulateTextureTypesNavbar() {
             tab.addEventListener('click', () => {
                 let imageUrl = AppConfig.tab1Image.jpgURL;
 
-                if (typeEnding === '_b') {
-                    // Handle the special case for Billboards A
-                    imageUrl = imageUrl.replace(/_n\.jpg$/, '_Billboards_a.jpg');
-                } else {
-                    // Replace _n with the type ending
-                    imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
-                }
+                // Replace _n with the type ending
+                imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
 
                 // Update the image source
                 const imageElement = document.getElementById('random-image');
@@ -107,6 +103,12 @@ function PopulateTextureTypesNavbar() {
             });
         }
     });
+
+    // After populating the navbar, set the initial active tab
+    const firstActiveTab = Array.from(tabLinks).find(tab => tab.classList.contains('highlighted'));
+    if (firstActiveTab) {
+        firstActiveTab.classList.add('active'); // Set the first highlighted tab as active
+    }
 }
 
 

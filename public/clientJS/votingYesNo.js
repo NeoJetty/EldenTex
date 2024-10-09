@@ -79,7 +79,7 @@ function handleVote(isYes) {
         .catch(error => console.error('Error submitting vote:', error));
 }
 
-// Function to handle key presses (left arrow for No, right arrow for Yes)
+// Function to handle key presses (left arrow for No, right arrow for Yes, up arrow for cycling tabs)
 function handleKeyPress(event) {
     if (event.key === 'ArrowRight') {
         // Right arrow key for "Yes"
@@ -87,6 +87,29 @@ function handleKeyPress(event) {
     } else if (event.key === 'ArrowLeft') {
         // Left arrow key for "No"
         handleVote(false);
+    } else if (event.key === 'ArrowUp') {
+        // Up arrow key to cycle through texture type tabs
+        cycleTextureTypeTabs();
+    }
+}
+
+// Function to cycle through texture type tabs
+function cycleTextureTypeTabs() {
+    const activeTabs = document.querySelectorAll('.tex-type-navitem.highlighted'); // Only consider highlighted tabs
+    const activeTab = Array.from(activeTabs).find(tab => tab.classList.contains('active'));
+
+    if (activeTab) {
+        // Find the next tab or loop back to the first one
+        const nextTab = activeTab.nextElementSibling || activeTabs[0];
+
+        // Remove 'active' class from the current tab
+        activeTab.classList.remove('active');
+
+        // Add 'active' class to the next tab
+        nextTab.classList.add('active');
+
+        // Simulate a click on the next tab to change the image
+        nextTab.click();
     }
 }
 
