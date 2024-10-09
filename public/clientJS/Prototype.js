@@ -6,7 +6,8 @@
 import { handleZoom, resetImageSize } from './imageManipulation.js';
 import { loadRandomImage, loadRandomUntaggedImage } from './requestImageData.js'
 import { createVotingUI } from './votingYesNo.js';
-import { runGalleryPage } from './gallery.js';
+import { runGalleryTab } from './gallery.js';
+import { runTextureAnalysisTab } from './singleTextureAnalysis.js';
 
 // Function to load content into a tab
 function loadTabContent(tabId, url) {
@@ -56,7 +57,10 @@ function InitMainNavbarListener() {
                 startJSForTab();
             } else if (targetTab === 'tab4') {
                 // Special case: handle tab4 content loading
-                runGalleryPage('tab4');
+                runGalleryTab('tab4');
+            } else if (targetTab === 'tab2') {
+                // Special case: handle tab4 content loading
+                runTextureAnalysisTab('tab2');
             } else {
                 // Load content for all other tabs
                 loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
@@ -69,16 +73,13 @@ function startJSForTab() {
     //loadRandomImage(); // Load random image for tab1
     loadRandomUntaggedImage();
     loadButtons();
-    loadTagContent();
+    createVotingUI();
 }
 
 function loadButtons(){
     // hardcoded for now
 }
 
-function loadTagContent(){
-    createVotingUI();
-}
 
 // Tabs are seperated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
 function loadAllTabHTMLs() {

@@ -10,7 +10,7 @@ async function fetchManyTextures(userId, tagID, page) {
     return response.json();  // Assuming it returns JSON in the specified format
 }
 
-async function runGalleryPage(htmlElement) {
+async function runGalleryTab(htmlElement) {
     const userId = AppConfig.user.ID;
 
     // Check if tagID is -1
@@ -101,7 +101,7 @@ function populateImageGrid(page) {
     imageGrid.innerHTML = '';
 
     // Get the current page textures
-    const textures = AppConfig.galleryByTag.allTextureData.slice((page - 1) * 18, page * 18); // Adjust the slice for pagination
+    const textures = AppConfig.galleryByTag.allTextureData.slice((page - 1) * 21, page * 21); // Adjust the slice for pagination
 
     // Loop through the texture data and create image elements
     textures.forEach(texture => {
@@ -117,7 +117,7 @@ function populateImageGrid(page) {
 }
 
 function updatePagination(totalTextures, currentPage) {
-    const itemsPerPage = 18; // Number of items per page
+    const itemsPerPage = 21; // Number of items per page
     const totalPages = Math.ceil(totalTextures / itemsPerPage); // Total number of pages
     const pageNumbersContainer = document.getElementById('pageNumbers');
     const pagination = document.getElementById('pagination');
@@ -165,4 +165,4 @@ async function fetchAllTags() {
     return data;  // Return the whole response object
 }
 
-export { runGalleryPage };
+export { runGalleryTab };

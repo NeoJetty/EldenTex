@@ -36,8 +36,9 @@ function loadRandomUntaggedImage() {
     requestUntaggedImageData(1, 4);
 }
 
-// Function to fetch and display the image by a specific ID
-function requestImageData(imageId) {
+// Function to fetch and display the image by a specific ID and update the specified image element
+function requestImageData(imageId, srcElement) {
+    // Fetch the image data using the provided imageId
     fetch(`/textureData/${imageId}`)
         .then(response => {
             if (!response.ok) {
@@ -46,7 +47,9 @@ function requestImageData(imageId) {
             return response.json();
         })
         .then(data => {
-            const imageElement = document.getElementById('random-image');
+            // Get the image element using the srcElement parameter
+            const imageElement = document.getElementById(srcElement);
+            
             if (imageElement) {
                 // Update AppConfig using the new helper function
                 AppConfig.updateFromImageDataJSON(data);
@@ -59,10 +62,13 @@ function requestImageData(imageId) {
 
                 // Populate the navbar based on textureTypes
                 PopulateTextureTypesNavbar();
+            } else {
+                console.error(`Element with ID '${srcElement}' not found.`);
             }
         })
         .catch(error => console.error('Error fetching image by ID:', error));
 }
+
 
 
 // Function to fetch and display the random image
@@ -112,4 +118,4 @@ function PopulateTextureTypesNavbar() {
 }
 
 
-export { loadRandomImage, loadRandomUntaggedImage };
+export { loadRandomImage, requestImageData, loadRandomUntaggedImage };
