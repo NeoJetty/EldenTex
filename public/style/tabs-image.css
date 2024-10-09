@@ -59,6 +59,7 @@
     height: auto;
     width: auto;
     transform-origin: center center;
+    object-fit: contain;
 }
 
 

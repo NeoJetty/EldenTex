@@ -34,6 +34,8 @@ app.use('/textureData', require('./server/serveTextureData'));
 app.use('/allTags', require('./server/serveAllTags'));
 // untaggedTexture/:user_id/:tag_id
 app.use('/untaggedTexture', require('./server/serveRandomUntagged'));
+// countTaggingProgress/:user_id/:tag_id
+app.use('/countTaggingProgress', require('./server/serveCountTaggingProgress'));
 // serveManyTextures/:user_id/:tag_id
 app.use('/serveManyTextures', require('./server/serveManyTextures'));
 
