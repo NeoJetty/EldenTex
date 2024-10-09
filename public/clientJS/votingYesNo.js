@@ -1,4 +1,4 @@
-import { GSettings } from './GSettings.js';
+import { AppConfig } from './AppConfig.js';
 
 // Set the variables
 let voteTagTheme = 'Symbol';
@@ -47,8 +47,8 @@ function createVotingUI() {
 
 // Function to handle the vote (Yes or No)
 function handleVote(isYes) {
-    const userID = GSettings.user.ID;
-    const imageID = GSettings.tab1Image.imgID;
+    const userID = AppConfig.user.ID;
+    const imageID = AppConfig.tab1Image.imgID;
 
     // Debugging output
     console.log('Handling vote:', isYes ? 'Yes' : 'No');

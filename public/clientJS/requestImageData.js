@@ -1,5 +1,5 @@
 // requestImagedata.js
-import { GSettings } from './GSettings.js';
+import { AppConfig } from './AppConfig.js';
 import { resetImageSize } from './imageManipulation.js';
 
 // Function to fetch and display a random untagged texture for the user and tag
@@ -14,11 +14,11 @@ function requestUntaggedImageData(userID, tagID) {
         .then(data => {
             const imageElement = document.getElementById('random-image');
             if (imageElement) {
-                // Update GSettings using the new helper function
-                GSettings.updateFromImageDataJSON(data);
+                // Update AppConfig using the new helper function
+                AppConfig.updateFromImageDataJSON(data);
 
                 // Update the image source
-                imageElement.src = GSettings.tab1Image.jpgURL;
+                imageElement.src = AppConfig.tab1Image.jpgURL;
 
                 // Reset image size when a new image is loaded
                 resetImageSize();
@@ -38,7 +38,7 @@ function loadRandomUntaggedImage() {
 
 // Function to fetch and display the image by a specific ID
 function requestImageData(imageId) {
-    fetch(`/imageData/${imageId}`)
+    fetch(`/textureData/${imageId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -48,11 +48,11 @@ function requestImageData(imageId) {
         .then(data => {
             const imageElement = document.getElementById('random-image');
             if (imageElement) {
-                // Update GSettings using the new helper function
-                GSettings.updateFromImageDataJSON(data);
+                // Update AppConfig using the new helper function
+                AppConfig.updateFromImageDataJSON(data);
 
                 // Update the image source
-                imageElement.src = GSettings.tab1Image.jpgURL;
+                imageElement.src = AppConfig.tab1Image.jpgURL;
 
                 // Reset image size when a new image is loaded
                 resetImageSize();
@@ -79,12 +79,12 @@ function PopulateTextureTypesNavbar() {
         let typeEnding = tab.getAttribute('data-type');
 
         // Highlight the tab if its type is true in textureTypes
-        if (GSettings.tab1Image.textureTypes[typeEnding]) {
+        if (AppConfig.tab1Image.textureTypes[typeEnding]) {
             tab.classList.add('highlighted'); // Add a class to highlight the tab
 
             // Add click event listener to the tab
             tab.addEventListener('click', () => {
-                let imageUrl = GSettings.tab1Image.jpgURL;
+                let imageUrl = AppConfig.tab1Image.jpgURL;
 
                 if (typeEnding === '_b') {
                     // Handle the special case for Billboards A

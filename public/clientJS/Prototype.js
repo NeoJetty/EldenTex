@@ -9,7 +9,7 @@ import { createVotingUI } from './votingYesNo.js';
 import { fetchMultipleTextures } from './displayMultipleTextures.js';
 
 async function startJSForTab4() {
-    const userId = GSettings.user.ID;  // Use the user ID from GSettings
+    const userId = AppConfig.user.ID;  // Use the user ID from AppConfig
     const tagId = 4;  // Replace with your actual tag ID logic if needed
 
     try {

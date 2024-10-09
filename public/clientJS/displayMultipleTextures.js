@@ -1,6 +1,6 @@
 // displayMultipleTextures.js
 
-import { GSettings } from './GSettings.js';
+import { AppConfig } from './AppConfig.js';
 
 async function fetchMultipleTextures(userId, tagId) {
     const url = `/serveManyTextures/${userId}/${tagId}`;
@@ -12,7 +12,7 @@ async function fetchMultipleTextures(userId, tagId) {
         }
 
         const textureData = await response.json();
-        GSettings.textures = textureData; // Store the texture data in GSettings
+        AppConfig.textures = textureData; // Store the texture data in AppConfig
 
         // Log the first texture name for testing
         if (textureData.length > 0) {

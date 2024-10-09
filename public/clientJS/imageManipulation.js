@@ -1,14 +1,14 @@
 let zoomLevel = 1;
 
-import { GSettings } from './GSettings.js';
+import { AppConfig } from './AppConfig.js';
 
 
 // Function to replace JPEG with PNG
 function replaceWithHighQualityImage() {
-    if (GSettings.tab1Image.pngURL == '') return;
+    if (AppConfig.tab1Image.pngURL == '') return;
     const imageElement = document.getElementById('random-image');
     if (imageElement) {
-        imageElement.src = GSettings.tab1Image.pngURL;
+        imageElement.src = AppConfig.tab1Image.pngURL;
     }
 }
 

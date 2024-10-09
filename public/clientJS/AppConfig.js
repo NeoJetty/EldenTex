@@ -65,16 +65,16 @@ const AppConfig = {
 
     // Function to construct JPG URL based on texture type
     buildJPGPath: function(textureName) {
-        let basePath = GSettings.folders.jpgs + textureName;
+        let basePath = AppConfig.folders.jpgs + textureName;
 
         // Check if the '_n' type is true and append '_n.jpg'
-        if (GSettings.tab1Image.textureTypes._n) {
+        if (AppConfig.tab1Image.textureTypes._n) {
             return basePath + '_n.jpg';
         }
 
         // If '_n' is false, cycle through texture types and return the first true one
-        for (let key in GSettings.tab1Image.textureTypes) {
-            if (GSettings.tab1Image.textureTypes[key]) {
+        for (let key in AppConfig.tab1Image.textureTypes) {
+            if (AppConfig.tab1Image.textureTypes[key]) {
                 return basePath + key + '.jpg';
             }
         }
@@ -83,15 +83,15 @@ const AppConfig = {
         return basePath + '.jpg';
     },
 
-    // Function to update GSettings from JSON data
+    // Function to update AppConfig from JSON data
     updateFromImageDataJSON: function(data) {
         // Update textureTypes first so buildJPGPath works
-        GSettings.tab1Image.textureTypes = data.textureTypes;
+        AppConfig.tab1Image.textureTypes = data.textureTypes;
 
         // Update other fields
-        GSettings.tab1Image.imgID = data.id;
-        GSettings.tab1Image.jpgURL = GSettings.buildJPGPath(data.textureName);
-        GSettings.tab1Image.pngURL = GSettings.buildPNGPath(GSettings.tab1Image.jpgURL);
+        AppConfig.tab1Image.imgID = data.id;
+        AppConfig.tab1Image.jpgURL = AppConfig.buildJPGPath(data.textureName);
+        AppConfig.tab1Image.pngURL = AppConfig.buildPNGPath(AppConfig.tab1Image.jpgURL);
     }
 };
 
