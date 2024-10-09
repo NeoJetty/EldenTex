@@ -74,6 +74,24 @@ class AppConfig {
     //              helper methods
     // ---------------------------------------------
 
+    // Method to update allTextureData and gallery metadata
+    updateTextureData(textures, new_tab_id) {
+        // If the new_tab_id is the same as the current tagID, return early
+        if (new_tab_id === this.galleryByTag.tagID) {
+            return;
+        }
+        
+        // Update galleryByTag.tagID to the new_tab_id
+        this.galleryByTag.tagID = new_tab_id; 
+
+        // Update other properties based on the fetched textures
+        this.galleryByTag.allTextureData = textures; // Update allTextureData with fetched textures
+        this.galleryByTag.numberOfEntries = textures.length; // Set number of entries based on the length of the fetched textures
+        this.galleryByTag.currentPage = 1; // Initialize currentPage to 1
+    }
+
+
+
     // Method to construct high-res PNG URL
     buildPNGPath(jpgUrl) {
         return jpgUrl.replace('/AllAET_JPG/', '/AllAET_PNG/').replace('.jpg', '.png');

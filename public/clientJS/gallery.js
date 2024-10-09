@@ -2,27 +2,13 @@
 
 import { AppConfig } from './AppConfig.js';
 
-async function fetchMultipleTextures(userId, tagId) {
-    const url = `/serveManyTextures/${userId}/${tagId}`;
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error fetching textures: ${response.statusText}`);
-        }
-
-        const textureData = await response.json();
-        AppConfig.textures = textureData; // Store the texture data in AppConfig
-
-        // Log the first texture name for testing
-        if (textureData.length > 0) {
-            console.log('First texture name:', textureData[0].textureName);
-        }
-
-        return textureData;
-    } catch (error) {
-        console.error('Failed to fetch textures:', error);
+// Example of fetchManyTextures function (this would be your actual fetch implementation)
+async function fetchManyTextures(userId, tagID) {
+    const response = await fetch(`/serveManyTextures/${userId}/${tagID}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
     }
+    return response.json();  // Assuming it returns JSON in the specified format
 }
 
 async function runGalleryPage(htmlElement) {
@@ -65,7 +51,6 @@ async function runGalleryPage(htmlElement) {
                 // Add event listener to handle dropdown changes
                 dropdown.addEventListener('change', (event) => {
                     const selectedTagId = event.target.value;  // Get the selected tag ID
-                    AppConfig.galleryByTag.tagID = selectedTagId;  // Update AppConfig with the selected tag ID
                     populateImages(selectedTagId);  // Call the function to populate images
                 });
 
@@ -86,12 +71,32 @@ async function runGalleryPage(htmlElement) {
     }
 }
 
-// New stub function to populate images based on the tag ID
-function populateImages(tagID) {
+async function populateImages(tagID) {
     console.log(`Populating images for tag ID: ${tagID}`);
-    // Here you would fetch and display the images based on the tagID
-    // For now, we will just log the tag ID
+
+    // Check if the tagID in the parameter is the same as in AppConfig
+    if (tagID === AppConfig.galleryByTag.tagID) {
+        console.log('No update needed: tagID is the same as the current tagID.');
+        return; // Skip the rest of the function
+    }
+
+    try {
+        // Fetch textures based on the selected tag ID
+        const userId = AppConfig.user.ID;
+        const textures = await fetchManyTextures(userId, tagID);
+        
+        // Update AppConfig with the fetched texture data
+        AppConfig.updateTextureData(textures, tagID);
+        
+        console.log('Fetched textures:', textures);
+        
+        // For now, just log the textures
+        // Here you can implement the logic to display the textures on the page
+    } catch (error) {
+        console.error(`Error fetching textures for tag ID ${tagID}:`, error);
+    }
 }
+
 
 
 // Example of fetchAllTags function
