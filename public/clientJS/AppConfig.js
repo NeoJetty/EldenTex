@@ -62,6 +62,12 @@ class AppConfig {
             theme: 'dark',
             language: 'en',
         };
+        this.galleryByTag = {
+            numberOfEntries: -1,  // Number of textures in the gallery
+            tagID: -1,            // The tag ID for the textures
+            currentPage: -1,       // Current page in the gallery
+            allTextureData: null   // Data from the JSON fetch for multiple textures
+        };
     }
 
     // ---------------------------------------------
@@ -120,9 +126,6 @@ class AppConfig {
         this.tab1Image.jpgURL = this.buildJPGPath(data.textureName);
         this.tab1Image.pngURL = this.buildPNGPath(this.tab1Image.jpgURL);
     }
-
-    
-    // Class End
 }
 
 // Exporting the AppConfig instance and exposing it globally for debugging

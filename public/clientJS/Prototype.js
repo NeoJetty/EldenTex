@@ -6,27 +6,7 @@
 import { handleZoom, resetImageSize } from './imageManipulation.js';
 import { loadRandomImage, loadRandomUntaggedImage } from './requestImageData.js'
 import { createVotingUI } from './votingYesNo.js';
-import { fetchMultipleTextures } from './displayMultipleTextures.js';
-
-async function startJSForTab4() {
-    const userId = AppConfig.user.ID;  // Use the user ID from AppConfig
-    const tagId = 4;  // Replace with your actual tag ID logic if needed
-
-    try {
-        const textures = await fetchMultipleTextures(userId, tagId);
-
-        // Display the first texture name in tab4 for testing
-        const tab4Content = document.getElementById('tab4');
-        if (textures && textures.length > 0) {
-            tab4Content.innerHTML = `First Texture: ${textures[0].textureName}`;
-        } else {
-            tab4Content.innerHTML = 'No textures found.';
-        }
-    } catch (error) {
-        console.error('Error loading textures for tab4:', error);
-        document.getElementById('tab4').innerHTML = 'Error loading textures.';
-    }
-}
+import { runGalleryPage } from './gallery.js';
 
 // Function to load content into a tab
 function loadTabContent(tabId, url) {
@@ -76,7 +56,7 @@ function InitMainNavbarListener() {
                 startJSForTab();
             } else if (targetTab === 'tab4') {
                 // Special case: handle tab4 content loading
-                startJSForTab4();
+                runGalleryPage('tab4');
             } else {
                 // Load content for all other tabs
                 loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);

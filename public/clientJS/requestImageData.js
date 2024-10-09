@@ -73,7 +73,12 @@ function loadRandomImage() {
 function PopulateTextureTypesNavbar() {
     const tabLinks = document.querySelectorAll('.tex-type-navitem');
 
-    // Loop through all tabs
+    // Remove the 'highlighted' class from all tabs before adding new highlights
+    tabLinks.forEach(tab => {
+        tab.classList.remove('highlighted'); // Clear previous highlights
+    });
+
+    // Loop through all tabs to highlight the relevant ones
     tabLinks.forEach(tab => {
         // Determine the corresponding data-type ending
         let typeEnding = tab.getAttribute('data-type');
@@ -103,5 +108,6 @@ function PopulateTextureTypesNavbar() {
         }
     });
 }
+
 
 export { loadRandomImage, loadRandomUntaggedImage };
