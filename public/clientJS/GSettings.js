@@ -1,4 +1,24 @@
-const GSettings = {
+/**
+ * AppConfig
+ * 
+ * This object serves as a global configuration store for the application, 
+ * holding various settings and state information needed across different 
+ * components. The properties within AppConfig include:
+ * 
+ * - folders: Contains paths for different image formats (e.g., JPG, PNG).
+ * - zoom: Manages zoom-related settings, including zoom factor, minimum, 
+ *   and maximum zoom levels.
+ * - tab1Image: Stores information specific to the first tab's image, 
+ *   including the image ID, URLs for both JPG and PNG formats, and a 
+ *   collection of texture types to determine available image variations.
+ * - user: Contains details about the current user, including user ID, 
+ *   name, theme preference, and language setting.
+ * 
+ * Additionally, AppConfig includes helper functions for constructing image 
+ * URLs based on texture types and updating its properties from incoming 
+ * JSON data.
+ */
+const AppConfig = {
     folders: {
         jpgs: '/AllAET_JPG/',
         pngs: '/AllAET_PNG/',
@@ -75,5 +95,5 @@ const GSettings = {
     }
 };
 
-export { GSettings };
-window.GSettings = GSettings; // Expose globally for debugging
+export { AppConfig };
+window.AppConfig = AppConfig; // Expose globally for debugging

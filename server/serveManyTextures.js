@@ -28,7 +28,7 @@ router.get('/:userID/:tagID', (req, res) => {
         }
 
         if (rows.length === 0) {
-            return res.status(404).send('No textures found for the given user and tag');
+            return res.status(200).json({ message: 'No textures found for this user_id and tag_id', textures: [] });
         }
 
         // Fetch texture data for each image_id
