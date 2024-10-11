@@ -1,13 +1,12 @@
-// Prototype.js
+// main.js
 
-// This is the file where all the code is put before refactoring, just the newest functionality. Hopefully
-// this will be refactored into smaller files soon
-
+import { AppConfig } from './AppConfig.js';
 import { handleZoom, resetImageSize } from './imageManipulation.js';
-import { loadRandomImage, loadRandomUntaggedImage } from './requestImageData.js'
-import { createVotingUI } from './votingYesNo.js';
-import { runGalleryTab } from './gallery.js';
-import { runTextureAnalysisTab } from './singleTextureAnalysis.js';
+import Manager from './manager.js'; // Import the Manager class
+
+// Declare the manager variable in a broader scope
+/** @type {Manager} */
+let manager; // This will hold the Manager instance
 
 // Function to load content into a tab
 function loadTabContent(tabId, url) {
@@ -17,7 +16,7 @@ function loadTabContent(tabId, url) {
             document.getElementById(tabId).innerHTML = data;
 
             // After loading content, check if zoom buttons exist and bind events
-            if (tabId === 'tab1') { // Only look for zoom buttons in tab1
+            if (tabId === 'tab1' || tabId === 'tab2') { // Only look for zoom buttons in tab1
                 const zoomInButton = document.querySelector('.zoom-in');
                 const zoomOutButton = document.querySelector('.zoom-out');
 
@@ -32,7 +31,6 @@ function loadTabContent(tabId, url) {
         })
         .catch(error => console.error('Error loading content:', error));
 }
-
 
 function InitMainNavbarListener() {
     // Event listener for tab clicks
@@ -51,16 +49,16 @@ function InitMainNavbarListener() {
             document.getElementById(targetTab).classList.add('active');
             e.target.classList.add('active');
 
-            // Load content for the active tab
+            // Check if any elements in the current tab have to be updated
             if (targetTab === 'tab1') {
                 // Load tab1-specific functionality
-                startJSForTab();
+                manager.votingTab();
             } else if (targetTab === 'tab4') {
                 // Special case: handle tab4 content loading
-                runGalleryTab('tab4');
+                manager.galleryTab();
             } else if (targetTab === 'tab2') {
-                // Special case: handle tab4 content loading
-                runTextureAnalysisTab('tab2');
+                // Special case: handle tab2 content loading
+                manager.analysisTab();
             } else {
                 // Load content for all other tabs
                 loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
@@ -69,19 +67,7 @@ function InitMainNavbarListener() {
     });
 }
 
-function startJSForTab() {
-    //loadRandomImage(); // Load random image for tab1
-    loadRandomUntaggedImage();
-    loadButtons();
-    createVotingUI();
-}
-
-function loadButtons(){
-    // hardcoded for now
-}
-
-
-// Tabs are seperated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
+// Tabs are separated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
 function loadAllTabHTMLs() {
     // Initialize the page on DOMContentLoaded
     document.addEventListener('DOMContentLoaded', async () => {
@@ -102,10 +88,16 @@ function loadAllTabHTMLs() {
     });
 }
 
-// readable squence of execution
+// Readable sequence of execution
 function InitInOrder() {
+    // some HTML content is ajaxed for whatever reason for now
     loadAllTabHTMLs();
-    InitMainNavbarListener(); // black 4 tabs at the top
+
+    // Create an instance of the Manager class
+    manager = new Manager(); // Initialize here
+
+    // Black 4 tabs at the top
+    InitMainNavbarListener(); 
 }
 
 InitInOrder();

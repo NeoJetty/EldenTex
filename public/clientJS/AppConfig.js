@@ -8,7 +8,7 @@
  * - folders: Contains paths for different image formats (e.g., JPG, PNG).
  * - zoom: Manages zoom-related settings, including zoom factor, minimum, 
  *   and maximum zoom levels.
- * - tab1Image: Stores information specific to the first tab's image, 
+ * - VotingTab: Stores information specific to the first tab's image, 
  *   including the image ID, URLs for both JPG and PNG formats, and a 
  *   collection of texture types to determine available image variations.
  * - user: Contains details about the current user, including user ID, 
@@ -35,7 +35,28 @@ class AppConfig {
             minZoom: 1,
             maxZoom: 4.0,
         };
-        this.tab1Image = {
+        this.votingTab = {
+            imgID: -1,
+            jpgURL: '',
+            pngURL: '',
+            textureTypes: { 
+                _a: false,
+                _n: false,
+                _r: false,
+                _v: false,
+                _d: false,
+                _em: false,
+                _3m: false,
+                _Billboards_a: false,
+                _Billboards_n: false,
+                _g: false,
+                _m: false,
+                _1m: false,
+                _van: false,
+                _vat: false,
+            },
+        };
+        this.analysisTab = {
             imgID: -1,
             jpgURL: '',
             pngURL: '',
@@ -68,7 +89,9 @@ class AppConfig {
             currentPage: -1,       // Current page in the gallery
             allTextureData: null   // Data from the JSON fetch for multiple textures
         };
+
     }
+
 
     // ---------------------------------------------
     //              helper methods
@@ -89,8 +112,6 @@ class AppConfig {
         this.galleryByTag.numberOfEntries = textures.length; // Set number of entries based on the length of the fetched textures
         this.galleryByTag.currentPage = 1; // Initialize currentPage to 1
     }
-
-
 
     // Method to construct high-res PNG URL
     buildPNGPath(jpgUrl) {
@@ -118,12 +139,10 @@ class AppConfig {
         return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
     }
 
-    
-
     // Method to update AppConfig from JSON data
     updateFromImageDataJSON(data) {
         // Initialize textureTypes based on incoming data
-        this.tab1Image.textureTypes = { 
+        this.votingTab.textureTypes = { 
             _a: data.textureTypes?._a ?? false,
             _n: data.textureTypes?._n ?? false,
             _r: data.textureTypes?._r ?? false,
@@ -141,9 +160,9 @@ class AppConfig {
         };
     
         // Update other fields based on incoming data
-        this.tab1Image.imgID = data.id;
-        this.tab1Image.jpgURL = this.buildJPGPath(data.textureName, this.tab1Image.textureTypes);
-        this.tab1Image.pngURL = this.buildPNGPath(this.tab1Image.jpgURL);
+        this.votingTab.imgID = data.id;
+        this.votingTab.jpgURL = this.buildJPGPath(data.textureName, this.votingTab.textureTypes);
+        this.votingTab.pngURL = this.buildPNGPath(this.votingTab.jpgURL);
     }
 }
 

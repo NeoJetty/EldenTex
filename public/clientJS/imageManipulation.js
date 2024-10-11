@@ -5,10 +5,10 @@ import { AppConfig } from './AppConfig.js';
 
 // Function to replace JPEG with PNG
 function replaceWithHighQualityImage() {
-    if (AppConfig.tab1Image.pngURL == '') return;
+    if (AppConfig.votingTab.pngURL == '') return;
     const imageElement = document.getElementById('random-image');
     if (imageElement) {
-        imageElement.src = AppConfig.tab1Image.pngURL;
+        imageElement.src = AppConfig.votingTab.pngURL;
     }
 }
 

@@ -48,7 +48,7 @@ function createVotingUI() {
 // Function to handle the vote (Yes or No)
 function handleVote(isYes) {
     const userID = AppConfig.user.ID;
-    const imageID = AppConfig.tab1Image.imgID;
+    const imageID = AppConfig.votingTab.imgID;
 
     // Debugging output
     console.log('Handling vote:', isYes ? 'Yes' : 'No');
@@ -94,6 +94,8 @@ function handleKeyPress(event) {
 }
 
 // Function to cycle through texture type tabs
+// intended to be only called through keyboard presses. The "normal" way to access tab is by clicking, but this is an extra feature
+// to make the voting tab as keyboard only as possible
 function cycleTextureTypeTabs() {
     const activeTabs = document.querySelectorAll('.tex-type-navitem.highlighted'); // Only consider highlighted tabs
     const activeTab = Array.from(activeTabs).find(tab => tab.classList.contains('active'));

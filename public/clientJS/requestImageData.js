@@ -23,7 +23,7 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
                     AppConfig.updateFromImageDataJSON(data);
 
                     // Update the image source
-                    imageElement.src = AppConfig.tab1Image.jpgURL;
+                    imageElement.src = AppConfig.votingTab.jpgURL;
 
                     // Reset image size when a new image is loaded
                     resetImageSize();
@@ -68,7 +68,7 @@ function requestImageData(imageId, parentDivID) {
                     AppConfig.updateFromImageDataJSON(data);
 
                     // Update the image source
-                    imageElement.src = AppConfig.tab1Image.jpgURL;
+                    imageElement.src = AppConfig.votingTab.jpgURL;
 
                     // Reset image size when a new image is loaded
                     resetImageSize();
@@ -106,12 +106,12 @@ function PopulateTextureTypesNavbar(parentDiv) {
         let typeEnding = tab.getAttribute('data-type');
 
         // Highlight the tab if its type is true in textureTypes
-        if (AppConfig.tab1Image.textureTypes[typeEnding]) {
+        if (AppConfig.votingTab.textureTypes[typeEnding]) {
             tab.classList.add('highlighted'); // Add a class to highlight the tab
 
             // Add click event listener to the tab
             tab.addEventListener('click', () => {
-                let imageUrl = AppConfig.tab1Image.jpgURL;
+                let imageUrl = AppConfig.votingTab.jpgURL;
 
                 // Replace _n with the type ending
                 imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
