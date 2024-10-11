@@ -1,5 +1,16 @@
-/* Tab Content Container */
-.tab1-all-content-container {
+/* Yes/No Tagging Tab */
+#tab1-content {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-areas: 
+        "tabs zoom-controls future-content"
+        "image zoom-controls future-content";
+    height: 800px; /* Adjust as needed */
+}
+
+/* Image Analysis Tab */
+#tab2-content {
     display: grid;
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
     grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
@@ -53,17 +64,7 @@
 }
 
 /* Image */
-#random-image {
-    max-width: 100%; /* Adjust to container width */
-    max-height: 100%; /* Adjust to container height */
-    height: auto;
-    width: auto;
-    transform-origin: center center;
-    object-fit: contain;
-}
-
-/* Image */
-#image-analysis {
+.big-texture-viewer {
     max-width: 100%; /* Adjust to container width */
     max-height: 100%; /* Adjust to container height */
     height: auto;

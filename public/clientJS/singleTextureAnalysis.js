@@ -4,7 +4,7 @@ import { loadRandomImage, requestImageData } from "./requestImageData.js";
 import { populateTags } from "./tagContainerBuilder.js";
 
 function runTextureAnalysisTab(target_tab){
-    requestImageData(30, 'image-analaysis');
+    requestImageData(30, 'tab2-content');
     populateTags('.tag-container');
 }
 

@@ -2,8 +2,7 @@
 import { AppConfig } from './AppConfig.js';
 import { resetImageSize } from './imageManipulation.js';
 
-// Function to fetch and display a random untagged texture for the user and tag
-function requestUntaggedImageData(userID, tagID) {
+function requestUntaggedImageData(userID, tagID, parentDiv) {
     fetch(`/untaggedTexture/${userID}/${tagID}`)
         .then(response => {
             if (!response.ok) {
@@ -12,19 +11,30 @@ function requestUntaggedImageData(userID, tagID) {
             return response.json();
         })
         .then(data => {
-            const imageElement = document.getElementById('random-image');
-            if (imageElement) {
-                // Update AppConfig using the new helper function
-                AppConfig.updateFromImageDataJSON(data);
+            // Get the parent <div> using the parentDiv parameter as its ID
+            const parentElement = document.getElementById(parentDiv);
+            
+            if (parentElement) {
+                // Find the <img> element with the class 'image-object' inside the parent div
+                const imageElement = parentElement.querySelector('.big-texture-viewer');
+                
+                if (imageElement) {
+                    // Update AppConfig using the new helper function
+                    AppConfig.updateFromImageDataJSON(data);
 
-                // Update the image source
-                imageElement.src = AppConfig.tab1Image.jpgURL;
+                    // Update the image source
+                    imageElement.src = AppConfig.tab1Image.jpgURL;
 
-                // Reset image size when a new image is loaded
-                resetImageSize();
+                    // Reset image size when a new image is loaded
+                    resetImageSize();
 
-                // Populate the navbar based on textureTypes
-                PopulateTextureTypesNavbar();
+                    // Populate the navbar based on textureTypes
+                    PopulateTextureTypesNavbar(parentElement);
+                } else {
+                    console.error(`No <img> element with class 'image-object' found inside the div with ID '${parentDiv}'.`);
+                }
+            } else {
+                console.error(`Element with ID '${parentDiv}' not found.`);
             }
         })
         .catch(error => console.error('Error fetching untagged image data:', error));
@@ -33,11 +43,10 @@ function requestUntaggedImageData(userID, tagID) {
 // Function to load a random untagged image for the user and tag
 // For now hardcoded IDs for TagID and UserID
 function loadRandomUntaggedImage() {
-    requestUntaggedImageData(1, 4);
+    requestUntaggedImageData(1, 4, 'tab1-content');
 }
 
-// Function to fetch and display the image by a specific ID and update the specified image element
-function requestImageData(imageId, srcElement) {
+function requestImageData(imageId, parentDivID) {
     // Fetch the image data using the provided imageId
     fetch(`/textureData/${imageId}`)
         .then(response => {
@@ -47,38 +56,44 @@ function requestImageData(imageId, srcElement) {
             return response.json();
         })
         .then(data => {
-            // Get the image element using the srcElement parameter
-            const imageElement = document.getElementById(srcElement);
+            // Get the parent <div> using the parentDiv parameter as its ID
+            const parentElement = document.getElementById(parentDivID);
             
-            if (imageElement) {
-                // Update AppConfig using the new helper function
-                AppConfig.updateFromImageDataJSON(data);
+            if (parentElement) {
+                // Find the <img> element with the class 'big-texture-viewer' inside the parent div
+                const imageElement = parentElement.querySelector('.big-texture-viewer');
+                
+                if (imageElement) {
+                    // Update AppConfig using the new helper function
+                    AppConfig.updateFromImageDataJSON(data);
 
-                // Update the image source
-                imageElement.src = AppConfig.tab1Image.jpgURL;
+                    // Update the image source
+                    imageElement.src = AppConfig.tab1Image.jpgURL;
 
-                // Reset image size when a new image is loaded
-                resetImageSize();
+                    // Reset image size when a new image is loaded
+                    resetImageSize();
 
-                // Populate the navbar based on textureTypes
-                PopulateTextureTypesNavbar();
+                    // Populate the navbar based on textureTypes
+                    PopulateTextureTypesNavbar(parentElement);
+                } else {
+                    console.error(`No <img> element with class 'big-texture-viewer' found inside the div with ID '${parentDiv}'.`);
+                }
             } else {
-                console.error(`Element with ID '${srcElement}' not found.`);
+                console.error(`Element with ID '${parentDiv}' not found.`);
             }
         })
         .catch(error => console.error('Error fetching image by ID:', error));
 }
-
-
 
 // Function to fetch and display the random image
 function loadRandomImage() {
     requestImageData(-1)
 }
 
-// Populate the texture types navbar
-function PopulateTextureTypesNavbar() {
-    const tabLinks = document.querySelectorAll('.tex-type-navitem');
+// Populate the texture types navbar within a specific parentDiv
+function PopulateTextureTypesNavbar(parentDiv) {
+    // Select the tab links only within the provided parentDiv
+    const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
 
     // Remove the 'highlighted' class from all tabs before adding new highlights
     tabLinks.forEach(tab => {
@@ -102,7 +117,7 @@ function PopulateTextureTypesNavbar() {
                 imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
 
                 // Update the image source
-                const imageElement = document.getElementById('random-image');
+                const imageElement = parentDiv.querySelectorAll('.big-texture-viewer');
                 if (imageElement) {
                     imageElement.src = imageUrl;
                 }
@@ -116,6 +131,7 @@ function PopulateTextureTypesNavbar() {
         firstActiveTab.classList.add('active'); // Set the first highlighted tab as active
     }
 }
+
 
 
 export { loadRandomImage, requestImageData, loadRandomUntaggedImage };
