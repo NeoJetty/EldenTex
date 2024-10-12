@@ -2,15 +2,15 @@
 
 /**
  * Fetches tags from the server and populates the specified container with checkboxes and labels.
- * @param {string} containerSelector - The CSS selector of the container to populate with tags.
+ * 
+ * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
+ * @returns {void}
  */
-function populateTags(containerSelector) {
+function populateTags(tagContainer) {
     // Fetch all tags from the server
     fetch('/allTags')
         .then(response => response.json())
         .then(data => {
-            // Get the tag container element where the checkboxes will go
-            const tagContainer = document.querySelector(containerSelector);
 
             if (!tagContainer) {
                 console.error('Error: Container element not found.');

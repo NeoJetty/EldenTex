@@ -5,8 +5,8 @@ let voteTagTheme = 'Symbol';
 let voteTagID = 4;
 
 // Function to create the voting UI
-function createVotingUI() {
-    const container = document.querySelector('.tag-container');
+function createVotingUI(parentDiv) {
+    const container = parentDiv.querySelector('.tag-container');
 
     // Check if the container exists
     if (!container) {

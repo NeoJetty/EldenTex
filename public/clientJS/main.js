@@ -9,33 +9,34 @@ import Manager from './manager.js'; // Import the Manager class
 let manager; // This will hold the Manager instance
 
 // Function to load content into a tab
-function loadTabContent(tabId, url) {
-    return fetch(url)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById(tabId).innerHTML = data;
+async function loadTabContent(tabId, url) {
+    try {
+        const response = await fetch(url);
+        const data = await response.text();
+        document.getElementById(tabId).innerHTML = data;
 
-            // After loading content, check if zoom buttons exist and bind events
-            if (tabId === 'tab1' || tabId === 'tab2') { // Only look for zoom buttons in tab1
-                const zoomInButton = document.querySelector('.zoom-in');
-                const zoomOutButton = document.querySelector('.zoom-out');
+        // After loading content, check if zoom buttons exist and bind events
+        if (tabId === 'tab1' || tabId === 'tab2') {
+            const zoomInButton = document.querySelector('.zoom-in');
+            const zoomOutButton = document.querySelector('.zoom-out');
 
-                if (zoomInButton) {
-                    zoomInButton.addEventListener('click', () => handleZoom('in'));
-                }
-
-                if (zoomOutButton) {
-                    zoomOutButton.addEventListener('click', () => handleZoom('out'));
-                }
+            if (zoomInButton) {
+                zoomInButton.addEventListener('click', () => handleZoom('in'));
             }
-        })
-        .catch(error => console.error('Error loading content:', error));
+
+            if (zoomOutButton) {
+                zoomOutButton.addEventListener('click', () => handleZoom('out'));
+            }
+        }
+    } catch (error) {
+        console.error(`Error loading content for ${tabId}:`, error);
+    }
 }
 
 function InitMainNavbarListener() {
     // Event listener for tab clicks
     document.querySelectorAll('.tab-link').forEach(link => {
-        link.addEventListener('click', (e) => {
+        link.addEventListener('click', async (e) => {
             e.preventDefault();
 
             // Remove active class from all content sections
@@ -51,53 +52,54 @@ function InitMainNavbarListener() {
 
             // Check if any elements in the current tab have to be updated
             if (targetTab === 'tab1') {
-                // Load tab1-specific functionality
                 manager.votingTab();
             } else if (targetTab === 'tab4') {
-                // Special case: handle tab4 content loading
                 manager.galleryTab();
             } else if (targetTab === 'tab2') {
-                // Special case: handle tab2 content loading
                 manager.analysisTab();
             } else {
-                // Load content for all other tabs
-                loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
+                // Load content for all other tabs dynamically
+                await loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
             }
         });
     });
 }
 
 // Tabs are separated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
-function loadAllTabHTMLs() {
-    // Initialize the page on DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            // Load all tab content and wait for all to complete
-            await Promise.all([
-                loadTabContent('tab1', 'Tab1_Content.html'),
-                loadTabContent('tab2', 'Tab2_Content.html'),
-                loadTabContent('tab3', 'Tab3_Content.html'),
-                loadTabContent('tab4', 'Tab4_Content.html')
-            ]);
-
-            // Automatically click the first tab to load its content and set it active
-            document.querySelector('.tab-link[data-tab="tab1"]').click();
-        } catch (error) {
-            console.error('Error loading all tab content:', error);
-        }
+async function loadAllTabHTMLs() {
+    // This function does not need to be async anymore
+    return Promise.all([
+        loadTabContent('tab1', 'Tab1_Content.html'),
+        loadTabContent('tab2', 'Tab2_Content.html'),
+        loadTabContent('tab3', 'Tab3_Content.html'),
+        loadTabContent('tab4', 'Tab4_Content.html')
+    ]).catch(error => {
+        console.error('Error loading all tab content:', error);
     });
 }
 
 // Readable sequence of execution
-function InitInOrder() {
-    // some HTML content is ajaxed for whatever reason for now
-    loadAllTabHTMLs();
+async function InitInOrder() {
+    try {
+        // Load all tab HTMLs and wait for them to be loaded
+        await loadAllTabHTMLs();
 
-    // Create an instance of the Manager class
-    manager = new Manager(); // Initialize here
+        // Now the content should be available
+        const tab1Content = document.querySelector('#tab1-content');
+        console.log(tab1Content); // This should now log the correct element
 
-    // Black 4 tabs at the top
-    InitMainNavbarListener(); 
+        // Create an instance of the Manager class
+        manager = new Manager(); // Initialize here
+
+        // Initialize the main navbar listener after all tabs are loaded
+        InitMainNavbarListener();
+
+        // Automatically click the first tab to load its content and set it active
+        document.querySelector('.tab-link[data-tab="tab1"]').click();
+    } catch (error) {
+        console.error('Error during initialization:', error);
+    }
 }
 
+// Start the initialization process
 InitInOrder();

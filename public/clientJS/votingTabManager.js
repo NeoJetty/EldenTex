@@ -3,10 +3,10 @@
 import { loadRandomUntaggedImage } from "./requestImageData.js";
 import { createVotingUI } from './votingYesNo.js';
 
-function runVotingTab() {
-    loadRandomUntaggedImage();
+function runVotingTab(parentDiv) {
+    loadRandomUntaggedImage(parentDiv);
     loadButtons();
-    createVotingUI();
+    createVotingUI(parentDiv);
 }
 
 function loadButtons(){

@@ -139,10 +139,18 @@ class AppConfig {
         return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
     }
 
+    updateVotingTabTextureFromJson(data){
+        this.updateFromImageDataJSON(data, this.votingTab)
+    }
+
+    updateAnalysisTabTextureFromJson(data){
+        this.updateFromImageDataJSON(data, this.analysisTab)
+    }
+
     // Method to update AppConfig from JSON data
-    updateFromImageDataJSON(data) {
+    updateFromImageDataJSON(data, propertyGroup) {
         // Initialize textureTypes based on incoming data
-        this.votingTab.textureTypes = { 
+        propertyGroup.textureTypes = { 
             _a: data.textureTypes?._a ?? false,
             _n: data.textureTypes?._n ?? false,
             _r: data.textureTypes?._r ?? false,
@@ -160,9 +168,9 @@ class AppConfig {
         };
     
         // Update other fields based on incoming data
-        this.votingTab.imgID = data.id;
-        this.votingTab.jpgURL = this.buildJPGPath(data.textureName, this.votingTab.textureTypes);
-        this.votingTab.pngURL = this.buildPNGPath(this.votingTab.jpgURL);
+        propertyGroup.imgID = data.id;
+        propertyGroup.jpgURL = this.buildJPGPath(data.textureName, propertyGroup.textureTypes);
+        propertyGroup.pngURL = this.buildPNGPath(propertyGroup.jpgURL);
     }
 }
 

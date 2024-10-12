@@ -8,9 +8,9 @@ class Manager {
     constructor() {
         // Create variables for tab content divs and assign them as member variables
         this.tab1Div = document.querySelector('#tab1-content');
-        this.tab2Div = document.querySelector('#tab1-content');
-        this.tab3Div = document.querySelector('#tab1-content');
-        this.tab4Div = document.querySelector('#tab1-content');
+        this.tab2Div = document.querySelector('#tab2-content');
+        this.tab3Div = document.querySelector('#tab3-content');
+        this.tab4Div = document.querySelector('#tab4-content');
     }
 
     galleryTab(){
@@ -18,11 +18,12 @@ class Manager {
     }
 
     analysisTab(){
-        runTextureAnalysisTab();
+        runTextureAnalysisTab(this.tab2Div);
+        
     }
 
     votingTab(){
-        runVotingTab();
+        runVotingTab(this.tab1Div);        
     }
     // Additional methods can be added here as needed
 }

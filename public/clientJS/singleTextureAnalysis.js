@@ -3,9 +3,22 @@
 import { loadRandomImage, requestImageData } from "./requestImageData.js";
 import { populateTags } from "./tagContainerBuilder.js";
 
-function runTextureAnalysisTab(target_tab){
-    requestImageData(30, 'tab2-content');
-    populateTags('.tag-container');
+/**
+ * Runs the texture analysis tab by loading a random image and populating the tags.
+ * 
+ * @param {HTMLDivElement} targetParentElement - The parent element (a <div>) where the image data will be displayed.
+ * @returns {void}
+ */
+function runTextureAnalysisTab(targetParentElement) {
+    requestImageData(30, targetParentElement); 
+
+    let textureAnalysisTextureTypeTabs = targetParentElement.querySelector('.tag-container')
+    if (!textureAnalysisTextureTypeTabs) {
+        console.error('Error: Container element not found.');
+        return;
+    }
+
+    populateTags(textureAnalysisTextureTypeTabs);
 }
 
-export {runTextureAnalysisTab};
+export { runTextureAnalysisTab };

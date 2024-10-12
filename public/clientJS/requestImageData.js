@@ -11,16 +11,13 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
             return response.json();
         })
         .then(data => {
-            // Get the parent <div> using the parentDiv parameter as its ID
-            const parentElement = document.getElementById(parentDiv);
-            
-            if (parentElement) {
+            if (parentDiv) {
                 // Find the <img> element with the class 'image-object' inside the parent div
-                const imageElement = parentElement.querySelector('.big-texture-viewer');
+                const imageElement = parentDiv.querySelector('.big-texture-viewer');
                 
                 if (imageElement) {
                     // Update AppConfig using the new helper function
-                    AppConfig.updateFromImageDataJSON(data);
+                    AppConfig.updateVotingTabTextureFromJson(data);
 
                     // Update the image source
                     imageElement.src = AppConfig.votingTab.jpgURL;
@@ -29,7 +26,7 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
                     resetImageSize();
 
                     // Populate the navbar based on textureTypes
-                    PopulateTextureTypesNavbar(parentElement);
+                    PopulateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
                 } else {
                     console.error(`No <img> element with class 'image-object' found inside the div with ID '${parentDiv}'.`);
                 }
@@ -42,11 +39,11 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
 
 // Function to load a random untagged image for the user and tag
 // For now hardcoded IDs for TagID and UserID
-function loadRandomUntaggedImage() {
-    requestUntaggedImageData(1, 4, 'tab1-content');
+function loadRandomUntaggedImage(parentDiv) {
+    requestUntaggedImageData(1, 4, parentDiv);
 }
 
-function requestImageData(imageId, parentDivID) {
+function requestImageData(imageId, parentDiv) {
     // Fetch the image data using the provided imageId
     fetch(`/textureData/${imageId}`)
         .then(response => {
@@ -55,26 +52,23 @@ function requestImageData(imageId, parentDivID) {
             }
             return response.json();
         })
-        .then(data => {
-            // Get the parent <div> using the parentDiv parameter as its ID
-            const parentElement = document.getElementById(parentDivID);
-            
-            if (parentElement) {
+        .then(data => {           
+            if (parentDiv) {
                 // Find the <img> element with the class 'big-texture-viewer' inside the parent div
-                const imageElement = parentElement.querySelector('.big-texture-viewer');
+                const imageElement = parentDiv.querySelector('.big-texture-viewer');
                 
                 if (imageElement) {
                     // Update AppConfig using the new helper function
-                    AppConfig.updateFromImageDataJSON(data);
+                    AppConfig.updateAnalysisTabTextureFromJson(data);
 
                     // Update the image source
-                    imageElement.src = AppConfig.votingTab.jpgURL;
+                    imageElement.src = AppConfig.analysisTab.jpgURL;
 
                     // Reset image size when a new image is loaded
                     resetImageSize();
 
                     // Populate the navbar based on textureTypes
-                    PopulateTextureTypesNavbar(parentElement);
+                    PopulateTextureTypesNavbar(parentDiv, AppConfig.analysisTab);
                 } else {
                     console.error(`No <img> element with class 'big-texture-viewer' found inside the div with ID '${parentDiv}'.`);
                 }
@@ -91,7 +85,7 @@ function loadRandomImage() {
 }
 
 // Populate the texture types navbar within a specific parentDiv
-function PopulateTextureTypesNavbar(parentDiv) {
+function PopulateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
     // Select the tab links only within the provided parentDiv
     const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
 
@@ -106,12 +100,12 @@ function PopulateTextureTypesNavbar(parentDiv) {
         let typeEnding = tab.getAttribute('data-type');
 
         // Highlight the tab if its type is true in textureTypes
-        if (AppConfig.votingTab.textureTypes[typeEnding]) {
+        if (AppConfigPropertyGroup.textureTypes[typeEnding]) {
             tab.classList.add('highlighted'); // Add a class to highlight the tab
 
             // Add click event listener to the tab
             tab.addEventListener('click', () => {
-                let imageUrl = AppConfig.votingTab.jpgURL;
+                let imageUrl = AppConfigPropertyGroup.jpgURL;
 
                 // Replace _n with the type ending
                 imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
