@@ -15,57 +15,68 @@ async function runGalleryTab(targetDiv) {
 
     // Check if tagID is -1
     if (AppConfig.galleryByTag.tagID === -1) {
-        try {
-            // Fetch all available tags
-            const response = await fetchAllTags();
-
-            console.log('Fetched tags response:', response);
-
-            const tags = response.tags;
-
-            if (Array.isArray(tags)) {
-                const dropdown = targetDiv.querySelector('#textureType');
-
-                if (!dropdown) {
-                    console.error(`Dropdown not found in element: ${targetDiv}`);
-                    return;
-                }
-
-                // Remove any existing entries in the dropdown
-                dropdown.innerHTML = '';
-                const defaultOption = document.createElement('option');
-                defaultOption.textContent = '-- choose --';
-                defaultOption.value = '';
-                dropdown.appendChild(defaultOption);
-
-                // Populate dropdown with fetched tags
-                tags.forEach(tag => {
-                    const option = document.createElement('option');
-                    option.textContent = tag.name;
-                    option.value = tag.id;
-                    dropdown.appendChild(option);
-                });
-
-                // Add event listener to handle dropdown changes
-                dropdown.addEventListener('change', (event) => {
-                    const selectedTagId = event.target.value;  // Get the selected tag ID
-                    populateImages(selectedTagId, 1);  // Call the function to populate images for the first page
-                });
-
-                console.log('Dropdown populated with tags');
-            } else {
-                console.error('Expected an array of tags, but got:', tags);
-                targetDiv.innerHTML = 'Error loading tags: unexpected response format.';
-            }
-        } catch (error) {
-            console.error('Error fetching tags:', error);
-            targetDiv.innerHTML = 'Error loading tags.';
-        }
+        await constructTagsDropdownMenu(targetDiv);
     } else {
         // If the tagID is not -1, trigger the image population function
         populateImages(AppConfig.galleryByTag.tagID, 1);  // Call function to populate images for the first page
     }
 }
+
+async function constructTagsDropdownMenu(targetDiv) {
+    try {
+        // Fetch all available tags
+        const response = await fetchAllTags();
+
+        console.log('Fetched tags response:', response);
+
+        const tags = response.tags;
+
+        if (Array.isArray(tags)) {
+            const dropdown = targetDiv.querySelector('#textureType');
+
+            if (!dropdown) {
+                console.error(`Dropdown not found in element: ${targetDiv}`);
+                return;
+            }
+
+            // Build the dropdown menu
+            buildDropdownMenu(dropdown, tags);
+
+            console.log('Dropdown populated with tags');
+        } else {
+            console.error('Expected an array of tags, but got:', tags);
+            targetDiv.innerHTML = 'Error loading tags: unexpected response format.';
+        }
+    } catch (error) {
+        console.error('Error fetching tags:', error);
+        targetDiv.innerHTML = 'Error loading tags.';
+    }
+}
+
+function buildDropdownMenu(dropdown, tags) {
+    // Remove any existing entries in the dropdown
+    dropdown.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = '-- choose --';
+    defaultOption.value = '';
+    dropdown.appendChild(defaultOption);
+
+    // Populate dropdown with fetched tags
+    tags.forEach(tag => {
+        const option = document.createElement('option');
+        option.textContent = tag.name;
+        option.value = tag.id;
+        dropdown.appendChild(option);
+    });
+
+    // Add event listener to handle dropdown changes
+    dropdown.addEventListener('change', (event) => {
+        const selectedTagId = event.target.value;  // Get the selected tag ID
+        populateImages(selectedTagId, 1);  // Call the function to populate images for the first page
+    });
+}
+
 
 async function populateImages(tagID, page) {
     console.log(`Populating images for tag ID: ${tagID} on page: ${page}`);

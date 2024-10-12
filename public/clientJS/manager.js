@@ -1,7 +1,7 @@
 // manager.js
 
 import { runGalleryTab } from './gallery.js';
-import { runTextureAnalysisTab } from './singleTextureAnalysis.js';
+import { runTextureAnalysisTab } from './textureAnalysis.js';
 import { runVotingTab } from './votingTabManager.js';
 
 class Manager {
@@ -18,8 +18,15 @@ class Manager {
     votingTab(){
         runVotingTab(this.tab1Div);        
     }
-    analysisTab(){
-        runTextureAnalysisTab(this.tab2Div);     
+    analysisTab(textureID) {
+        // Check if textureID is provided
+        if (textureID) {
+            // If textureID is passed, use it as the second parameter
+            runTextureAnalysisTab(this.tab2Div, textureID);
+        } else {
+            // If not, default to using 20 as the second parameter
+            runTextureAnalysisTab(this.tab2Div, 11);
+        }
     }
     galleryTab(){
         runGalleryTab(this.tab4Div);

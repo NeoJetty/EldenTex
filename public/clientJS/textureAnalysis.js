@@ -1,4 +1,4 @@
-// singleTextureAnalysis.js
+// textureAnalysis.js
 
 import { loadRandomImage, requestImageData } from "./requestImageData.js";
 import { populateTags } from "./tagContainerBuilder.js";
@@ -9,8 +9,8 @@ import { populateTags } from "./tagContainerBuilder.js";
  * @param {HTMLDivElement} targetParentElement - The parent element (a <div>) where the image data will be displayed.
  * @returns {void}
  */
-function runTextureAnalysisTab(targetParentElement) {
-    requestImageData(30, targetParentElement); 
+function runTextureAnalysisTab(targetParentElement, textureID) {
+    requestImageData(textureID, targetParentElement); 
 
     let textureAnalysisTextureTypeTabs = targetParentElement.querySelector('.tag-container')
     if (!textureAnalysisTextureTypeTabs) {
