@@ -26,7 +26,7 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
                     resetImageSize();
 
                     // Populate the navbar based on textureTypes
-                    PopulateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
+                    populateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
                 } else {
                     console.error(`No <img> element with class 'image-object' found inside the div with ID '${parentDiv}'.`);
                 }
@@ -68,7 +68,7 @@ function requestImageData(imageId, parentDiv) {
                     resetImageSize();
 
                     // Populate the navbar based on textureTypes
-                    PopulateTextureTypesNavbar(parentDiv, AppConfig.analysisTab);
+                    populateTextureTypesNavbar(parentDiv, AppConfig.analysisTab);
                 } else {
                     console.error(`No <img> element with class 'big-texture-viewer' found inside the div with ID '${parentDiv}'.`);
                 }
@@ -85,7 +85,7 @@ function loadRandomImage() {
 }
 
 // Populate the texture types navbar within a specific parentDiv
-function PopulateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
+function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
     // Select the tab links only within the provided parentDiv
     const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
 
@@ -111,8 +111,9 @@ function PopulateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
                 imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
 
                 // Update the image source
-                const imageElement = parentDiv.querySelectorAll('.big-texture-viewer');
+                const imageElement = parentDiv.querySelector('.big-texture-viewer');
                 if (imageElement) {
+                    console.log(`Updating image source to: ${imageUrl}`);
                     imageElement.src = imageUrl;
                 }
             });

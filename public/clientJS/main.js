@@ -84,10 +84,6 @@ async function InitInOrder() {
         // Load all tab HTMLs and wait for them to be loaded
         await loadAllTabHTMLs();
 
-        // Now the content should be available
-        const tab1Content = document.querySelector('#tab1-content');
-        console.log(tab1Content); // This should now log the correct element
-
         // Create an instance of the Manager class
         manager = new Manager(); // Initialize here
 
