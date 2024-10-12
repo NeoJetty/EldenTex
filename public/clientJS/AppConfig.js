@@ -26,6 +26,11 @@ class AppConfig {
         AppConfig.instance = this; // Store the instance
 
         // Initialize properties
+
+        // debug: 0: only errors, 1: warnings, 2: debug-spam
+        this.debug = {
+            level: 1,
+        };
         this.folders = {
             jpgs: '/AllAET_JPG/',
             pngs: '/AllAET_PNG/',

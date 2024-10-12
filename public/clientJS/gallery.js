@@ -10,7 +10,7 @@ async function fetchManyTextures(userId, tagID, page) {
     return response.json();  // Assuming it returns JSON in the specified format
 }
 
-async function runGalleryTab(htmlElement) {
+async function runGalleryTab(targetDiv) {
     const userId = AppConfig.user.ID;
 
     // Check if tagID is -1
@@ -24,11 +24,10 @@ async function runGalleryTab(htmlElement) {
             const tags = response.tags;
 
             if (Array.isArray(tags)) {
-                const container = document.getElementById(htmlElement);
-                const dropdown = container.querySelector('#textureType');
+                const dropdown = targetDiv.querySelector('#textureType');
 
                 if (!dropdown) {
-                    console.error(`Dropdown not found in element: ${htmlElement}`);
+                    console.error(`Dropdown not found in element: ${targetDiv}`);
                     return;
                 }
 
@@ -56,13 +55,11 @@ async function runGalleryTab(htmlElement) {
                 console.log('Dropdown populated with tags');
             } else {
                 console.error('Expected an array of tags, but got:', tags);
-                const container = document.getElementById(htmlElement);
-                container.innerHTML = 'Error loading tags: unexpected response format.';
+                targetDiv.innerHTML = 'Error loading tags: unexpected response format.';
             }
         } catch (error) {
             console.error('Error fetching tags:', error);
-            const container = document.getElementById(htmlElement);
-            container.innerHTML = 'Error loading tags.';
+            targetDiv.innerHTML = 'Error loading tags.';
         }
     } else {
         // If the tagID is not -1, trigger the image population function

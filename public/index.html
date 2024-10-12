@@ -21,6 +21,18 @@
         <a href="#" class="tab-link" data-tab="tab2">Single Texture Analysis</a>
         <a href="#" class="tab-link" data-tab="tab3">3</a>
         <a href="#" class="tab-link" data-tab="tab4">Gallery by Tag</a>
+        
+        <!-- Debug Link with Dropdown -->
+        <div class="dropdown-container">
+            <a href="#" class="tab-link dropdown-toggle">Debug</a>
+            <div class="dropdown-menu">
+                <a href="/textureData/-1" class="dropdown-item" target="_blank">Texture Data</a>
+                <a href="/allTags" class="dropdown-item" target="_blank">All Tags</a>
+                <a href="/untaggedTexture/1/4" class="dropdown-item" target="_blank">Untagged Texture</a>
+                <a href="/countTaggingProgress/1/4" class="dropdown-item" target="_blank">Count Tagging Progress</a>
+                <a href="/serveManyTextures/1/4" class="dropdown-item" target="_blank">Serve Many Textures</a>
+            </div>
+        </div>
     </div>
 
     <div id="tab1" class="content active">
@@ -36,8 +48,7 @@
         
     </div>
    
-    <!-- some dependencies -->
-
+    <!-- Scripts -->
     <script type="module" src="clientJS/main.js" defer></script>
 
  

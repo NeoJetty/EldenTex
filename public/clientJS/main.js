@@ -63,6 +63,7 @@ function InitMainNavbarListener() {
             }
         });
     });
+    if(AppConfig.debug.level == 2) console.log('Main navbar listener initialized.');
 }
 
 // Tabs are separated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
@@ -83,6 +84,7 @@ async function InitInOrder() {
     try {
         // Load all tab HTMLs and wait for them to be loaded
         await loadAllTabHTMLs();
+        if(AppConfig.debug.level == 2) console.log('loadAllTabHTMLs loaded');
 
         // Create an instance of the Manager class
         manager = new Manager(); // Initialize here

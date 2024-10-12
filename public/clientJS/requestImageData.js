@@ -113,7 +113,6 @@ function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
                 // Update the image source
                 const imageElement = parentDiv.querySelector('.big-texture-viewer');
                 if (imageElement) {
-                    console.log(`Updating image source to: ${imageUrl}`);
                     imageElement.src = imageUrl;
                 }
             });
