@@ -4,19 +4,14 @@
  * Fetches tags from the server and populates the specified container with checkboxes and labels.
  * 
  * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
+ * @param {Array<number>} [preCheckedTagIDs] - An optional array of tag IDs to pre-check.
  * @returns {void}
  */
-function populateTags(tagContainer) {
+function populateTags(tagContainer, textureID, preCheckedTagIDs) {
     // Fetch all tags from the server
     fetch('/allTags')
         .then(response => response.json())
         .then(data => {
-
-            if (!tagContainer) {
-                console.error('Error: Container element not found.');
-                return;
-            }
-
             // Clear existing content
             tagContainer.innerHTML = '';
 
@@ -28,6 +23,11 @@ function populateTags(tagContainer) {
                 checkbox.id = `tag-${tag.id}`;
                 checkbox.value = tag.id;
                 checkbox.classList.add('tag-checkbox');
+
+                // Check if this tag ID is in the preCheckedTagIDs array
+                if (preCheckedTagIDs.includes(tag.id)) {
+                    checkbox.checked = true; // Pre-check the checkbox
+                }
 
                 // Create label element
                 const label = document.createElement('label');
@@ -47,4 +47,26 @@ function populateTags(tagContainer) {
         });
 }
 
-export { populateTags };
+/**
+ * Fetches tags for the specified image ID and the current user.
+ * 
+ * @returns {Promise<number[]>} - A promise that resolves to an array of tag IDs.
+ */
+async function requestTagsForImage(textureID) {
+    const userId = AppConfig.user.ID; // Extract user ID from AppConfig
+
+    try {
+        const response = await fetch(`/serveTagsForTexture/${userId}/${textureID}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch tags for the specified texture.');
+        }
+
+        const fetchedTags = await response.json();
+        return fetchedTags;
+    } catch (error) {
+        console.error('Error fetching tags:', error);
+        return []; // Return an empty array if there was an error
+    }
+}
+
+export { populateTags, requestTagsForImage };

@@ -38,6 +38,9 @@ app.use('/untaggedTexture', require('./server/serveRandomUntagged'));
 app.use('/countTaggingProgress', require('./server/serveCountTaggingProgress'));
 // serveManyTextures/:user_id/:tag_id
 app.use('/serveManyTextures', require('./server/serveManyTextures'));
+// serveTagsForTexture/:user_id/:image_id
+app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
+
 
 // ------------------------------------------------------
 // DB write modules

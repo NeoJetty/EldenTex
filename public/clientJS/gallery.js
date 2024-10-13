@@ -11,8 +11,6 @@ async function fetchManyTextures(userId, tagID, page) {
 
 async function runGalleryTab(targetDiv, analysisTabCallback) {
     const userId = AppConfig.user.ID;
-    console.log('Analysis tab callback1:', analysisTabCallback);
-
     // Store the callback in AppConfig
     AppConfig.galleryByTag.analysisTabCallback = analysisTabCallback;
 
@@ -30,10 +28,14 @@ async function fetchTextureDataset(tagID, page) {
 
     try {
         const textures = await fetchManyTextures(userId, tagID, page);
+        if(AppConfig.debug.level == 2){
+            console.log(`Fetching textures with User ID: ${userId}, Tag ID: ${tagID}, Page: ${page}`);            
+            console.log('Fetched textures:', textures);
+        }
         // Update AppConfig with the fetched texture data
         AppConfig.updateGalleryDataset(textures, tagID);
 
-        console.log('Fetched textures:', textures);
+        
         return textures; // Return the fetched textures
     } catch (error) {
         console.error(`Error fetching textures for tag ID ${tagID}:`, error);
@@ -90,7 +92,8 @@ function buildDropdownMenu(dropdown, tags) {
 }
 
 async function changeGalleryPage(tagID, page) {
-    console.log(`Populating images for tag ID: ${tagID} on page: ${page}`);
+    if(AppConfig.debug.level == 2) console.log(`refreshing Gallery page: ${page} for tag: ${tagID}`);
+
     if (tagID != AppConfig.galleryByTag.tagID) {
         const textures = await fetchTextureDataset(tagID, page);
         buildImageGrid(textures, page, AppConfig.galleryByTag.analysisTabCallback); // Use stored callback
@@ -103,7 +106,6 @@ async function changeGalleryPage(tagID, page) {
 
 function buildImageGrid(textures, page, callbackToAnalysisTab) {
     const imageGrid = document.getElementById('imageGrid');
-    console.log('Analysis tab callback2:', callbackToAnalysisTab);
     // Clear existing images in the grid
     imageGrid.innerHTML = '';
 
@@ -171,8 +173,9 @@ async function fetchAllTags() {
     if (!response.ok) {
         throw new Error('Failed to fetch tags');
     }
-    const data = await response.json();
-    console.log('Response from /allTags:', data); // Log the raw response
+    if(AppConfig.debug.level == 2) console.log('Response from /allTags:', data);
+
+    const data = await response.json();  
     return data;  // Return the whole response object
 }
 
