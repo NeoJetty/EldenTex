@@ -92,7 +92,8 @@ class AppConfig {
             numberOfEntries: -1,  // Number of textures in the gallery
             tagID: -1,            // The tag ID for the textures
             currentPage: -1,       // Current page in the gallery
-            allTextureData: null   // Data from the JSON fetch for multiple textures
+            allTextureData: null,   // Data from the JSON fetch for multiple textures
+            analysisTabCallback: null,   
         };
 
     }
@@ -103,7 +104,7 @@ class AppConfig {
     // ---------------------------------------------
 
     // Method to update allTextureData and gallery metadata
-    updateTextureData(textures, new_tab_id) {
+    updateGalleryDataset(textures, new_tab_id) {
         // If the new_tab_id is the same as the current tagID, return early
         if (new_tab_id === this.galleryByTag.tagID) {
             return;

@@ -10,6 +10,7 @@ import { populateTags } from "./tagContainerBuilder.js";
  * @returns {void}
  */
 function runTextureAnalysisTab(targetParentElement, textureID) {
+    console.log(`ANALYSIS - TextureID: ${textureID}`);
     requestImageData(textureID, targetParentElement); 
 
     let textureAnalysisTextureTypeTabs = targetParentElement.querySelector('.tag-container')

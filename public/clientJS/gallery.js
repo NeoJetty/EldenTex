@@ -1,4 +1,3 @@
-// gallery.js
 import { AppConfig } from './AppConfig.js';
 
 // Example of fetchManyTextures function (this would be your actual fetch implementation)
@@ -10,42 +9,55 @@ async function fetchManyTextures(userId, tagID, page) {
     return response.json();  // Assuming it returns JSON in the specified format
 }
 
-async function runGalleryTab(targetDiv) {
+async function runGalleryTab(targetDiv, analysisTabCallback) {
     const userId = AppConfig.user.ID;
+    console.log('Analysis tab callback1:', analysisTabCallback);
 
-    // Check if tagID is -1
+    // Store the callback in AppConfig
+    AppConfig.galleryByTag.analysisTabCallback = analysisTabCallback;
+
     if (AppConfig.galleryByTag.tagID === -1) {
         await constructTagsDropdownMenu(targetDiv);
     } else {
-        // If the tagID is not -1, trigger the image population function
-        populateImages(AppConfig.galleryByTag.tagID, 1);  // Call function to populate images for the first page
+        const textures = await fetchTextureDataset(AppConfig.galleryByTag.tagID, 1);
+        buildImageGrid(textures, 1, AppConfig.galleryByTag.analysisTabCallback);
+        updatePagination(textures.length, 1);
+    }
+}
+
+async function fetchTextureDataset(tagID, page) {
+    const userId = AppConfig.user.ID;
+
+    try {
+        const textures = await fetchManyTextures(userId, tagID, page);
+        // Update AppConfig with the fetched texture data
+        AppConfig.updateGalleryDataset(textures, tagID);
+
+        console.log('Fetched textures:', textures);
+        return textures; // Return the fetched textures
+    } catch (error) {
+        console.error(`Error fetching textures for tag ID ${tagID}:`, error);
+        return []; // Return an empty array on error
     }
 }
 
 async function constructTagsDropdownMenu(targetDiv) {
     try {
-        // Fetch all available tags
         const response = await fetchAllTags();
-
-        console.log('Fetched tags response:', response);
-
         const tags = response.tags;
 
         if (Array.isArray(tags)) {
-            const dropdown = targetDiv.querySelector('#textureType');
+            const dropdownMenuElement = targetDiv.querySelector('#textureType');
 
-            if (!dropdown) {
-                console.error(`Dropdown not found in element: ${targetDiv}`);
+            if (!dropdownMenuElement) {
+                console.error(`DropdownMenu HTML element not found in: ${targetDiv}`);
                 return;
             }
 
             // Build the dropdown menu
-            buildDropdownMenu(dropdown, tags);
-
-            console.log('Dropdown populated with tags');
+            buildDropdownMenu(dropdownMenuElement, tags);
         } else {
             console.error('Expected an array of tags, but got:', tags);
-            targetDiv.innerHTML = 'Error loading tags: unexpected response format.';
         }
     } catch (error) {
         console.error('Error fetching tags:', error);
@@ -73,56 +85,47 @@ function buildDropdownMenu(dropdown, tags) {
     // Add event listener to handle dropdown changes
     dropdown.addEventListener('change', (event) => {
         const selectedTagId = event.target.value;  // Get the selected tag ID
-        populateImages(selectedTagId, 1);  // Call the function to populate images for the first page
+        changeGalleryPage(selectedTagId, 1);  // Call the function to populate images for the first page
     });
 }
 
-
-async function populateImages(tagID, page) {
+async function changeGalleryPage(tagID, page) {
     console.log(`Populating images for tag ID: ${tagID} on page: ${page}`);
-
-    // Check if the tagID in the parameter is the same as in AppConfig
     if (tagID != AppConfig.galleryByTag.tagID) {
-        // If different => update
-        try {
-            // Fetch textures based on the selected tag ID and page
-            const userId = AppConfig.user.ID;
-            const textures = await fetchManyTextures(userId, tagID, page);
-
-            // Update AppConfig with the fetched texture data
-            AppConfig.updateTextureData(textures, tagID);
-
-            console.log('Fetched textures:', textures);
-
-        } catch (error) {
-            console.error(`Error fetching textures for tag ID ${tagID}:`, error);
-        }       
-    } 
-
-    populateImageGrid(page);
+        const textures = await fetchTextureDataset(tagID, page);
+        buildImageGrid(textures, page, AppConfig.galleryByTag.analysisTabCallback); // Use stored callback
+        updatePagination(textures.length, page);
+    } else {
+        buildImageGrid(AppConfig.galleryByTag.allTextureData, page, AppConfig.galleryByTag.analysisTabCallback); // Use stored callback
+        updatePagination(AppConfig.galleryByTag.allTextureData.length, page);
+    }
 }
 
-function populateImageGrid(page) {
+function buildImageGrid(textures, page, callbackToAnalysisTab) {
     const imageGrid = document.getElementById('imageGrid');
-
+    console.log('Analysis tab callback2:', callbackToAnalysisTab);
     // Clear existing images in the grid
     imageGrid.innerHTML = '';
 
     // Get the current page textures
-    const textures = AppConfig.galleryByTag.allTextureData.slice((page - 1) * 21, page * 21); // Adjust the slice for pagination
+    const pagedTextures = textures.slice((page - 1) * 21, page * 21); // Adjust the slice for pagination
 
     // Loop through the texture data and create image elements
-    textures.forEach(texture => {
+    pagedTextures.forEach(texture => {
         const img = document.createElement('img');
         // Build the image path using the textureName and textureTypes from the current texture
         img.src = AppConfig.buildJPGPath(texture.textureName, texture.textureTypes); 
         img.alt = `Image for ${texture.textureName}`; // Set an appropriate alt text
+
+        // Add a click event listener that calls the callback with the texture ID
+        img.addEventListener('click', () => {
+            callbackToAnalysisTab(texture.id); // Call the callback function with texture.id
+        });
+
         imageGrid.appendChild(img); // Append the image to the grid
     });
-
-    // Update pagination
-    updatePagination(AppConfig.galleryByTag.allTextureData.length, page);
 }
+
 
 function updatePagination(totalTextures, currentPage) {
     const itemsPerPage = 21; // Number of items per page
@@ -148,7 +151,7 @@ function updatePagination(totalTextures, currentPage) {
         pageLink.addEventListener('click', (e) => {
             e.preventDefault();
             // Call function to fetch and display images for the selected page
-            populateImages(AppConfig.galleryByTag.tagID, i);
+            changeGalleryPage(AppConfig.galleryByTag.tagID, i);
         });
 
         pageNumbersContainer.appendChild(pageLink);
