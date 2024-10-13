@@ -1,10 +1,14 @@
 // tagContainerBuilder.js
 
+import { AppConfig } from './AppConfig.js';
+
 /**
  * Fetches tags from the server and populates the specified container with checkboxes and labels.
+ * Adds listeners for check/uncheck events.
  * 
  * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
  * @param {Array<number>} [preCheckedTagIDs] - An optional array of tag IDs to pre-check.
+ * @param {number} textureID - The ID of the texture being analyzed.
  * @returns {void}
  */
 function populateTags(tagContainer, textureID, preCheckedTagIDs) {
@@ -24,10 +28,15 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs) {
                 checkbox.value = tag.id;
                 checkbox.classList.add('tag-checkbox');
 
-                // Check if this tag ID is in the preCheckedTagIDs array
+                // Pre-check the checkbox if this tag ID is in the preCheckedTagIDs array
                 if (preCheckedTagIDs.includes(tag.id)) {
-                    checkbox.checked = true; // Pre-check the checkbox
+                    checkbox.checked = true;
                 }
+
+                // Add event listener to handle check/uncheck events
+                checkbox.addEventListener('change', () => {
+                    handleTagSelection(checkbox.checked, tag.id, textureID);
+                });
 
                 // Create label element
                 const label = document.createElement('label');
@@ -45,6 +54,43 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs) {
         .catch(error => {
             console.error('Error fetching tags:', error);
         });
+}
+
+/**
+ * Handles the selection (check/uncheck) of a tag for a texture.
+ * 
+ * @param {boolean} isChecked - Whether the checkbox was checked or unchecked.
+ * @param {number} tagID - The ID of the tag.
+ * @param {number} textureID - The ID of the texture being analyzed.
+ */
+function handleTagSelection(isChecked, tagID, textureID) {
+    const userID = AppConfig.user.ID;
+
+    // Debugging output
+    console.log('Tag selection changed:', isChecked ? 'Checked' : 'Unchecked');
+    console.log('User ID:', userID);
+    console.log('Texture ID:', textureID);
+    console.log('Tag ID:', tagID);
+
+    // Construct the request URL
+    const action = isChecked ? 'true' : 'false'; // Send 'true' or 'false' depending on check/uncheck
+    const url = `/dbAddTagToImageAndUser?user_id=${userID}&tag_id=${tagID}&image_id=${textureID}&vote=${action}`;
+
+    // Debugging output
+    console.log('Constructed URL for tag change:', url);
+
+    // Send the GET request to the server
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update tag');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Tag update submitted:', data);
+        })
+        .catch(error => console.error('Error submitting tag update:', error));
 }
 
 /**
