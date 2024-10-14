@@ -4,7 +4,7 @@ import { AppConfig } from './AppConfig.js';
 
 /**
  * Fetches tags from the server and populates the specified container with checkboxes and labels.
- * Adds listeners for check/uncheck events.
+ * Adds a form field for textureID and listeners for check/uncheck events.
  * 
  * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
  * @param {Array<number>} [preCheckedTagIDs] - An optional array of tag IDs to pre-check.
@@ -12,49 +12,69 @@ import { AppConfig } from './AppConfig.js';
  * @returns {void}
  */
 function populateTags(tagContainer, textureID, preCheckedTagIDs) {
+    // Clear existing content
+    tagContainer.innerHTML = '';
+
+    // Create the form elements (Text field + OK button)
+    const formField = document.createElement('input');
+    formField.type = 'text';
+    formField.value = textureID; // Pre-initialize with textureID
+    formField.id = 'textureIDField';
+    formField.classList.add('texture-id-input');
+
+    const okButton = document.createElement('button');
+    okButton.textContent = 'OK';
+    okButton.classList.add('ok-button');
+
+    // Add the button click listener
+    okButton.addEventListener('click', () => {
+        const textureIDValue = parseInt(formField.value, 10); // Convert the field value to integer
+        if (!isNaN(textureIDValue)) {
+            manager.analysisTab(textureIDValue); // Call manager.analysisTab with the integer value
+        } else {
+            console.error('Invalid texture ID input');
+        }
+    });
+
+    // Append the form field and button above the tags
+    tagContainer.appendChild(formField);
+    tagContainer.appendChild(okButton);
+    tagContainer.appendChild(document.createElement('br')); // Optional line break
+
     // Fetch all tags from the server
     fetch('/allTags')
         .then(response => response.json())
         .then(data => {
-            // Clear existing content
-            tagContainer.innerHTML = '';
-
             // Iterate over each tag and create checkbox + label
             data.tags.forEach(tag => {
-                // Create checkbox element
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.id = `tag-${tag.id}`;
                 checkbox.value = tag.id;
                 checkbox.classList.add('tag-checkbox');
 
-                // Pre-check the checkbox if this tag ID is in the preCheckedTagIDs array
                 if (preCheckedTagIDs.includes(tag.id)) {
                     checkbox.checked = true;
                 }
 
-                // Add event listener to handle check/uncheck events
                 checkbox.addEventListener('change', () => {
                     handleTagSelection(checkbox.checked, tag.id, textureID);
                 });
 
-                // Create label element
                 const label = document.createElement('label');
                 label.htmlFor = `tag-${tag.id}`;
                 label.textContent = `${tag.name} (${tag.category})`;
 
-                // Append the checkbox and label to the container
                 tagContainer.appendChild(checkbox);
                 tagContainer.appendChild(label);
-
-                // Optionally add a line break for formatting
-                tagContainer.appendChild(document.createElement('br'));
+                tagContainer.appendChild(document.createElement('br')); // Optional line break
             });
         })
         .catch(error => {
             console.error('Error fetching tags:', error);
         });
 }
+
 
 /**
  * Handles the selection (check/uncheck) of a tag for a texture.

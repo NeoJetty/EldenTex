@@ -38,7 +38,7 @@ class Manager {
             runTextureAnalysisTab(this.tab2Div, textureID);
         } else {
             // If not, default to using 11 as the second parameter
-            runTextureAnalysisTab(this.tab2Div, 11);
+            runTextureAnalysisTab(this.tab2Div, 696);
         }
     }
 

@@ -13,12 +13,15 @@ async function runTextureAnalysisTab(targetParentElement, textureID) {
 
     const preCheckedTags = await requestTagsForImage(textureID);
 
-    let textureAnalysisTextureTypeTabs = targetParentElement.querySelector('.tag-container');
-    if (!textureAnalysisTextureTypeTabs) {
+    let textureAnalysisTextureTypeTab = targetParentElement.querySelector('.tag-container');
+    if (!textureAnalysisTextureTypeTab) {
         console.error('Error: Container element not found.');
         return;
     }
-    populateTags(textureAnalysisTextureTypeTabs, textureID, preCheckedTags);
+
+
+
+    populateTags(textureAnalysisTextureTypeTab, textureID, preCheckedTags);
 }
 
 export { runTextureAnalysisTab };
