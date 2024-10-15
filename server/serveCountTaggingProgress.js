@@ -25,7 +25,8 @@ router.get('/:user_id/:tag_id', (req, res) => {
         // Count the total number of entries in the textures table
         const countTexturesQuery = `
             SELECT COUNT(*) AS totalCount
-            FROM textures;
+            FROM textures_tracking_duplicates
+            WHERE copy_of_normal = 0;
         `;
 
         db.get(countTexturesQuery, (err, totalRow) => {

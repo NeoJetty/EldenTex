@@ -7,11 +7,12 @@ router.get('/:user_id/:tag_id', (req, res) => {
     const tagId = parseInt(req.params.tag_id);
     const db = req.db; // Use the database connection from the request
 
-    // Query to find a random texture that is not yet tagged by the user for the given tag
+    // Query to find a random texture from textures_tracking_duplicates that is not yet tagged by the user for the given tag
     const sqlQuery = `
         SELECT t.id, t.name
-        FROM textures t
-        WHERE t.id NOT IN (
+        FROM textures_tracking_duplicates t
+        WHERE t.copy_of_normal = 0
+        AND t.id NOT IN (
             SELECT image_id
             FROM tags_by_user_and_image
             WHERE user_id = ? AND tag_id = ?
