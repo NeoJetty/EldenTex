@@ -51,7 +51,25 @@ app.use('/dbCreateNewTag', require('./server/dbCreateNewTag'));
 // DBaddTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
 app.use('/dbAddTagToImageAndUser', require('./server/dbAddTagToImageAndUser'));
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Start the server and listen on all network interfaces (LAN accessible)
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://${getLocalIPAddress()}:${port}`);
 });
+
+// Utility function to get local IP address for display purposes
+function getLocalIPAddress() {
+    const { networkInterfaces } = require('os');
+    const nets = networkInterfaces();
+    let localAddress = 'localhost'; // Fallback
+
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+            if (net.family === 'IPv4' && !net.internal) {
+                localAddress = net.address;
+                break;
+            }
+        }
+    }
+    return localAddress;
+}
+
