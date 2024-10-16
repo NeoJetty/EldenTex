@@ -28,7 +28,7 @@ router.get('/:user_id/:tag_id', (req, res) => {
         }
 
         if (!row) {
-            return res.status(404).send('No untagged textures found');
+            return res.status(200).send('No more data for this tag request. Congratulations, all done!');
         }
 
         const textureId = row.id;
