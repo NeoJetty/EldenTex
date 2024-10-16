@@ -1,5 +1,4 @@
 import csv
-import sys
 import os
 import json
 import sqlite3
@@ -59,36 +58,29 @@ def find_maps_by_model(models, aeg_to_map_dict):
                 maps.add(map_id[0])  # Add the map ID to the set
     return list(maps)
 
-def insert_texture_to_map_db(db_path, texture, map_id):
+def get_texture_id_from_name(cursor, texture_name):
+    """Fetch the texture_id from the textures table based on the texture name."""
+    cursor.execute("SELECT id FROM textures WHERE name = ?", (texture_name,))
+    result = cursor.fetchone()
+    return result[0] if result else None
+
+def insert_texture_to_map_db(cursor, texture, map_id):
     """Insert the texture, its type, and map into the database."""
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
+    texture_name_split = texture.split('_')
+    texture_name = texture_name_split[0] + '_' + texture_name_split[1]
+    texture_type = texture_name_split[2][:-4]
 
-        # Ensure the table exists
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS texture_map (
-                texture_id TEXT NOT NULL,
-                texture_type TEXT NOT NULL,
-                map_id TEXT NOT NULL
-            )
-        ''')
+    # Get the texture_id from the textures table
+    texture_id = get_texture_id_from_name(cursor, texture_name)
+    if texture_id is None:
+        print(f"Texture ID for {texture_name} not found in the database.")
+        return
 
-        texture_name_split = texture.split('_')
-        texture_name = texture_name_split[0] + '_' + texture_name_split[1]
-        texture_type = texture_name_split[2][:-4]
-
-        # Insert into the database
-        cursor.execute('''
-            INSERT INTO texture_map (texture_id, texture_type, map_id) 
-            VALUES (?, ?, ?)
-        ''', (texture_id, texture_type, map_id))
-
-        conn.commit()
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-    finally:
-        conn.close()
+    # Insert into the database
+    cursor.execute('''
+        INSERT INTO texture_map (texture_id, texture_type, map_id) 
+        VALUES (?, ?, ?)
+    ''', (texture_id, texture_type, map_id))
 
 def process_all_textures(base_dir, db_path):
     # Define the paths to CSV and JSON files
@@ -105,20 +97,31 @@ def process_all_textures(base_dir, db_path):
     # Load the JSON file for map names
     map_dict = load_json(map_json)
 
+    # Open database connection and create the table if it does not exist
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Drop the table if it exists
+    cursor.execute('''DROP TABLE IF EXISTS texture_map''')
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS texture_map (
+            texture_id TEXT NOT NULL,
+            texture_type TEXT NOT NULL,
+            map_id TEXT NOT NULL
+        )
+    ''')
+
     # Iterate through all textures in tif_to_material_dict
     for material_id, textures in tif_to_material_dict.items():
-        
-
         for texture in textures:
             if texture.startswith('AET'):
-                print(f"Processing texture file: {texture}")
-        # Find the material associated with the given texture filename
+                # Find the material associated with the given texture filename
                 material = material_id
 
                 # Find all AEG models associated with that material
                 models, dummy_status = find_models_by_material(material, material_to_aeg_dict)
                 if not models:
-                    print(f"No AEG models found for material {material}.")
                     continue
 
                 # Find all maps associated with those AEG models
@@ -131,7 +134,11 @@ def process_all_textures(base_dir, db_path):
                 for map_id in map_ids:
                     map_name = map_dict.get(map_id, "Unknown Map")
                     print(f"Inserting: Texture ID: {texture}, Map ID: {map_id}")
-                    insert_texture_to_map_db(db_path, texture, map_id)
+                    insert_texture_to_map_db(cursor, texture, map_id)
+
+    # Commit changes and close the database connection
+    conn.commit()
+    conn.close()
 
 base_dir = r"E:\EldenTex\design\FromTextureToMap"
 db_path = r'E:\EldenTex\8a2f6b3c9e4f7ab.db'
