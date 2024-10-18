@@ -40,6 +40,9 @@ app.use('/countTaggingProgress', require('./server/serveCountTaggingProgress'));
 app.use('/serveManyTextures', require('./server/serveManyTextures'));
 // serveTagsForTexture/:user_id/:image_id
 app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
+// serveMapsForTexture/:texture_id
+app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
+
 
 
 // ------------------------------------------------------

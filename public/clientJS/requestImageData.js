@@ -43,49 +43,46 @@ function loadRandomUntaggedImage(parentDiv) {
     requestUntaggedImageData(1, 4, parentDiv);
 }
 
-function requestImageData(imageId, parentDiv) {
-    // Fetch the image data using the provided imageId
-    fetch(`/textureData/${imageId}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {           
-            if (parentDiv) {
-                // Find the <img> element with the class 'big-texture-viewer' inside the parent div
-                const imageElement = parentDiv.querySelector('.big-texture-viewer');
-                
-                if (imageElement) {
-                    // Update AppConfig using the new helper function
-                    AppConfig.updateAnalysisTabTextureFromJson(data);
+async function updateImageSrcAndAppConfig(imageId, parentDiv) {
+    try {
+        // Fetch the image data using the provided imageId
+        const response = await fetch(`/textureData/${imageId}`);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-                    // Update the image source
-                    imageElement.src = AppConfig.analysisTab.jpgURL;
+        const data = await response.json();
+        
+        if (parentDiv) {
+            // Find the <img> element with the class 'big-texture-viewer' inside the parent div
+            const imageElement = parentDiv.querySelector('.big-texture-viewer');
+            
+            if (imageElement) {
+                // Update AppConfig using the new helper function
+                AppConfig.updateAnalysisTabTextureFromJson(data);
 
-                    // Reset image size when a new image is loaded
-                    resetImageSize();
+                // Update the image source
+                imageElement.src = AppConfig.analysisTab.jpgURL;
 
-                    // Populate the navbar based on textureTypes
-                    populateTextureTypesNavbar(parentDiv, AppConfig.analysisTab);
-                } else {
-                    console.error(`No <img> element with class 'big-texture-viewer' found inside the div with ID '${parentDiv}'.`);
-                }
+                // Reset image size when a new image is loaded
+                resetImageSize();
             } else {
-                console.error(`Element with ID '${parentDiv}' not found.`);
+                console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
             }
-        })
-        .catch(error => console.error('Error fetching image by ID:', error));
+        } else {
+            console.error(`Element with ID '${parentDiv}' not found.`);
+        }
+    } catch (error) {
+        console.error('Error fetching image by ID:', error);
+    }
 }
 
-// Function to fetch and display the random image
-function loadRandomImage() {
-    requestImageData(-1)
-}
+
 
 // Populate the texture types navbar within a specific parentDiv
 function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
+    console.log(AppConfigPropertyGroup);
     // Select the tab links only within the provided parentDiv
     const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
 
@@ -128,4 +125,4 @@ function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
 
 
 
-export { loadRandomImage, requestImageData, loadRandomUntaggedImage };
+export { updateImageSrcAndAppConfig, loadRandomUntaggedImage, populateTextureTypesNavbar };

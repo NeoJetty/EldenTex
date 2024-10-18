@@ -35,10 +35,10 @@
     display: none; /* Hidden by default */
     position: fixed; /* Change to fixed for centering on screen */
     background-color: #222222; /* Background color for dropdown */
-    min-width: 160px; /* Set minimum width */
+    min-width: 240px; /* Set minimum width */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    top: 18%; /* Position it vertically centered */
+    top: 22%; /* Position it vertically centered */
     left: 95%; /* Position it horizontally centered */
     transform: translate(-50%, -50%); /* Center it with transform */
 }

@@ -34,11 +34,15 @@ class Manager {
 
         // Check if textureID is provided
         if (textureID) {
+            console.log('ID passed');
             // If textureID is passed, use it as the second parameter
-            runTextureAnalysisTab(this.tab2Div, textureID);
+            runTextureAnalysisTab(this.tab2Div, textureID, (textureID) => this.analysisTab(textureID));
+            console.log(document.querySelector('#textureIDField').value);
         } else {
+            console.log('ID default');
             // If not, default to using 11 as the second parameter
-            runTextureAnalysisTab(this.tab2Div, 4648);
+            runTextureAnalysisTab(this.tab2Div, 3295, (textureID) => this.analysisTab(textureID));
+            console.log(document.querySelector('#textureIDField').value);   
         }
     }
 

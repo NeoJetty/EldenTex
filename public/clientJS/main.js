@@ -57,9 +57,6 @@ function InitMainNavbarListener() {
                 manager.galleryTab();
             } else if (targetTab === 'tab2') {
                 manager.analysisTab();
-            } else {
-                // Load content for all other tabs dynamically
-                await loadTabContent(targetTab, `Tab${targetTab.charAt(targetTab.length - 1)}_Content.html`);
             }
         });
     });
