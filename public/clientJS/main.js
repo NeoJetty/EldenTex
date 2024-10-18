@@ -9,28 +9,11 @@ import Manager from './manager.js'; // Import the Manager class
 let manager; // This will hold the Manager instance
 
 // Function to load content into a tab
-async function loadTabContent(tabId, url) {
-    try {
-        const response = await fetch(url);
-        const data = await response.text();
-        document.getElementById(tabId).innerHTML = data;
-
-        // After loading content, check if zoom buttons exist and bind events
-        if (tabId === 'tab1' || tabId === 'tab2') {
-            const zoomInButton = document.querySelector('.zoom-in');
-            const zoomOutButton = document.querySelector('.zoom-out');
-
-            if (zoomInButton) {
-                zoomInButton.addEventListener('click', () => handleZoom('in'));
-            }
-
-            if (zoomOutButton) {
-                zoomOutButton.addEventListener('click', () => handleZoom('out'));
-            }
-        }
-    } catch (error) {
-        console.error(`Error loading content for ${tabId}:`, error);
-    }
+function initializeButtons() {
+    const zoomInButton = document.querySelector('.zoom-in');
+    const zoomOutButton = document.querySelector('.zoom-out');
+    zoomInButton.addEventListener('click', () => handleZoom('in'));
+    zoomOutButton.addEventListener('click', () => handleZoom('out'));
 }
 
 function InitMainNavbarListener() {
@@ -39,48 +22,27 @@ function InitMainNavbarListener() {
         link.addEventListener('click', async (e) => {
             e.preventDefault();
 
-            // Remove active class from all content sections
-            document.querySelectorAll('.content').forEach(section => section.classList.remove('active'));
+            let nextActiveTabName = e.target.getAttribute('data-tab')
 
-            // Remove active class from all tabs
-            document.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));
+            // change visibility of the tab (not the content)
+            manager.makeTabVisible(nextActiveTabName);
 
-            // Add active class to the clicked tab and its corresponding content section
-            const targetTab = e.target.getAttribute('data-tab');
-            document.getElementById(targetTab).classList.add('active');
-            e.target.classList.add('active');
-
-            // Check if any elements in the current tab have to be updated
-            if (targetTab === 'tab1') {
+            // Update tab content
+            if (nextActiveTabName === 'tab1') {
                 manager.votingTab();
-            } else if (targetTab === 'tab4') {
-                manager.galleryTab();
-            } else if (targetTab === 'tab2') {
+            } else if (nextActiveTabName === 'tab2'){
                 manager.analysisTab();
+            } else if (nextActiveTabName === 'tab4') {
+                manager.galleryTab();
             }
         });
     });
     if(AppConfig.debug.level == 2) console.log('Main navbar listener initialized.');
 }
 
-// Tabs are separated in HTMLs for modularity. This makes it hard to use standard functions as some elements are not loaded in at all times.
-async function loadAllTabHTMLs() {
-    // This function does not need to be async anymore
-    return Promise.all([
-        loadTabContent('tab1', 'Tab1_Content.html'),
-        loadTabContent('tab2', 'Tab2_Content.html'),
-        loadTabContent('tab3', 'Tab3_Content.html'),
-        loadTabContent('tab4', 'Tab4_Content.html')
-    ]).catch(error => {
-        console.error('Error loading all tab content:', error);
-    });
-}
-
 // Readable sequence of execution
 async function InitInOrder() {
     try {
-        // Load all tab HTMLs and wait for them to be loaded
-        await loadAllTabHTMLs();
         if(AppConfig.debug.level == 2) console.log('loadAllTabHTMLs loaded');
 
         // Create an instance of the Manager class
@@ -88,6 +50,8 @@ async function InitInOrder() {
 
         // Initialize the main navbar listener after all tabs are loaded
         InitMainNavbarListener();
+
+        initializeButtons();
 
         // Automatically click the first tab to load its content and set it active
         document.querySelector('.tab-link[data-tab="tab1"]').click();

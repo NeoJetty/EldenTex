@@ -12,7 +12,7 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
         })
         .then(data => {
             if (parentDiv) {
-                // Find the <img> element with the class 'image-object' inside the parent div
+                // Find the <img> element with the class 'big-texture-viewer' inside the parent div
                 const imageElement = parentDiv.querySelector('.big-texture-viewer');
                 
                 if (imageElement) {
@@ -28,14 +28,20 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
                     // Populate the navbar based on textureTypes
                     populateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
                 } else {
-                    console.error(`No <img> element with class 'image-object' found inside the div with ID '${parentDiv}'.`);
+                    console.error(`No <img> element with class 'big-texture-viewer' found inside the div with ID '${parentDiv}'.`);
                 }
             } else {
                 console.error(`Element with ID '${parentDiv}' not found.`);
             }
         })
-        .catch(error => console.error('Error fetching untagged image data:', error));
+        .catch(error => {
+            console.log('No texture data available or all data successfully tagged for this user/tag combination. Server error:', error);
+            
+            // Fallback image if an error occurs
+            parentDiv.querySelector('.big-texture-viewer').src = "/UXimg/image_not_available.png"; 
+        });
 }
+
 
 // Function to load a random untagged image for the user and tag
 // For now hardcoded IDs for TagID and UserID

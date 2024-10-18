@@ -9,7 +9,7 @@ import { populateTags, requestTagsForImage } from "./tagContainerBuilder.js";
  * @param {number} textureID - The ID of the texture to analyze.
  * @returns {void}
  */
-async function runTextureAnalysisTab(targetParentElement, textureID, callbackUpdateAnalysisTab) {
+async function runAnalysisTab(targetParentElement, textureID, callbackUpdateAnalysisTab) {
 
     console.log('runAnalysis');
     // ------------------ update left hand image -------------
@@ -26,14 +26,6 @@ async function runTextureAnalysisTab(targetParentElement, textureID, callbackUpd
 
     // ------------------ form to navigate to other texture -------------
     createTextureIdInput(analysisTagsDiv, textureID, callbackUpdateAnalysisTab);
-
-    // Log the value immediately after the element is created
-    const textureIdField = document.querySelector('#textureIDField');
-    if (textureIdField) {
-        console.log('Texture ID Field exists:', textureIdField.value);
-    } else {
-        console.error('Texture ID Field was not found.');
-    }
     
     // ------------------ tags -------------
     const preCheckedTags = await requestTagsForImage(textureID);
@@ -87,7 +79,7 @@ function createTextureIdInput(analysisTagsDiv, textureID, callbackUpdateAnalysis
  * @param {number} textureID - The ID of the texture to fetch related maps for.
  * @returns {Promise<void>}
  */
-async function updateRelatedMaps(textureAnalysisTextureTypeTab, textureID) {
+async function updateRelatedMaps(analysisTextureTypeTab, textureID) {
     try {
         // Fetch maps related to the textureID from the new server endpoint
         const response = await fetch(`/serveMapsForTexture/${textureID}`);
@@ -96,28 +88,35 @@ async function updateRelatedMaps(textureAnalysisTextureTypeTab, textureID) {
         }
 
         const data = await response.json();
-        
-        // Check if there are related maps in data.related_maps
+
+        // Create a heading element for related maps
+        const heading = document.createElement('h3');
+        heading.textContent = 'Related Maps:';
+        analysisTextureTypeTab.appendChild(heading);
+
         if (data.related_maps && data.related_maps.length > 0) {
-        let mapContent = '<h3>Related Maps:</h3><ul>';
+            // Create a <ul> element for the list of related maps
+            const list = document.createElement('ul');
 
-        // Iterate through the related_maps and create HTML entries for each
-        data.related_maps.forEach(map => {
-            mapContent += `<li>Map ID: ${map.map_id} (Texture Type: ${map.texture_type})</li>`;
-        });
+            // Iterate through the related_maps and create <li> elements for each map
+            data.related_maps.forEach(map => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `Map ID: ${map.map_id} (Texture Type: ${map.texture_type})`;
+                list.appendChild(listItem);
+            });
 
-        mapContent += '</ul>';
-        
-        // Append the generated content to the container's innerHTML
-        textureAnalysisTextureTypeTab.innerHTML += mapContent;
-    } else {
-        // If no maps are found, append a message indicating no related maps
-        textureAnalysisTextureTypeTab.innerHTML += '<p>No related maps found for this texture.</p>';
-    }
+            // Append the <ul> to the container
+            analysisTextureTypeTab.appendChild(list);
+        } else {
+            // If no maps are found, append a <p> element indicating this
+            const noMapsMessage = document.createElement('p');
+            noMapsMessage.textContent = 'No related maps found for this texture.';
+            analysisTextureTypeTab.appendChild(noMapsMessage);
+        }
 
     } catch (error) {
         console.error('Error fetching related maps:', error);
     }
 }
 
-export { runTextureAnalysisTab };
+export { runAnalysisTab };
