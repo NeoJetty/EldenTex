@@ -105,7 +105,7 @@ async function changeGalleryPage(tagID, page) {
 }
 
 function buildImageGrid(textures, page, callbackToAnalysisTab) {
-    const imageGrid = document.getElementById('imageGrid');
+    const imageGrid = document.getElementById('gallery-image-grid');
     // Clear existing images in the grid
     imageGrid.innerHTML = '';
 

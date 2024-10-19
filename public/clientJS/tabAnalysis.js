@@ -11,7 +11,6 @@ import { populateTags, requestTagsForImage } from "./tagContainerBuilder.js";
  */
 async function runAnalysisTab(targetParentElement, textureID, callbackUpdateAnalysisTab) {
 
-    console.log('runAnalysis');
     // ------------------ update left hand image -------------
     await updateImageSrcAndAppConfig(textureID, targetParentElement); 
     populateTextureTypesNavbar(targetParentElement, AppConfig.analysisTab);

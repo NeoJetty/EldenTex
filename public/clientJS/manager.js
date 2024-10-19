@@ -1,6 +1,6 @@
 // manager.js
 
-import { runGalleryTab } from './gallery.js';
+import { runGalleryTab } from './tabGallery.js';
 import { runAnalysisTab } from './tabAnalysis.js';
 import { runVotingTab } from './tabVoting.js';
 
@@ -23,12 +23,10 @@ class Manager {
 
         // Check if textureID is provided
         if (textureID) {
-            console.log('ID passed');
             // If textureID is passed, use it as the second parameter
             runAnalysisTab(this.tab2Div, textureID, (textureID) => this.analysisTab(textureID));
             console.log(document.querySelector('#textureIDField').value);
         } else {
-            console.log('ID default');
             // If not, default to using 11 as the second parameter
             runAnalysisTab(this.tab2Div, 3295, (textureID) => this.analysisTab(textureID));
             console.log(document.querySelector('#textureIDField').value);   
@@ -36,8 +34,8 @@ class Manager {
     }
 
     galleryTab() {
-        this.makeTabVisible('tab3');
-        // Pass the callback to runGalleryTab
+        this.makeTabVisible('tab4');
+        // Pass the callback to the analysisTab to runGalleryTab
         runGalleryTab(this.tab4Div, (textureID) => this.analysisTab(textureID));
     }
 

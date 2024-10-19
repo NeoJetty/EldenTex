@@ -1,28 +1,26 @@
-/* multiImagePreview.css */
+/* gallery.css */
 .dropdown {
     margin-bottom: 20px;
 }
 
-.image-grid {
+#gallery-image-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     margin-bottom: 20px;
 }
 
-/* Set max width and height for images to fit within 1080p */
-.image-grid img {
-    max-width: calc((1920px - 40px) / 7); /* 40px accounts for gap between images */
-    max-height: 200px; /* Limit height to ensure multiple rows fit */
+/* Set fixed width and height for images */
+#gallery-image-grid img {
     width: 100%; /* Ensures images fill their grid cell */
-    height: auto; /* Maintains aspect ratio */
+    height: 150px; /* Set a fixed height for all images */
     border: 1px solid #ccc;
-    object-fit: contain; /* Ensures images are scaled to fit their containers without cropping */
-    background-color: #f0f0f0; /* Optional: background color for empty spaces */
+    object-fit: cover; /* Ensures images fill their container without stretching */
+    background-color: #f0f0f0; /* Background color for empty spaces */
     cursor: pointer;
 }
 
-#imageGrid img:hover {
+#gallery-image-grid img:hover {
     opacity: 0.8; /* Optional: add a subtle hover effect, like lowering opacity */
 }
 
@@ -35,4 +33,3 @@
     text-decoration: none;
     color: blue;
 }
-

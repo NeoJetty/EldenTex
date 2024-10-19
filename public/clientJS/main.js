@@ -60,7 +60,7 @@ async function InitInOrder() {
     } catch (error) {
         console.error('Error during initialization:', error);
     }
-    let somestring = testTypescript('angela',19);
+    let somestring = testTypescript();
     console.log(somestring);
 }
 
