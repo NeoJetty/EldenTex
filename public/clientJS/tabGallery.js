@@ -9,16 +9,15 @@ async function fetchManyTextures(userId, tagID, page) {
     return response.json();  // Assuming it returns JSON in the specified format
 }
 
-async function runGalleryTab(targetDiv, analysisTabCallback) {
+async function runGalleryTab(targetDiv) {
     const userId = AppConfig.user.ID;
     // Store the callback in AppConfig
-    AppConfig.galleryByTag.analysisTabCallback = analysisTabCallback;
 
-    if (AppConfig.galleryByTag.tagID === -1) {
+    if (AppConfig.galleryTab.tagID === -1) {
         await constructTagsDropdownMenu(targetDiv);
     } else {
-        const textures = await fetchTextureDataset(AppConfig.galleryByTag.tagID, 1);
-        buildImageGrid(textures, 1, AppConfig.galleryByTag.analysisTabCallback);
+        const textures = await fetchTextureDataset(AppConfig.galleryTab.tagID, 1);
+        buildImageGrid(textures, 1);
         updatePagination(textures.length, 1);
     }
 }
@@ -94,17 +93,17 @@ function buildDropdownMenu(dropdown, tags) {
 async function changeGalleryPage(tagID, page) {
     if(AppConfig.debug.level == 2) console.log(`refreshing Gallery page: ${page} for tag: ${tagID}`);
 
-    if (tagID != AppConfig.galleryByTag.tagID) {
+    if (tagID != AppConfig.galleryTab.tagID) {
         const textures = await fetchTextureDataset(tagID, page);
-        buildImageGrid(textures, page, AppConfig.galleryByTag.analysisTabCallback); // Use stored callback
+        buildImageGrid(textures, page, AppConfig.galleryTab.analysisTabCallback); // Use stored callback
         updatePagination(textures.length, page);
     } else {
-        buildImageGrid(AppConfig.galleryByTag.allTextureData, page, AppConfig.galleryByTag.analysisTabCallback); // Use stored callback
-        updatePagination(AppConfig.galleryByTag.allTextureData.length, page);
+        buildImageGrid(AppConfig.galleryTab.allTextureData, page, AppConfig.galleryTab.analysisTabCallback); // Use stored callback
+        updatePagination(AppConfig.galleryTab.allTextureData.length, page);
     }
 }
 
-function buildImageGrid(textures, page, callbackToAnalysisTab) {
+function buildImageGrid(textures, page) {
     const imageGrid = document.getElementById('gallery-image-grid');
 
     // Get the current page textures
@@ -159,7 +158,7 @@ function updatePagination(totalTextures, currentPage) {
         pageLink.addEventListener('click', (e) => {
             e.preventDefault();
             // Call function to fetch and display images for the selected page
-            changeGalleryPage(AppConfig.galleryByTag.tagID, i);
+            changeGalleryPage(AppConfig.galleryTab.tagID, i);
         });
 
         pageNumbersContainer.appendChild(pageLink);

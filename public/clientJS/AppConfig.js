@@ -1,207 +1,178 @@
 /**
  * AppConfig
- * 
- * This class serves as a global configuration store for the application, 
- * encapsulating various settings and state information needed across 
- * different components. The properties within AppConfig include:
- * 
- * - folders: Contains paths for different image formats (e.g., JPG, PNG).
- * - zoom: Manages zoom-related settings, including zoom factor, minimum, 
- *   and maximum zoom levels.
- * - VotingTab: Stores information specific to the first tab's image, 
- *   including the image ID, URLs for both JPG and PNG formats, and a 
- *   collection of texture types to determine available image variations.
- * - user: Contains details about the current user, including user ID, 
- *   name, theme preference, and language setting.
- * 
- * Additionally, AppConfig includes methods for constructing image 
- * URLs based on texture types and updating its properties from 
- * incoming JSON data.
+ *
+ * This class serves as a global configuration store for the application,
+ * encapsulating various settings and state information needed across
+ * different components.
  */
-class AppConfig {
+class TextureTypes {
     constructor() {
-        if (AppConfig.instance) {
-            return AppConfig.instance; // Return the existing instance
-        }
-        AppConfig.instance = this; // Store the instance
-
-        // Initialize properties
-
-        // debug: 0: only errors, 1: warnings, 2: debug-spam
-        this.debug = {
-            level: 1,
-        };
-        this.folders = {
-            jpgs: '/AllAET_JPG/',
-            pngs: '/AllAET_PNG/',
-        };
-        this.zoom = {
-            zoomFactor: 1,
-            minZoom: 1,
-            maxZoom: 4.0,
-        };
-        this.votingTab = {
-            imgID: -1,
-            jpgURL: '',
-            pngURL: '',
-            textureTypes: { 
-                _a: false,
-                _n: false,
-                _r: false,
-                _v: false,
-                _d: false,
-                _em: false,
-                _3m: false,
-                _Billboards_a: false,
-                _Billboards_n: false,
-                _g: false,
-                _m: false,
-                _1m: false,
-                _van: false,
-                _vat: false,
-            },
-        };
-        this.analysisTab = {
-            imgID: -1,
-            jpgURL: '',
-            pngURL: '',
-            textureTypes: { 
-                _a: false,
-                _n: false,
-                _r: false,
-                _v: false,
-                _d: false,
-                _em: false,
-                _3m: false,
-                _Billboards_a: false,
-                _Billboards_n: false,
-                _g: false,
-                _m: false,
-                _1m: false,
-                _van: false,
-                _vat: false,
-            },
-        };
-        this.user = {
-            ID: 1,
-            name: 'NeoJetty',
-            theme: 'dark',
-            language: 'en',
-        };
-        this.galleryByTag = {
-            numberOfEntries: -1,  // Number of textures in the gallery
-            tagID: -1,            // The tag ID for the textures
-            currentPage: -1,       // Current page in the gallery
-            allTextureData: null,   // Data from the JSON fetch for multiple textures
-            analysisTabCallback: null,   
-        };
-
+        this._a = false;
+        this._n = false;
+        this._r = false;
+        this._v = false;
+        this._d = false;
+        this._em = false;
+        this._3m = false;
+        this._Billboards_a = false;
+        this._Billboards_n = false;
+        this._g = false;
+        this._m = false;
+        this._1m = false;
+        this._van = false;
+        this._vat = false;
     }
-
-
-    // ---------------------------------------------
-    //              helper methods
-    // ---------------------------------------------
-
-    // Method to update allTextureData and gallery metadata
+}
+class TextureDataContainer {
+    constructor() {
+        this.imgID = -1;
+        this.jpgURL = '';
+        this.pngURL = '';
+        this.textureTypes = new TextureTypes();
+    }
+    // Method to update from JSON
+    updateFromImageDataJSON(data) {
+        var _b, _c, _e, _f, _h, _j, _k, _l, _o, _p, _q, _s, _t, _u, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
+        this.textureTypes = {
+            _a: (_c = (_b = data.textureTypes) === null || _b === void 0 ? void 0 : _b._a) !== null && _c !== void 0 ? _c : false,
+            _n: (_f = (_e = data.textureTypes) === null || _e === void 0 ? void 0 : _e._n) !== null && _f !== void 0 ? _f : false,
+            _r: (_j = (_h = data.textureTypes) === null || _h === void 0 ? void 0 : _h._r) !== null && _j !== void 0 ? _j : false,
+            _v: (_l = (_k = data.textureTypes) === null || _k === void 0 ? void 0 : _k._v) !== null && _l !== void 0 ? _l : false,
+            _d: (_p = (_o = data.textureTypes) === null || _o === void 0 ? void 0 : _o._d) !== null && _p !== void 0 ? _p : false,
+            _em: (_s = (_q = data.textureTypes) === null || _q === void 0 ? void 0 : _q._em) !== null && _s !== void 0 ? _s : false,
+            _3m: (_u = (_t = data.textureTypes) === null || _t === void 0 ? void 0 : _t._3m) !== null && _u !== void 0 ? _u : false,
+            _Billboards_a: (_x = (_w = data.textureTypes) === null || _w === void 0 ? void 0 : _w._Billboards_a) !== null && _x !== void 0 ? _x : false,
+            _Billboards_n: (_z = (_y = data.textureTypes) === null || _y === void 0 ? void 0 : _y._Billboards_n) !== null && _z !== void 0 ? _z : false,
+            _g: (_1 = (_0 = data.textureTypes) === null || _0 === void 0 ? void 0 : _0._g) !== null && _1 !== void 0 ? _1 : false,
+            _m: (_3 = (_2 = data.textureTypes) === null || _2 === void 0 ? void 0 : _2._m) !== null && _3 !== void 0 ? _3 : false,
+            _1m: (_5 = (_4 = data.textureTypes) === null || _4 === void 0 ? void 0 : _4._1m) !== null && _5 !== void 0 ? _5 : false,
+            _van: (_7 = (_6 = data.textureTypes) === null || _6 === void 0 ? void 0 : _6._van) !== null && _7 !== void 0 ? _7 : false,
+            _vat: (_9 = (_8 = data.textureTypes) === null || _8 === void 0 ? void 0 : _8._vat) !== null && _9 !== void 0 ? _9 : false,
+        };
+        this.imgID = data.id;
+        this.jpgURL = AppConfig.getInstance().buildJPGPath(data.textureName, this.textureTypes);
+        this.pngURL = AppConfig.getInstance().buildPNGPath(this.jpgURL);
+    }
+}
+class User {
+    constructor() {
+        this.ID = 1;
+        this.name = 'NeoJetty';
+        this.theme = 'dark';
+        this.language = 'en';
+    }
+}
+class Zoom {
+    constructor() {
+        this.zoomFactor = 1;
+        this.minZoom = 1;
+        this.maxZoom = 4.0;
+    }
+}
+class Folders {
+    constructor() {
+        this.jpgs = '/AllAET_JPG/';
+        this.pngs = '/AllAET_PNG/';
+    }
+}
+class GalleryTab {
+    constructor() {
+        this.numberOfEntries = -1;
+        this.tagID = -1;
+        this.currentPage = -1;
+        this.allTextureData = null;
+    }
+}
+class Debug {
+    constructor() {
+        this.level = 1; // Debug level, can be expanded later if needed
+    }
+}
+class AppConfig {
+    // Private constructor to prevent instantiation
+    constructor() {
+        this.debug = new Debug(); // Debug instance
+        this.folders = new Folders();
+        this.zoom = new Zoom();
+        this.votingTab = new TextureDataContainer();
+        this.analysisTab = new TextureDataContainer();
+        this.filterTab = new TextureDataContainer();
+        this.user = new User();
+        this.galleryTab = new GalleryTab();
+    }
+    // Method to get the singleton instance
+    static getInstance() {
+        if (!AppConfig.instance) {
+            AppConfig.instance = new AppConfig(); // Create a new instance if it doesn't exist
+        }
+        return AppConfig.instance; // Return the existing instance
+    }
+    // Method to update gallery dataset
     updateGalleryDataset(textures, new_tab_id) {
-        // If the new_tab_id is the same as the current tagID, return early
-        if (new_tab_id === this.galleryByTag.tagID) {
+        if (new_tab_id === this.galleryTab.tagID)
             return;
-        }
-        
-        // Update galleryByTag.tagID to the new_tab_id
-        this.galleryByTag.tagID = new_tab_id; 
-
-        // Update other properties based on the fetched textures
-        this.galleryByTag.allTextureData = textures; // Update allTextureData with fetched textures
-        this.galleryByTag.numberOfEntries = textures.length; // Set number of entries based on the length of the fetched textures
-        this.galleryByTag.currentPage = 1; // Initialize currentPage to 1
+        this.galleryTab.tagID = new_tab_id;
+        this.galleryTab.allTextureData = textures;
+        this.galleryTab.numberOfEntries = textures.length;
+        this.galleryTab.currentPage = 1;
     }
-
     // Method to construct high-res PNG URL
     buildPNGPath(jpgUrl) {
         return jpgUrl.replace('/AllAET_JPG/', '/AllAET_PNG/').replace('.jpg', '.png');
     }
-
     // Method to construct JPG URL based on texture type
     buildJPGPath(textureName, textureTypes) {
         let basePath = this.folders.jpgs + textureName;
-
-        // Check if the '_n' type is true and append '_n.jpg'
         if (textureTypes._n) {
             return basePath + '_n.jpg';
         }
-
-        // If '_n' is false, cycle through texture types
         for (let key of Object.keys(textureTypes)) {
             if (textureTypes[key]) {
                 return basePath + key + '.jpg';
             }
         }
-
-        // If no valid texture types are found, log a 200 error and return a false path
         console.error(`200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`);
-        return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
+        return basePath + '.jpg'; // Default path
     }
-
-    // Method to construct JPG URL based on texture type
     buildLowQualityJPGPath(textureName, textureTypes) {
         let basePath = this.folders.jpgs + textureName;
-
-        // Check if the '_n' type is true and append '_n.jpg'
         if (textureTypes._n) {
             return basePath + '_n_l.jpg';
         }
-
-        // If '_n' is false, cycle through texture types
         for (let key of Object.keys(textureTypes)) {
             if (textureTypes[key]) {
                 return basePath + key + '_l.jpg';
             }
         }
-
-        // If no valid texture types are found, log a 200 error and return a false path
         console.error(`200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`);
-        return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
+        return basePath + '.jpg'; // Default path
     }
-
-    updateVotingTabTextureFromJson(data){
-        this.updateFromImageDataJSON(data, this.votingTab)
-    }
-
-    updateAnalysisTabTextureFromJson(data){
-        this.updateFromImageDataJSON(data, this.analysisTab)
-    }
-
-    // Method to update AppConfig from JSON data
+    // Method to update from JSON
     updateFromImageDataJSON(data, propertyGroup) {
-        // Initialize textureTypes based on incoming data
-        propertyGroup.textureTypes = { 
-            _a: data.textureTypes?._a ?? false,
-            _n: data.textureTypes?._n ?? false,
-            _r: data.textureTypes?._r ?? false,
-            _v: data.textureTypes?._v ?? false,
-            _d: data.textureTypes?._d ?? false,
-            _em: data.textureTypes?._em ?? false,
-            _3m: data.textureTypes?._3m ?? false,
-            _Billboards_a: data.textureTypes?._Billboards_a ?? false,
-            _Billboards_n: data.textureTypes?._Billboards_n ?? false,
-            _g: data.textureTypes?._g ?? false,
-            _m: data.textureTypes?._m ?? false,
-            _1m: data.textureTypes?._1m ?? false,
-            _van: data.textureTypes?._van ?? false,
-            _vat: data.textureTypes?._vat ?? false,
+        var _b, _c, _e, _f, _h, _j, _k, _l, _o, _p, _q, _s, _t, _u, _w, _x, _y, _z, _0, _1, _2, _3, _4, _5, _6, _7, _8, _9;
+        propertyGroup.textureTypes = {
+            _a: (_c = (_b = data.textureTypes) === null || _b === void 0 ? void 0 : _b._a) !== null && _c !== void 0 ? _c : false,
+            _n: (_f = (_e = data.textureTypes) === null || _e === void 0 ? void 0 : _e._n) !== null && _f !== void 0 ? _f : false,
+            _r: (_j = (_h = data.textureTypes) === null || _h === void 0 ? void 0 : _h._r) !== null && _j !== void 0 ? _j : false,
+            _v: (_l = (_k = data.textureTypes) === null || _k === void 0 ? void 0 : _k._v) !== null && _l !== void 0 ? _l : false,
+            _d: (_p = (_o = data.textureTypes) === null || _o === void 0 ? void 0 : _o._d) !== null && _p !== void 0 ? _p : false,
+            _em: (_s = (_q = data.textureTypes) === null || _q === void 0 ? void 0 : _q._em) !== null && _s !== void 0 ? _s : false,
+            _3m: (_u = (_t = data.textureTypes) === null || _t === void 0 ? void 0 : _t._3m) !== null && _u !== void 0 ? _u : false,
+            _Billboards_a: (_x = (_w = data.textureTypes) === null || _w === void 0 ? void 0 : _w._Billboards_a) !== null && _x !== void 0 ? _x : false,
+            _Billboards_n: (_z = (_y = data.textureTypes) === null || _y === void 0 ? void 0 : _y._Billboards_n) !== null && _z !== void 0 ? _z : false,
+            _g: (_1 = (_0 = data.textureTypes) === null || _0 === void 0 ? void 0 : _0._g) !== null && _1 !== void 0 ? _1 : false,
+            _m: (_3 = (_2 = data.textureTypes) === null || _2 === void 0 ? void 0 : _2._m) !== null && _3 !== void 0 ? _3 : false,
+            _1m: (_5 = (_4 = data.textureTypes) === null || _4 === void 0 ? void 0 : _4._1m) !== null && _5 !== void 0 ? _5 : false,
+            _van: (_7 = (_6 = data.textureTypes) === null || _6 === void 0 ? void 0 : _6._van) !== null && _7 !== void 0 ? _7 : false,
+            _vat: (_9 = (_8 = data.textureTypes) === null || _8 === void 0 ? void 0 : _8._vat) !== null && _9 !== void 0 ? _9 : false,
         };
-    
-        // Update other fields based on incoming data
         propertyGroup.imgID = data.id;
         propertyGroup.jpgURL = this.buildJPGPath(data.textureName, propertyGroup.textureTypes);
         propertyGroup.pngURL = this.buildPNGPath(propertyGroup.jpgURL);
     }
 }
-
-// Exporting the AppConfig instance and exposing it globally for debugging
-const appConfigInstance = new AppConfig();
+// Exporting the AppConfig singleton instance
+const appConfigInstance = AppConfig.getInstance(); // Get the singleton instance
 export { appConfigInstance as AppConfig };
+// @ts-ignore
 window.AppConfig = appConfigInstance; // Expose globally for debugging

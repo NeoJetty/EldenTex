@@ -17,7 +17,7 @@ function requestUntaggedImageData(userID, tagID, parentDiv) {
                 
                 if (imageElement) {
                     // Update AppConfig using the new helper function
-                    AppConfig.updateVotingTabTextureFromJson(data);
+                    AppConfig.votingTab.updateFromImageDataJSON(data);
 
                     // Update the image source
                     imageElement.src = AppConfig.votingTab.jpgURL;
@@ -66,7 +66,8 @@ async function updateImageSrcAndAppConfig(imageId, parentDiv) {
             
             if (imageElement) {
                 // Update AppConfig using the new helper function
-                AppConfig.updateAnalysisTabTextureFromJson(data);
+                //AppConfig.analysisTab.up
+                AppConfig.analysisTab.updateFromImageDataJSON(data);
 
                 // Update the image source
                 imageElement.src = AppConfig.analysisTab.jpgURL;
