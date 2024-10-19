@@ -6,11 +6,11 @@ let voteTagID = 4;
 
 // Function to create the voting UI
 function createVotingUI(parentDiv) {
-    const container = parentDiv.querySelector('.tag-container');
+    const container = parentDiv.querySelector('.right-main-container');
 
     // Check if the container exists
     if (!container) {
-        console.error('The element with class "tag-container" was not found.');
+        console.error('The element with class "right-main-container" was not found.');
         return;
     }
 

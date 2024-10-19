@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style/main_top_navbar.css">
     <link rel="stylesheet" href="style/content.css">
     <link rel="stylesheet" href="style/tabs-image.css">
-    <link rel="stylesheet" href="style/zoom-future.css">
+    <link rel="stylesheet" href="style/zoom.css">
     <link rel="stylesheet" href="style/gallery.css">
 </head>
 <body>
@@ -19,7 +19,7 @@
     <div class="main_top_navbar">
         <a href="#" class="tab-link" data-tab="tab1">Random Texture</a>
         <a href="#" class="tab-link" data-tab="tab2">Single Texture Analysis</a>
-        <a href="#" class="tab-link" data-tab="tab3">3</a>
+        <a href="#" class="tab-link" data-tab="tab3">Filter</a>
         <a href="#" class="tab-link" data-tab="tab4">Gallery by Tag</a>
         
         <!-- Debug Link with Dropdown -->
@@ -72,8 +72,7 @@
             </div>
         
             <!-- Tag Container -->
-            <!-- Future Content Placeholder -->
-            <div class="tag-container">
+            <div class="right-main-container">
                 <!-- Placeholder for title -->
                 <div id="vote-title"></div>
                 
@@ -119,8 +118,7 @@
             </div>
 
             <!-- Tag Container -->
-            <!-- Future Content Placeholder -->
-            <div class="tag-container">
+            <div class="right-main-container">
                 <!-- Placeholder for title -->
                 <div id="vote-title"></div>
                 
@@ -128,9 +126,50 @@
         </div>
     </div>
 
-    <!-- Tab2 = Empty Tab -->
+    <!-- Tab3 = Empty Tab -->
     <div id="tab3" class="content">
-        <!-- Tab3_Content.html AJAX -->
+        <div id="tab3-content">
+            <!-- Tabs Container -->
+            <div class="tex-type-navbar-container">
+                <div class="tex-type-navbar">
+                    <a href="#" class="tex-type-navitem" data-type="_vat">vat</a>
+                    <a href="#" class="tex-type-navitem" data-type="_van">van</a>
+                    <a href="#" class="tex-type-navitem" data-type="_1m">1m</a>
+                    <a href="#" class="tex-type-navitem" data-type="_m">m</a>
+                    <a href="#" class="tex-type-navitem" data-type="_g">g</a>
+                    <a href="#" class="tex-type-navitem" data-type="_Billboards_n">b_n</a>
+                    <a href="#" class="tex-type-navitem" data-type="_Billboards_a">b_a</a>
+                    <a href="#" class="tex-type-navitem" data-type="_3m">3m</a>
+                    <a href="#" class="tex-type-navitem" data-type="_em">em</a>
+                    <a href="#" class="tex-type-navitem" data-type="_d">d</a>
+                    <a href="#" class="tex-type-navitem" data-type="_v">v</a>
+                    <a href="#" class="tex-type-navitem" data-type="_r">r</a>
+                    <a href="#" class="tex-type-navitem" data-type="_n">n</a>
+                    <a href="#" class="tex-type-navitem" data-type="_a">a</a>
+                </div>
+            </div>
+        
+            <!-- Image Container -->
+            <div class="image-container">
+                <img class="big-texture-viewer" src="/UXimg/image_not_available.png" alt="Elden Ring Texture">
+            </div>
+        
+            <!-- Zoom Controls -->
+            <div class="zoom-controls">
+                <button class="zoom-button zoom-in">+</button>
+                <button class="zoom-button zoom-out">-</button>
+            </div>
+        
+            <!-- Tag Container -->
+            <div class="right-main-container">
+                <!-- Placeholder for title -->
+                <div id="vote-title"></div>
+                
+                <!-- "No" and "Yes" buttons -->
+                <button id="vote-no">No</button>
+                <button id="vote-yes">Yes</button>
+            </div>
+        </div>    
     </div>
 
     <!-- Tab4 = Gallery Tab -->
@@ -162,6 +201,12 @@
                 <img src="/UXimg/image_not_available.png" alt="Image 13">
                 <img src="/UXimg/image_not_available.png" alt="Image 14">
                 <img src="/UXimg/image_not_available.png" alt="Image 15">
+                <img src="/UXimg/image_not_available.png" alt="Image 16">
+                <img src="/UXimg/image_not_available.png" alt="Image 17">
+                <img src="/UXimg/image_not_available.png" alt="Image 18">
+                <img src="/UXimg/image_not_available.png" alt="Image 19">
+                <img src="/UXimg/image_not_available.png" alt="Image 20">
+                <img src="/UXimg/image_not_available.png" alt="Image 21">
             </div>
 
             <div class="pagination" id="pagination">

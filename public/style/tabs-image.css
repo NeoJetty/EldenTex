@@ -4,8 +4,8 @@
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
     grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
     grid-template-areas: 
-        "tabs zoom-controls future-content"
-        "image zoom-controls future-content";
+        "tabs zoom-controls right-main-container"
+        "image zoom-controls right-main-container";
     height: 800px; /* Adjust as needed */
 }
 
@@ -15,8 +15,19 @@
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
     grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
     grid-template-areas: 
-        "tabs zoom-controls future-content"
-        "image zoom-controls future-content";
+        "tabs zoom-controls right-main-container"
+        "image zoom-controls right-main-container";
+    height: 800px; /* Adjust as needed */
+}
+
+/* Filter Tab */
+#tab3-content {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-areas: 
+        "tabs zoom-controls right-main-container"
+        "image zoom-controls right-main-container";
     height: 800px; /* Adjust as needed */
 }
 

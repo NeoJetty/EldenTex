@@ -106,27 +106,33 @@ async function changeGalleryPage(tagID, page) {
 
 function buildImageGrid(textures, page, callbackToAnalysisTab) {
     const imageGrid = document.getElementById('gallery-image-grid');
-    // Clear existing images in the grid
-    imageGrid.innerHTML = '';
 
     // Get the current page textures
     const pagedTextures = textures.slice((page - 1) * 21, page * 21); // Adjust the slice for pagination
 
-    // Loop through the texture data and create image elements
-    pagedTextures.forEach(texture => {
-        const img = document.createElement('img');
-        // Build the image path using the textureName and textureTypes from the current texture
-        img.src = AppConfig.buildJPGPath(texture.textureName, texture.textureTypes); 
-        img.alt = `Image for ${texture.textureName}`; // Set an appropriate alt text
+    // Access all existing img elements in the grid
+    const images = imageGrid.getElementsByTagName('img');
 
-        // Add a click event listener that calls the callback with the texture ID
-        img.addEventListener('click', () => {
-            callbackToAnalysisTab(texture.id); // Call the callback function with texture.id
-        });
-
-        imageGrid.appendChild(img); // Append the image to the grid
+    // Loop through the texture data
+    pagedTextures.forEach((texture, index) => {
+        // Check if there's already an existing image to update
+        if (images[index]) {
+            // Update the src and alt attributes of existing images
+            images[index].src = AppConfig.buildLowQualityJPGPath(texture.textureName, texture.textureTypes); 
+            images[index].alt = `${texture.id}`; // Set an appropriate alt text
+        } else {
+            // If there's no existing image (more textures than images), create a new one
+        }
     });
+
+    // Optional: Set default image for unused images
+    for (let i = pagedTextures.length; i < images.length; i++) {
+        images[i].src = "/UXimg/image_not_available.png"; // Set default image
+        images[i].style.display = 'block'; // Ensure the image is visible
+    }
 }
+
+
 
 
 function updatePagination(totalTextures, currentPage) {

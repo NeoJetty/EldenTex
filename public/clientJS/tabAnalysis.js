@@ -16,7 +16,7 @@ async function runAnalysisTab(targetParentElement, textureID, callbackUpdateAnal
     populateTextureTypesNavbar(targetParentElement, AppConfig.analysisTab);
 
     // ------------------ update right hand container -------------
-    let analysisTagsDiv = targetParentElement.querySelector('.tag-container');
+    let analysisTagsDiv = targetParentElement.querySelector('.right-main-container');
     if (!analysisTagsDiv) {
         console.error('Error: Container element not found.');
         return;

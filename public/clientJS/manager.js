@@ -3,6 +3,8 @@
 import { runGalleryTab } from './tabGallery.js';
 import { runAnalysisTab } from './tabAnalysis.js';
 import { runVotingTab } from './tabVoting.js';
+import { runFilterTab } from './tabFilter.js';
+import { AppConfig } from './AppConfig.js';
 
 class Manager {
     constructor() {
@@ -11,6 +13,35 @@ class Manager {
         this.tab2Div = document.getElementById('tab2-content');
         this.tab3Div = document.getElementById('tab3-content');
         this.tab4Div = document.getElementById('tab4-content');
+        this.setEventListenersCallingManager();
+    }
+
+    setEventListenersCallingManager() {
+        // ---------------------------
+        //     Gallery image grid
+        // ---------------------------
+
+        const imageGrid = document.getElementById('gallery-image-grid');
+        // Access all existing img elements in the grid
+        const images = imageGrid.getElementsByTagName('img'); 
+    
+        // Loop through all the images
+        for (let i = 0; i < images.length; i++) {
+            const img = images[i];
+    
+            // Set the event listener for each image
+            img.addEventListener('click', (event) => {
+                const textureID = event.target.alt; // Get the alt text at event time
+                this.analysisTab(textureID); // Call the callback with the texture name
+            });
+        }
+
+        // ---------------------------
+        //     Analysis input field
+        // ---------------------------
+        // can probably stay the same for now
+        // I'm not sure if i wanna move the responsibility to tabAnalysis
+        // since the call theoretically points back to the tabAnalysis and does not need to invole Manager
     }
 
     votingTab() {
@@ -20,17 +51,27 @@ class Manager {
 
     analysisTab(textureID) {
         this.makeTabVisible('tab2');
-
+        console.log(textureID);
+        console.log(AppConfig.analysisTab.imgID);
+        
         // Check if textureID is provided
-        if (textureID) {
-            // If textureID is passed, use it as the second parameter
+        if (textureID) {  // show texture by parameter
+            
             runAnalysisTab(this.tab2Div, textureID, (textureID) => this.analysisTab(textureID));
-            console.log(document.querySelector('#textureIDField').value);
-        } else {
-            // If not, default to using 11 as the second parameter
-            runAnalysisTab(this.tab2Div, 3295, (textureID) => this.analysisTab(textureID));
-            console.log(document.querySelector('#textureIDField').value);   
+
+        } else if (AppConfig.analysisTab.imgID == -1) { // show default texture
+
+            runAnalysisTab(this.tab2Div, 3295, (textureID) => this.analysisTab(textureID)); 
+
+        } else { // show last viewed texture
+
+            runAnalysisTab(this.tab2Div, AppConfig.analysisTab.imgID, (textureID) => this.analysisTab(textureID));
+
         }
+    }
+
+    filterTab(){
+        runFilterTab(this.tab3Div);
     }
 
     galleryTab() {

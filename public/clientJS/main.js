@@ -1,7 +1,7 @@
 // main.js
 
 import { AppConfig } from './AppConfig.js';
-import { handleZoom, resetImageSize } from './imageManipulation.js';
+import { handleZoom } from './imageManipulation.js';
 import Manager from './manager.js'; // Import the Manager class
 import { testTypescript } from './testTsc.js';
 
@@ -33,6 +33,8 @@ function InitMainNavbarListener() {
                 manager.votingTab();
             } else if (nextActiveTabName === 'tab2'){
                 manager.analysisTab();
+            } else if (nextActiveTabName === 'tab3'){
+                manager.filterTab();
             } else if (nextActiveTabName === 'tab4') {
                 manager.galleryTab();
             }

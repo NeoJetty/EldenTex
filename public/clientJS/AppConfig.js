@@ -145,6 +145,27 @@ class AppConfig {
         return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
     }
 
+    // Method to construct JPG URL based on texture type
+    buildLowQualityJPGPath(textureName, textureTypes) {
+        let basePath = this.folders.jpgs + textureName;
+
+        // Check if the '_n' type is true and append '_n.jpg'
+        if (textureTypes._n) {
+            return basePath + '_n_l.jpg';
+        }
+
+        // If '_n' is false, cycle through texture types
+        for (let key of Object.keys(textureTypes)) {
+            if (textureTypes[key]) {
+                return basePath + key + '_l.jpg';
+            }
+        }
+
+        // If no valid texture types are found, log a 200 error and return a false path
+        console.error(`200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`);
+        return basePath + '.jpg';  // or return an empty string, null, or any default path you prefer
+    }
+
     updateVotingTabTextureFromJson(data){
         this.updateFromImageDataJSON(data, this.votingTab)
     }
