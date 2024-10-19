@@ -3,6 +3,7 @@
 import { AppConfig } from './AppConfig.js';
 import { handleZoom, resetImageSize } from './imageManipulation.js';
 import Manager from './manager.js'; // Import the Manager class
+import { testTypescript } from './testTsc.js';
 
 // Declare the manager variable in a broader scope
 /** @type {Manager} */
@@ -53,11 +54,14 @@ async function InitInOrder() {
 
         initializeButtons();
 
+        manager.votingTab();
         // Automatically click the first tab to load its content and set it active
-        document.querySelector('.tab-link[data-tab="tab1"]').click();
+        //document.querySelector('.tab-link[data-tab="tab1"]').click();
     } catch (error) {
         console.error('Error during initialization:', error);
     }
+    let somestring = testTypescript('angela',19);
+    console.log(somestring);
 }
 
 // Start the initialization process
