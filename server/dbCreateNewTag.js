@@ -48,7 +48,7 @@ router.get('/:user_id/:tag_id', async (req, res) => {
     }
 
     const db = req.db;  // Use the already injected `db` from middleware in server.js
-    const table = 'tags_per_user';
+    const table = 'tags_from_users';
 
     try {
         // Check if the entry exists

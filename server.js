@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 // Serve modules
 // ------------------------------------------------------
 
-// textureData/:imageId (GET specific image data by imageId, or random if imageId is -1)
+// textureData/:texture_id (GET specific texture data by texture_id, or random if texture_id is -1)
 app.use('/textureData', require('./server/serveTextureData'));
 // allTags
 app.use('/allTags', require('./server/serveAllTags'));
@@ -38,7 +38,7 @@ app.use('/untaggedTexture', require('./server/serveRandomUntagged'));
 app.use('/countTaggingProgress', require('./server/serveCountTaggingProgress'));
 // serveManyTextures/:user_id/:tag_id
 app.use('/serveManyTextures', require('./server/serveManyTextures'));
-// serveTagsForTexture/:user_id/:image_id
+// serveTagsForTexture/:user_id/:texture_id
 app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
 // serveMapsForTexture/:texture_id
 app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
@@ -53,8 +53,8 @@ app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
 app.use('/dbDeleteTagFromTexture', require('./server/dbDeleteTagFromTexture'));
 // dbCreateNewTag/:user_id/:tag_id
 app.use('/dbCreateNewTag', require('./server/dbCreateNewTag'));
-// DBaddTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
-app.use('/dbAddTagToImageAndUser', require('./server/dbAddTagToImageAndUser'));
+// dbAddTagToTexture/:user_id/:tag_id/:texture_id/:vote 
+app.use('/dbAddTagToTexture', require('./server/dbAddTagToTexture'));
 
 // Start the server and listen on all network interfaces (LAN accessible)
 app.listen(port, '0.0.0.0', () => {

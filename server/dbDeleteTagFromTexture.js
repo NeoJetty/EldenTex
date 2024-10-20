@@ -13,8 +13,8 @@ router.get('/:user_id/:tag_id/:texture_id', (req, res) => {
 
     // SQL query to delete the tag for the given user and tag ID
     const sqlQuery = `
-        DELETE FROM tags_by_user_and_image
-        WHERE user_id = ? AND tag_id = ? AND image_id = ?;
+        DELETE FROM tag_texture_associations
+        WHERE user_id = ? AND tag_id = ? AND texture_id = ?;
     `;
 
     db.run(sqlQuery, [userId, tagId, textureId], function(err) {

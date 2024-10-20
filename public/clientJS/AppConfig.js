@@ -25,7 +25,7 @@ class TextureTypes {
 }
 class TextureDataContainer {
     constructor() {
-        this.imgID = -1;
+        this.textureID = -1;
         this.jpgURL = '';
         this.pngURL = '';
         this.textureTypes = new TextureTypes();
@@ -49,7 +49,7 @@ class TextureDataContainer {
             _van: (_7 = (_6 = data.textureTypes) === null || _6 === void 0 ? void 0 : _6._van) !== null && _7 !== void 0 ? _7 : false,
             _vat: (_9 = (_8 = data.textureTypes) === null || _8 === void 0 ? void 0 : _8._vat) !== null && _9 !== void 0 ? _9 : false,
         };
-        this.imgID = data.id;
+        this.textureID = data.id;
         this.jpgURL = AppConfig.getInstance().buildJPGPath(data.textureName, this.textureTypes);
         this.pngURL = AppConfig.getInstance().buildPNGPath(this.jpgURL);
     }
@@ -166,7 +166,7 @@ class AppConfig {
             _van: (_7 = (_6 = data.textureTypes) === null || _6 === void 0 ? void 0 : _6._van) !== null && _7 !== void 0 ? _7 : false,
             _vat: (_9 = (_8 = data.textureTypes) === null || _8 === void 0 ? void 0 : _8._vat) !== null && _9 !== void 0 ? _9 : false,
         };
-        propertyGroup.imgID = data.id;
+        propertyGroup.textureID = data.id;
         propertyGroup.jpgURL = this.buildJPGPath(data.textureName, propertyGroup.textureTypes);
         propertyGroup.pngURL = this.buildPNGPath(propertyGroup.jpgURL);
     }

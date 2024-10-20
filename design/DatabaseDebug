@@ -1,3 +1,4 @@
+# helper script to delete tables if a bugged db entry nukes the python SQL web app
 import os
 import sqlite3
 
@@ -9,8 +10,8 @@ print(f"Using database: {db_path}")
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
-# Drop the tags_per_user table if it exists
-cursor.execute('DROP TABLE tags_per_user')
+# Drop the tags_from_users table if it exists
+# cursor.execute('DROP TABLE tags_from_users')
 
 # Commit the changes and close the connection
 conn.commit()

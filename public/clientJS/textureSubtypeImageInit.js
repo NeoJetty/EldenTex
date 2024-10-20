@@ -7,7 +7,7 @@ function DECAPloadRandomImage() {
         .then(response => response.json())
         .then(data => {
             if (data) {
-                AppConfig.votingTab.imgID = data.id;
+                AppConfig.votingTab.textureID = data.id;
                 AppConfig.tab1Image.jpgURL = data.imageUrl;
                 AppConfig.tab1Image.textureTypes = data.textureTypes;
                 // Update the UI with the new image and settings

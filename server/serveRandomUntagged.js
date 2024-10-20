@@ -13,8 +13,8 @@ router.get('/:user_id/:tag_id', (req, res) => {
         FROM textures_tracking_duplicates t
         WHERE t.copy_of_normal = 0
         AND t.id NOT IN (
-            SELECT image_id
-            FROM tags_by_user_and_image
+            SELECT texture_id
+            FROM tag_texture_associations
             WHERE user_id = ? AND tag_id = ?
         )
         ORDER BY RANDOM()

@@ -49,10 +49,10 @@ function loadRandomUntaggedImage(parentDiv) {
     requestUntaggedImageData(1, 4, parentDiv);
 }
 
-async function updateImageSrcAndAppConfig(imageId, parentDiv) {
+async function updateImageSrcAndAppConfig(textureID, parentDiv) {
     try {
-        // Fetch the image data using the provided imageId
-        const response = await fetch(`/textureData/${imageId}`);
+        // Fetch the image data using the provided textureID
+        const response = await fetch(`/textureData/${textureID}`);
         
         if (!response.ok) {
             throw new Error('Network response was not ok');

@@ -57,13 +57,13 @@ class Manager {
             
             runAnalysisTab(this.tab2Div, textureID, (textureID) => this.analysisTab(textureID));
 
-        } else if (AppConfig.analysisTab.imgID == -1) { // show default texture
+        } else if (AppConfig.analysisTab.textureID == -1) { // show default texture
 
             runAnalysisTab(this.tab2Div, 3295, (textureID) => this.analysisTab(textureID)); 
 
         } else { // show last viewed texture
 
-            runAnalysisTab(this.tab2Div, AppConfig.analysisTab.imgID, (textureID) => this.analysisTab(textureID));
+            runAnalysisTab(this.tab2Div, AppConfig.analysisTab.textureID, (textureID) => this.analysisTab(textureID));
 
         }
     }

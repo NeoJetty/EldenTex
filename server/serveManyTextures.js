@@ -14,8 +14,8 @@ router.get('/:userID/:tagID', (req, res) => {
 
     // Query to get all texture image IDs for the given user and tag where vote is TRUE
     const query = `
-        SELECT image_id 
-        FROM tags_by_user_and_image 
+        SELECT texture_id 
+        FROM tag_texture_associations 
         WHERE user_id = ? 
         AND tag_id = ? 
         AND vote = TRUE
@@ -31,22 +31,22 @@ router.get('/:userID/:tagID', (req, res) => {
             return res.status(200).json({ message: 'No textures found for this user_id and tag_id', textures: [] });
         }
 
-        // Fetch texture data for each image_id
-        const imageIDs = rows.map(row => row.image_id);
-        fetchTexturesDataByIds(imageIDs, db, res);
+        // Fetch texture data for each texture_id
+        const textureIDs = rows.map(row => row.texture_id);
+        fetchTexturesDataByIds(textureIDs, db, res);
     });
 });
 
 // Function to fetch texture data for multiple image IDs
-function fetchTexturesDataByIds(imageIDs, db, res) {
-    const placeholders = imageIDs.map(() => '?').join(', ');
+function fetchTexturesDataByIds(textureIDs, db, res) {
+    const placeholders = textureIDs.map(() => '?').join(', ');
     const query = `
         SELECT * 
         FROM textures 
         WHERE id IN (${placeholders})
     `;
 
-    db.all(query, imageIDs, (err, textureRows) => {
+    db.all(query, textureIDs, (err, textureRows) => {
         if (err) {
             console.error('Error querying database:', err);
             return res.status(500).send('Database error');

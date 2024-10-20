@@ -48,7 +48,7 @@ function createVotingUI(parentDiv) {
 // Function to handle the vote (Yes or No)
 function handleVote(isYes) {
     const userID = AppConfig.user.ID;
-    const imageID = AppConfig.votingTab.imgID;
+    const imageID = AppConfig.votingTab.textureID;
 
     // Debugging output
     console.log('Handling vote:', isYes ? 'Yes' : 'No');
@@ -57,7 +57,7 @@ function handleVote(isYes) {
 
     // Construct the GET request URL
     const voteValue = isYes ? 'true' : 'false'; // Send 'true' or 'false'
-    const url = `/dbAddTagToImageAndUser?user_id=${userID}&tag_id=${voteTagID}&image_id=${imageID}&vote=${voteValue}`;
+    const url = `/dbAddTagToTexture?user_id=${userID}&tag_id=${voteTagID}&texture_id=${imageID}&vote=${voteValue}`;
 
     // Debugging output
     console.log('Constructed URL:', url);

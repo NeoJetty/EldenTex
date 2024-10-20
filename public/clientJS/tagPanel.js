@@ -118,7 +118,7 @@ function handleTagSelection(isChecked, tagID, textureID) {
     const userID = AppConfig.user.ID;
     // Construct the request URL
     const action = isChecked ? 'true' : 'false'; // Send 'true' or 'false' depending on check/uncheck
-    const url = `/dbAddTagToImageAndUser?user_id=${userID}&tag_id=${tagID}&image_id=${textureID}&vote=${action}`;
+    const url = `/dbAddTagToTexture?user_id=${userID}&tag_id=${tagID}&texture_id=${textureID}&vote=${action}`;
     // Send the GET request to the server
     fetch(url)
         .then(response => {

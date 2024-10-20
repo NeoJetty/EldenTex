@@ -7,10 +7,10 @@ router.get('/:user_id/:tag_id', (req, res) => {
     const tagId = parseInt(req.params.tag_id);
     const db = req.db; // Use the database connection from the request modifying middleware
 
-    // Count the entries in the tags_by_user_and_image for the given user_id and tag_id
+    // Count the entries in the tag_texture_associations for the given user_id and tag_id
     const countTagsQuery = `
         SELECT COUNT(*) AS count
-        FROM tags_by_user_and_image
+        FROM tag_texture_associations
         WHERE user_id = ? AND tag_id = ?;
     `;
 

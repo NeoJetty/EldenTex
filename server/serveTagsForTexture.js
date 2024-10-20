@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 
 // Define the route for fetching tags for a specific user and image
-router.get('/:user_id/:image_id', (req, res) => {
+router.get('/:user_id/:texture_id', (req, res) => {
     const userId = parseInt(req.params.user_id);
-    const imageId = parseInt(req.params.image_id);
+    const textureId = parseInt(req.params.texture_id);
     const db = req.db; // Use the database connection from the request
 
     // SQL query to find tags for the given user and image
     const sqlQuery = `
         SELECT tag_id, vote
-        FROM tags_by_user_and_image
-        WHERE user_id = ? AND image_id = ?;
+        FROM tag_texture_associations
+        WHERE user_id = ? AND texture_id = ?;
     `;
 
-    db.all(sqlQuery, [userId, imageId], (err, rows) => {
+    db.all(sqlQuery, [userId, textureId], (err, rows) => {
         if (err) {
             console.error('Database error:', err);
             return res.status(500).send('Database error');
