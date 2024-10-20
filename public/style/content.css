@@ -11,10 +11,10 @@
 .tag-toggle {
     display: inline-block;
     cursor: pointer;
-    margin-right: 8px; /* Optional spacing */
+    margin-right: 3px; /* Optional spacing */
 }
 
 .toggle-image {
     width: 24px; /* Adjust the size of the toggle */
-    height: 24px;
+    height: 13px;
 }

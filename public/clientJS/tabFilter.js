@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
-import { populateTags, requestTagsForImage } from "./tagContainerBuilder.js";
+import { populateTags, requestTagsForImage } from "./tagPanel.js";
 export function runFilterTab(divElement) {
     return __awaiter(this, void 0, void 0, function* () {
         let textureID = 11;

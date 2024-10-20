@@ -1,6 +1,6 @@
 import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
-import { populateTags, requestTagsForImage } from "./tagContainerBuilder.js";
+import { populateTags, requestTagsForImage } from "./tagPanel.js";
 
 /**
  * Runs the texture analysis tab by loading a random image and populating the tags.

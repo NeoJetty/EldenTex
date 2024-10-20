@@ -2,7 +2,7 @@
 
 import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
-import { populateTags, requestTagsForImage } from "./TagPanelServices.js";
+import { populateTags, requestTagsForImage } from "./tagPanel.js";
 
 export async function runFilterTab(divElement: HTMLDivElement):Promise<void> {
     let textureID = 11;
@@ -24,5 +24,4 @@ export async function runFilterTab(divElement: HTMLDivElement):Promise<void> {
     // ------------------ tags -------------
     const preCheckedTags = await requestTagsForImage(textureID);
     populateTags(analysisTagsDiv, textureID, preCheckedTags);
-
 }

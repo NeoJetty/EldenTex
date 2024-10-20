@@ -89,7 +89,6 @@ async function updateImageSrcAndAppConfig(imageId, parentDiv) {
 
 // Populate the texture types navbar within a specific parentDiv
 function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
-    console.log(AppConfigPropertyGroup);
     // Select the tab links only within the provided parentDiv
     const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
 
