@@ -17,59 +17,24 @@ function populateTags(tagContainer: HTMLElement, textureID: number, preCheckedTa
         console.error('preCheckedTagIDs is not an array:', preCheckedTagIDs);
         preCheckedTagIDs = []; // Fallback to an empty array
     }
+
     // Fetch all tags from the server
     fetch('/allTags')
         .then(response => response.json())
         .then(data => {
             // Iterate over each tag and create a toggle element
             data.tags.forEach((tag: { id: number; name: string; category: string }) => {
-                const toggle = document.createElement('div');
-                toggle.classList.add('tag-toggle');
-                toggle.dataset.tagId = tag.id.toString();
+                const toggleDiv = createToggleElement(tag, preCheckedTagIDs);
+                
+                // Add the event listener for toggle click
+                toggleDiv.addEventListener('click', (event) => on3StateToggleClick(event, textureID));
 
-                // Check if the tag is in preCheckedTagIDs
-                const tagVote = preCheckedTagIDs.find(tv => tv.tag_id === tag.id);
-                const isChecked = tagVote ? tagVote.vote : false; // Determine initial state
+                // Append the toggle to the container
+                tagContainer.appendChild(toggleDiv);
 
-                // Set the initial image based on the pre-checked tags
-                const toggleImage = document.createElement('img');
-                if (tagVote) {
-                    // If there's a tagVote, determine the state based on its value
-                    toggleImage.src = isChecked ? 'UXimg/toggle_on.png' : 'UXimg/toggle_off.png';
-                    toggle.dataset.state = isChecked ? 'on' : 'off';
-                } else {
-                    // Initialize to neutral state if there's no tag data
-                    toggleImage.src = 'UXimg/toggle_neutral.png';
-                    toggle.dataset.state = 'neutral';
-                }
-
-                toggleImage.classList.add('toggle-image');
-                toggle.appendChild(toggleImage);
-
-                // Add event listener for toggle click
-                toggle.addEventListener('click', () => {
-                    const currentState = toggle.dataset.state;
-                    if (currentState === 'on') {
-                        toggleImage.src = 'UXimg/toggle_off.png';
-                        toggle.dataset.state = 'off';
-                        handleTagSelection(false, tag.id, textureID);
-                    } else if (currentState === 'off') {
-                        toggleImage.src = 'UXimg/toggle_neutral.png';
-                        toggle.dataset.state = 'neutral';
-                        handleTagNeutralSelection(tag.id, textureID);
-                    } else {
-                        toggleImage.src = 'UXimg/toggle_on.png';
-                        toggle.dataset.state = 'on';
-                        handleTagSelection(true, tag.id, textureID);
-                    }
-                });
-
-                // Create a label for the toggle
+                // Create and append the label for the toggle
                 const label = document.createElement('label');
                 label.textContent = `${tag.name} (${tag.category})`;
-
-                // Append the toggle and label to the container
-                tagContainer.appendChild(toggle);
                 tagContainer.appendChild(label);
                 tagContainer.appendChild(document.createElement('br')); // Optional line break
             });
@@ -79,7 +44,72 @@ function populateTags(tagContainer: HTMLElement, textureID: number, preCheckedTa
         });
 }
 
+/**
+ * Creates a toggle element for a given tag.
+ * 
+ * @param {Object} tag - The tag object containing id, name, and category.
+ * @param {TagVote[]} preCheckedTagIDs - Array of pre-checked tag IDs.
+ * @returns {HTMLElement} The toggle element.
+ */
+function createToggleElement(tag: { id: number; name: string; category: string }, preCheckedTagIDs: TagVote[]): HTMLElement {
+    const toggle = document.createElement('div');
+    toggle.classList.add('tag-toggle');
+    toggle.dataset.tagId = tag.id.toString();
 
+    // Determine initial state based on preCheckedTagIDs
+    const tagVote = preCheckedTagIDs.find(tv => tv.tag_id === tag.id);
+    const isChecked = tagVote ? tagVote.vote : false; // Determine initial state
+
+    // Set the initial image based on the pre-checked tags
+    const toggleImage = document.createElement('img');
+    if (tagVote) {
+        toggleImage.src = isChecked ? 'UXimg/toggle_on.png' : 'UXimg/toggle_off.png';
+        toggle.dataset.state = isChecked ? 'on' : 'off';
+    } else {
+        toggleImage.src = 'UXimg/toggle_neutral.png';
+        toggle.dataset.state = 'neutral';
+    }
+
+    toggleImage.classList.add('toggle-image');
+    toggle.appendChild(toggleImage);
+
+    return toggle;
+}
+
+/**
+ * Handles the toggle click event.
+ * 
+ * @param {MouseEvent} event - The click event.
+ * @param {number} textureID - The ID of the texture.
+ */
+function on3StateToggleClick(event: MouseEvent, textureID: number): void {
+    const toggle = event.currentTarget as HTMLElement; // Get the toggle element from the event
+    const toggleImage = toggle.querySelector('.toggle-image') as HTMLImageElement;
+    
+    // Extract tag ID from data attribute and ensure it is a valid number
+    const tagIDStr = toggle.dataset.tagId;
+    if (!tagIDStr) {
+        console.error('Tag ID is not defined in the data attributes.');
+        return; // Exit if tagID is not found
+    }
+    const tagID = parseInt(tagIDStr); // Convert to number
+
+    const currentState = toggle.dataset.state;
+
+    if (currentState === 'on') {
+        toggleImage.src = 'UXimg/toggle_off.png';
+        toggle.dataset.state = 'off';
+        handleTagSelection(false, tagID, textureID);
+    } else if (currentState === 'off') {
+        toggleImage.src = 'UXimg/toggle_neutral.png';
+        toggle.dataset.state = 'neutral';
+        handleTagNeutralSelection(tagID, textureID);
+    } else {
+        toggleImage.src = 'UXimg/toggle_on.png';
+        toggle.dataset.state = 'on';
+        handleTagSelection(true, tagID, textureID);
+    }
+}
 
 /**
  * Handles the selection (check/uncheck) of a tag for a texture.
