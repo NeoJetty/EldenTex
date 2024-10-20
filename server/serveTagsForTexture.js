@@ -9,9 +9,9 @@ router.get('/:user_id/:image_id', (req, res) => {
 
     // SQL query to find tags for the given user and image
     const sqlQuery = `
-        SELECT tag_id
+        SELECT tag_id, vote
         FROM tags_by_user_and_image
-        WHERE user_id = ? AND image_id = ? AND vote = 1;
+        WHERE user_id = ? AND image_id = ?;
     `;
 
     db.all(sqlQuery, [userId, imageId], (err, rows) => {
@@ -22,14 +22,17 @@ router.get('/:user_id/:image_id', (req, res) => {
 
         // If no tags are found, return 200 OK with an empty array
         if (rows.length === 0) {
-            return res.status(200).json([]); // No tags found, but it's not an error
+            return res.status(200).json({ textureTags: [] });
         }
 
-        // Extract tag IDs from the result
-        const tagIds = rows.map(row => row.tag_id);
+        // Map rows to include boolean values for 'vote'
+        const textureTags = rows.map(row => ({
+            tag_id: row.tag_id,
+            vote: !!row.vote // Convert to boolean
+        }));
 
-        // Send the array of tag IDs as JSON response
-        res.json(tagIds);
+        // Send the array of tag IDs and votes as JSON response
+        res.json({ textureTags });
     });
 });
 

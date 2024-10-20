@@ -14,11 +14,16 @@ import { AppConfig } from './AppConfig.js';
  * Adds a form field for textureID and listeners for check/uncheck events.
  *
  * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
- * @param {Array<number>} [preCheckedTagIDs] - An optional array of tag IDs to pre-check.
  * @param {number} textureID - The ID of the texture being analyzed.
+ * @param {Array<TagVote>} [preCheckedTagIDs] - An optional array of TagVote objects to pre-check.
  * @returns {void}
  */
 function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
+    // Ensure preCheckedTagIDs is an array
+    if (!Array.isArray(preCheckedTagIDs)) {
+        console.error('preCheckedTagIDs is not an array:', preCheckedTagIDs);
+        preCheckedTagIDs = []; // Fallback to an empty array
+    }
     // Fetch all tags from the server
     fetch('/allTags')
         .then(response => response.json())
@@ -28,15 +33,20 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
             const toggle = document.createElement('div');
             toggle.classList.add('tag-toggle');
             toggle.dataset.tagId = tag.id.toString();
+            // Check if the tag is in preCheckedTagIDs
+            const tagVote = preCheckedTagIDs.find(tv => tv.tag_id === tag.id);
+            const isChecked = tagVote ? tagVote.vote : false; // Determine initial state
             // Set the initial image based on the pre-checked tags
             const toggleImage = document.createElement('img');
-            if (preCheckedTagIDs.includes(tag.id)) {
-                toggleImage.src = 'UXimg/toggle_on.png';
-                toggle.dataset.state = 'on'; // Track state
+            if (tagVote) {
+                // If there's a tagVote, determine the state based on its value
+                toggleImage.src = isChecked ? 'UXimg/toggle_on.png' : 'UXimg/toggle_off.png';
+                toggle.dataset.state = isChecked ? 'on' : 'off';
             }
             else {
-                toggleImage.src = 'UXimg/toggle_off.png';
-                toggle.dataset.state = 'off'; // Track state
+                // Initialize to neutral state if there's no tag data
+                toggleImage.src = 'UXimg/toggle_neutral.png';
+                toggle.dataset.state = 'neutral';
             }
             toggleImage.classList.add('toggle-image');
             toggle.appendChild(toggleImage);
@@ -47,6 +57,11 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
                     toggleImage.src = 'UXimg/toggle_off.png';
                     toggle.dataset.state = 'off';
                     handleTagSelection(false, tag.id, textureID);
+                }
+                else if (currentState === 'off') {
+                    toggleImage.src = 'UXimg/toggle_neutral.png';
+                    toggle.dataset.state = 'neutral';
+                    handleTagNeutralSelection(tag.id, textureID);
                 }
                 else {
                     toggleImage.src = 'UXimg/toggle_on.png';
@@ -70,22 +85,15 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
 /**
  * Handles the selection (check/uncheck) of a tag for a texture.
  *
- * @param {boolean} isChecked - Whether the checkbox was checked or unchecked.
+ * @param {boolean} isChecked - Whether the tag was selected or unselected.
  * @param {number} tagID - The ID of the tag.
  * @param {number} textureID - The ID of the texture being analyzed.
  */
 function handleTagSelection(isChecked, tagID, textureID) {
     const userID = AppConfig.user.ID;
-    // Debugging output
-    console.log('Tag selection changed:', isChecked ? 'Checked' : 'Unchecked');
-    console.log('User ID:', userID);
-    console.log('Texture ID:', textureID);
-    console.log('Tag ID:', tagID);
     // Construct the request URL
     const action = isChecked ? 'true' : 'false'; // Send 'true' or 'false' depending on check/uncheck
     const url = `/dbAddTagToImageAndUser?user_id=${userID}&tag_id=${tagID}&image_id=${textureID}&vote=${action}`;
-    // Debugging output
-    console.log('Constructed URL for tag change:', url);
     // Send the GET request to the server
     fetch(url)
         .then(response => {
@@ -95,15 +103,39 @@ function handleTagSelection(isChecked, tagID, textureID) {
         return response.json();
     })
         .then(data => {
-        console.log('Tag update submitted:', data);
+        console.log(`Tag ${tagID} changed to ${isChecked} for texture ${textureID}. Server message:`, data);
     })
         .catch(error => console.error('Error submitting tag update:', error));
+}
+/**
+ * Handles the neutral (no vote) selection of a tag for a texture.
+ *
+ * @param {number} tagID - The ID of the tag.
+ * @param {number} textureID - The ID of the texture being analyzed.
+ */
+function handleTagNeutralSelection(tagID, textureID) {
+    const userID = AppConfig.user.ID;
+    // Construct the request URL for deleting the tag from texture
+    const url = `/dbDeleteTagFromTexture/${userID}/${tagID}/${textureID}`;
+    // Send the request to the server to remove the tag
+    fetch(url)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error(`Failed to remove tag, status: ${response.status}`);
+        }
+        // If the response is OK, parse the JSON
+        return response.json(); // Assuming the server returns a JSON response
+    })
+        .then(data => {
+        console.log(`Tag ${tagID} set to neutral (removed) for texture ${textureID}. Server message:`, data);
+    })
+        .catch(error => console.error('Error removing tag:', error));
 }
 /**
  * Fetches tags for the specified image ID and the current user.
  *
  * @param {number} textureID - The ID of the texture being analyzed.
- * @returns {Promise<number[]>} - A promise that resolves to an array of tag IDs.
+ * @returns {Promise<TagVote[]>} - A promise that resolves to an array of objects containing tag_id and vote.
  */
 function requestTagsForImage(textureID) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -113,8 +145,13 @@ function requestTagsForImage(textureID) {
             if (!response.ok) {
                 throw new Error('Failed to fetch tags for the specified texture.');
             }
-            const fetchedTags = yield response.json();
-            return fetchedTags;
+            const data = yield response.json();
+            // Ensure the textureTags field exists and is an array
+            if (!data.textureTags || !Array.isArray(data.textureTags)) {
+                throw new Error('Invalid response format.');
+            }
+            // Return the array of TagVote objects
+            return data.textureTags;
         }
         catch (error) {
             console.error('Error fetching tags:', error);

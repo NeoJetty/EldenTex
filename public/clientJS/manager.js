@@ -51,8 +51,6 @@ class Manager {
 
     analysisTab(textureID) {
         this.makeTabVisible('tab2');
-        console.log(textureID);
-        console.log(AppConfig.analysisTab.imgID);
         
         // Check if textureID is provided
         if (textureID) {  // show texture by parameter

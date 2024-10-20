@@ -49,7 +49,9 @@ app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
 // DB write modules
 // ------------------------------------------------------
 
-// addTag/:user_id/:tag_id
+// dbDeleteTagFromTexture/:user_id/:tag_id
+app.use('/dbDeleteTagFromTexture', require('./server/dbDeleteTagFromTexture'));
+// dbCreateNewTag/:user_id/:tag_id
 app.use('/dbCreateNewTag', require('./server/dbCreateNewTag'));
 // DBaddTagToImageAndUser/:user_id/:tag_id/:image_id/:vote 
 app.use('/dbAddTagToImageAndUser', require('./server/dbAddTagToImageAndUser'));
