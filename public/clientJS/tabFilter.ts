@@ -2,7 +2,7 @@
 
 import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
-import { populateTags, requestTagsForImage } from "./tagContainerBuilder.js";
+import { populateTags, requestTagsForImage } from "./TagPanelServices.js";
 
 export async function runFilterTab(divElement: HTMLDivElement):Promise<void> {
     let textureID = 11;
