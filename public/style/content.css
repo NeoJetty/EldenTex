@@ -7,3 +7,14 @@
 .content.active {
     display: block; /* Show only the active tab */
 }
+
+.tag-toggle {
+    display: inline-block;
+    cursor: pointer;
+    margin-right: 8px; /* Optional spacing */
+}
+
+.toggle-image {
+    width: 24px; /* Adjust the size of the toggle */
+    height: 24px;
+}

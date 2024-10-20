@@ -1,4 +1,4 @@
-// tagContainerBuilder.js
+// TagPanelServices.js
 
 import { AppConfig } from './AppConfig.js';
 
@@ -16,27 +16,44 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs) {
     fetch('/allTags')
         .then(response => response.json())
         .then(data => {
-            // Iterate over each tag and create checkbox + label
+            // Iterate over each tag and create a toggle element
             data.tags.forEach(tag => {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = `tag-${tag.id}`;
-                checkbox.value = tag.id;
-                checkbox.classList.add('tag-checkbox');
+                const toggle = document.createElement('div');
+                toggle.classList.add('tag-toggle');
+                toggle.dataset.tagId = tag.id;
 
+                // Set the initial image based on the pre-checked tags
+                const toggleImage = document.createElement('img');
                 if (preCheckedTagIDs.includes(tag.id)) {
-                    checkbox.checked = true;
+                    toggleImage.src = 'UXimg/toggle_on.png';
+                    toggle.dataset.state = 'on'; // Track state
+                } else {
+                    toggleImage.src = 'UXimg/toggle_off.png';
+                    toggle.dataset.state = 'off'; // Track state
                 }
+                toggleImage.classList.add('toggle-image');
+                toggle.appendChild(toggleImage);
 
-                checkbox.addEventListener('change', () => {
-                    handleTagSelection(checkbox.checked, tag.id, textureID);
+                // Add event listener for toggle click
+                toggle.addEventListener('click', () => {
+                    const currentState = toggle.dataset.state;
+                    if (currentState === 'on') {
+                        toggleImage.src = 'UXimg/toggle_off.png';
+                        toggle.dataset.state = 'off';
+                        handleTagSelection(false, tag.id, textureID);
+                    } else {
+                        toggleImage.src = 'UXimg/toggle_on.png';
+                        toggle.dataset.state = 'on';
+                        handleTagSelection(true, tag.id, textureID);
+                    }
                 });
 
+                // Create a label for the toggle
                 const label = document.createElement('label');
-                label.htmlFor = `tag-${tag.id}`;
                 label.textContent = `${tag.name} (${tag.category})`;
 
-                tagContainer.appendChild(checkbox);
+                // Append the toggle and label to the container
+                tagContainer.appendChild(toggle);
                 tagContainer.appendChild(label);
                 tagContainer.appendChild(document.createElement('br')); // Optional line break
             });
@@ -45,6 +62,7 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs) {
             console.error('Error fetching tags:', error);
         });
 }
+
 
 
 /**
