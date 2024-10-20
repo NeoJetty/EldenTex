@@ -1,7 +1,11 @@
 /* General Body Styles */
 /* CSS for everything global */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Cardo", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #FFF;
+    background-color: #202124;
     margin: 0;
     padding: 0;
 }

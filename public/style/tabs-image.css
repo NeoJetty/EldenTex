@@ -37,7 +37,7 @@
     overflow-x: auto; /* Allow horizontal scrolling if needed */
     display: flex;
     align-items: center;
-    background-color: #f0f0f0; /* Background color for tabs */
+    /*background-color: #f0f0f0; Background color for tabs */
     border-bottom: 1px solid #ccc; /* Optional: Border for visual clarity */
 }
 
