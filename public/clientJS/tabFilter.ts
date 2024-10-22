@@ -1,10 +1,10 @@
-// tabFilter.ts
+// TabFilter.ts
 
 import { AppConfig } from "./AppConfig.js";
-import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
+import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestTextureData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
 
-export class TabFilter {
+class TabFilter {
     private textureID: number;
 
     constructor() {
@@ -20,9 +20,9 @@ export class TabFilter {
         populateTextureTypesNavbar(divElement, AppConfig.analysisTab);
 
         // ------------------ update right hand container -------------
-        const analysisTagsDiv = divElement.querySelector('.right-main-container');
+        const analysisTagsDiv = divElement.querySelector('.right-main-container') as HTMLDivElement;
         if (!analysisTagsDiv) {
-            console.error('Error: Container element not found.');
+            console.error('Error: Container element not found...');
             return;
         }
         analysisTagsDiv.innerHTML = '';
@@ -32,3 +32,5 @@ export class TabFilter {
         populateTags(analysisTagsDiv, this.textureID, preCheckedTags);
     }
 }
+
+export default TabFilter;

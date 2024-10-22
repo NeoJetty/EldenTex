@@ -1,8 +1,8 @@
-// manager.ts
-import { runGalleryTab } from './tabGallery.js';
-import { runAnalysisTab } from './tabAnalysis.js';
-import { runVotingTab } from './tabVoting.js';
-import { TabFilter } from './tabFilter.js';
+// Manager.ts
+import TabVoting from './TabVoting.js';
+import TabAnalysis from './TabAnalysis.js';
+import TabFilter from './TabFilter.js';
+import TabGallery from './TabGallery.js';
 import { AppConfig } from './AppConfig.js';
 class Manager {
     constructor() {
@@ -13,7 +13,10 @@ class Manager {
         this.tab3Div = document.getElementById('tab3-content');
         this.tab4Div = document.getElementById('tab4-content');
         // Initialize FilterTab instance
-        this.filterTabInstance = new TabFilter();
+        this.tabVoting = new TabVoting(this.tab1Div);
+        this.tabAnalysis = new TabAnalysis(this.tab2Div, (textureID) => { this.analysisTab(textureID); });
+        this.tabFilter = new TabFilter();
+        this.tabGallery = new TabGallery();
         this.setEventListenersCallingManager();
     }
     setEventListenersCallingManager() {
@@ -31,45 +34,40 @@ class Manager {
                 img.addEventListener('click', (event) => {
                     const target = event.target;
                     const textureID = target.alt; // Get the alt text at event time
-                    this.analysisTab(Number(textureID)); // Call the callback with the texture ID as a number
+                    this.analysisTab(Number(textureID));
                 });
             }
         }
         // ---------------------------
-        //     Analysis Tab Input Field?
+        //     Analysis Tab Input Field? or do it in TabAnalysis Tab
         // ---------------------------
     }
     votingTab() {
         this.makeTabVisible('tab1');
-        if (this.tab1Div)
-            runVotingTab(this.tab1Div);
+        this.tabVoting.updateAll();
     }
     analysisTab(textureID) {
         this.makeTabVisible('tab2');
         // Check if textureID is provided
         if (textureID && this.tab2Div) { // show texture by parameter
-            runAnalysisTab(this.tab2Div, textureID, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(textureID);
         }
         else if (AppConfig.analysisTab.textureID === -1 && this.tab2Div) { // show default texture
-            runAnalysisTab(this.tab2Div, 3295, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(3295);
         }
         else if (this.tab2Div) { // show last viewed texture
-            runAnalysisTab(this.tab2Div, AppConfig.analysisTab.textureID, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(AppConfig.analysisTab.textureID);
         }
     }
     filterTab() {
         this.makeTabVisible('tab3');
-        if (this.tab3Div) {
-            // Call the updateAll method from FilterTab class
-            this.filterTabInstance.updateAll(this.tab3Div);
-        }
+        // Call the updateAll method from FilterTab class
+        this.tabFilter.updateAll(this.tab3Div);
     }
     galleryTab() {
         this.makeTabVisible('tab4');
-        if (this.tab4Div) {
-            // Pass the callback to the analysisTab to runGalleryTab
-            runGalleryTab(this.tab4Div, (textureID) => this.analysisTab(textureID));
-        }
+        // Pass the callback to the analysisTab to runGalleryTab
+        this.tabGallery.updateAll(this.tab4Div);
     }
     makeTabVisible(nextActiveTab) {
         if (this.isVisible(nextActiveTab))

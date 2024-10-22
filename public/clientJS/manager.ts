@@ -1,21 +1,24 @@
-// manager.ts
+// Manager.ts
 
-import { runGalleryTab } from './tabGallery.js';
-import { runAnalysisTab } from './tabAnalysis.js';
-import { runVotingTab } from './tabVoting.js';
-import { TabFilter } from './tabFilter.js';
+import TabVoting    from './TabVoting.js';
+import TabAnalysis  from './TabAnalysis.js';
+import TabFilter    from './TabFilter.js';
+import TabGallery   from './TabGallery.js';
 import { AppConfig } from './AppConfig.js';
 
 class Manager {
-    private tab1Div: HTMLDivElement | null;
-    private tab2Div: HTMLDivElement | null;
-    private tab3Div: HTMLDivElement | null;
-    private tab4Div: HTMLDivElement | null;
-    private filterTabInstance: TabFilter;
+    private tab1Div: HTMLDivElement;
+    private tab2Div: HTMLDivElement;
+    private tab3Div: HTMLDivElement;
+    private tab4Div: HTMLDivElement;
+    private tabVoting  : TabVoting;
+    private tabAnalysis: TabAnalysis;
+    private tabFilter  : TabFilter;
+    private tabGallery : TabGallery;
 
     constructor() {
         // Assign the tab content divs to member variables
-       // Use type assertion to cast the element to HTMLDivElement
+        // Use type assertion to cast the element to HTMLDivElement
         this.tab1Div = document.getElementById('tab1-content') as HTMLDivElement;
         this.tab2Div = document.getElementById('tab2-content') as HTMLDivElement;
         this.tab3Div = document.getElementById('tab3-content') as HTMLDivElement;
@@ -23,7 +26,10 @@ class Manager {
 
 
         // Initialize FilterTab instance
-        this.filterTabInstance = new TabFilter();
+        this.tabVoting   = new TabVoting(this.tab1Div);
+        this.tabAnalysis = new TabAnalysis(this.tab2Div, (textureID) => {this.analysisTab(textureID)});
+        this.tabFilter   = new TabFilter();
+        this.tabGallery  = new TabGallery();
 
         this.setEventListenersCallingManager();
     }
@@ -45,18 +51,18 @@ class Manager {
                 img.addEventListener('click', (event: Event) => {
                     const target = event.target as HTMLImageElement;
                     const textureID = target.alt; // Get the alt text at event time
-                    this.analysisTab(Number(textureID)); // Call the callback with the texture ID as a number
+                    this.analysisTab(Number(textureID));
                 });
             }
         }
         // ---------------------------
-        //     Analysis Tab Input Field?
+        //     Analysis Tab Input Field? or do it in TabAnalysis Tab
         // ---------------------------
     }
 
     votingTab(): void {
         this.makeTabVisible('tab1');
-        if (this.tab1Div) runVotingTab(this.tab1Div);
+        this.tabVoting.updateAll();
     }
 
     analysisTab(textureID?: number): void {
@@ -65,32 +71,26 @@ class Manager {
         // Check if textureID is provided
         if (textureID && this.tab2Div) {  // show texture by parameter
 
-            runAnalysisTab(this.tab2Div, textureID, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(textureID);
 
         } else if (AppConfig.analysisTab.textureID === -1 && this.tab2Div) { // show default texture
-
-            runAnalysisTab(this.tab2Div, 3295, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(3295);
 
         } else if (this.tab2Div) { // show last viewed texture
-
-            runAnalysisTab(this.tab2Div, AppConfig.analysisTab.textureID, (newTextureID) => this.analysisTab(newTextureID));
+            this.tabAnalysis.updateAll(AppConfig.analysisTab.textureID);
         }
     }
 
     filterTab(): void {
         this.makeTabVisible('tab3');
-        if (this.tab3Div) {
             // Call the updateAll method from FilterTab class
-            this.filterTabInstance.updateAll(this.tab3Div);
-        }
+            this.tabFilter.updateAll(this.tab3Div);
     }
 
     galleryTab(): void {
         this.makeTabVisible('tab4');
-        if (this.tab4Div) {
             // Pass the callback to the analysisTab to runGalleryTab
-            runGalleryTab(this.tab4Div, (textureID) => this.analysisTab(textureID));
-        }
+            this.tabGallery.updateAll(this.tab4Div);
     }
 
     makeTabVisible(nextActiveTab: string): void {

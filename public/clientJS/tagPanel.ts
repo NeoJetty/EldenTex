@@ -11,7 +11,7 @@ import { AppConfig } from './AppConfig.js';
  * @param {Array<TagVote>} [preCheckedTagIDs] - An optional array of TagVote objects to pre-check.
  * @returns {void}
  */
-function populateTags(tagContainer: HTMLElement, textureID: number, preCheckedTagIDs: TagVote[] = []): void {
+function populateTags(tagContainer: HTMLDivElement, textureID: number, preCheckedTagIDs: TagVote[] = []): void {
     // Ensure preCheckedTagIDs is an array
     if (!Array.isArray(preCheckedTagIDs)) {
         console.error('preCheckedTagIDs is not an array:', preCheckedTagIDs);
