@@ -4,24 +4,31 @@ import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestImageData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
 
-export async function runFilterTab(divElement: HTMLDivElement):Promise<void> {
-    let textureID = 11;
-    // You can manipulate the div element as needed
-    divElement.getElementsByClassName('.tag-container');
+export class TabFilter {
+    private textureID: number;
 
-    // ------------------ update left hand image -------------
-    await updateImageSrcAndAppConfig(textureID, divElement); 
-    populateTextureTypesNavbar(divElement, AppConfig.analysisTab);
-
-    // ------------------ update right hand container -------------
-    let analysisTagsDiv = divElement.querySelector('.right-main-container');
-    if (!analysisTagsDiv) {
-        console.error('Error: Container element not found.');
-        return;
+    constructor() {
+        this.textureID = AppConfig.filterTab.textureID;
     }
-    analysisTagsDiv.innerHTML = '';
-    
-    // ------------------ tags -------------
-    const preCheckedTags = await requestTagsForImage(textureID);
-    populateTags(analysisTagsDiv, textureID, preCheckedTags);
+
+    async updateAll(divElement: HTMLDivElement): Promise<void> {
+        // Manipulate the div element as needed
+        divElement.getElementsByClassName('.tag-container');
+
+        // ------------------ update left hand image -------------
+        await updateImageSrcAndAppConfig(this.textureID, divElement); 
+        populateTextureTypesNavbar(divElement, AppConfig.analysisTab);
+
+        // ------------------ update right hand container -------------
+        const analysisTagsDiv = divElement.querySelector('.right-main-container');
+        if (!analysisTagsDiv) {
+            console.error('Error: Container element not found.');
+            return;
+        }
+        analysisTagsDiv.innerHTML = '';
+
+        // ------------------ tags -------------
+        const preCheckedTags = await requestTagsForImage(this.textureID);
+        populateTags(analysisTagsDiv, this.textureID, preCheckedTags);
+    }
 }

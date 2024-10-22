@@ -4,8 +4,36 @@ body {
     font-family: "Cardo", serif;
     font-weight: 400;
     font-style: normal;
-    color: #FFF;
+    color: #e8eaed;
+    font-size:21px;
     background-color: #202124;
     margin: 0;
     padding: 0;
 }
+
+/* For Webkit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */   
+    background-color: #202124; /* Background color of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #4a4d52; /* Color of the scrollbar thumb */
+    border-radius: 6px; /* Round the corners */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #5a5d62; /* Color of the scrollbar thumb on hover */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin; /* Set the width of the scrollbar */
+    scrollbar-color: #4a4d52 #202124; /* Thumb color and track color */
+}
+
+/* For IE and Edge (legacy) */
+html {
+    -ms-overflow-style: scrollbar; /* For Internet Explorer and Edge */
+}
+

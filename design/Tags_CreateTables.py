@@ -30,9 +30,9 @@ CREATE TABLE IF NOT EXISTS tags_aggregate (
 )
 ''')
 
-# Create the new 'tags_per_user' table without the 'vote' column
+# Create the new 'tags_from_users' table without the 'vote' column
 cursor.execute('''
-CREATE TABLE IF NOT EXISTS tags_per_user (
+CREATE TABLE IF NOT EXISTS tags_from_users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tag_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -41,17 +41,17 @@ CREATE TABLE IF NOT EXISTS tags_per_user (
 )
 ''')
 
-# Create the new 'tags_by_user_and_image' table with 'image_id' and 'vote'
+# Create the new 'tag_texture_associations' table with 'texture_id' and 'vote'
 cursor.execute('''
-CREATE TABLE IF NOT EXISTS tags_by_user_and_image (
+CREATE TABLE IF NOT EXISTS tag_texture_associations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     tag_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    image_id INTEGER NOT NULL,
+    texture_id INTEGER NOT NULL,
     vote BOOLEAN NOT NULL,
     FOREIGN KEY(tag_id) REFERENCES tags(id),
     FOREIGN KEY(user_id) REFERENCES users(id),
-    FOREIGN KEY(image_id) REFERENCES textures(id)
+    FOREIGN KEY(texture_id) REFERENCES textures(id)
 )
 ''')
 
