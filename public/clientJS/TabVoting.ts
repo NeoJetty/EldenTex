@@ -1,6 +1,6 @@
 // TabVoting.ts
 
-import { loadRandomUntaggedImage, requestUntaggedTextureData } from "./requestTextureData.js";
+import { requestUntaggedTextureData } from "./requestTextureData.js";
 import { createVotingUI } from './votingYesNo.js';
 import { TextureViewer } from "./TextureViewer.js";
 import { AppConfig } from "./AppConfig.js";
@@ -17,7 +17,11 @@ class TabVoting {
     // The new main function, renamed to updateAll
     public async updateAll(): Promise<void> {
         let data = await requestUntaggedTextureData(1,2);
-        
+        if(!data){
+            this.textureViewer.setFallbackImage();
+            return;
+        } 
+
         AppConfig.votingTab.updateFromImageDataJSON(data);
 
         this.textureViewer.replaceTexture(AppConfig.votingTab.jpgURL);

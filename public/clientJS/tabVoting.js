@@ -11,6 +11,10 @@ class TabVoting {
     // The new main function, renamed to updateAll
     async updateAll() {
         let data = await requestUntaggedTextureData(1, 2);
+        if (!data) {
+            this.textureViewer.setFallbackImage();
+            return;
+        }
         AppConfig.votingTab.updateFromImageDataJSON(data);
         this.textureViewer.replaceTexture(AppConfig.votingTab.jpgURL);
         this.textureViewer.populateTextureTypesNavbar(AppConfig.votingTab);

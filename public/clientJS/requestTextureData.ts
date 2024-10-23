@@ -16,55 +16,56 @@ function requestUntaggedTextureData(userID: number, tagID: number): Promise<any>
         });
 }
 
-function OLDrequestUntaggedImageData(userID: number, tagID: number, parentDiv: HTMLDivElement) {
-    fetch(`/untaggedTexture/${userID}/${tagID}`)
+function requestTextureData(textureID: number): Promise<any> {
+    return fetch(`/textureData/${textureID}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         })
-        .then(data => {
-            if (parentDiv) {
-                // Find the <img> element with the class 'big-texture-viewer' inside the parent div
-                const imageElement = parentDiv.querySelector('.big-texture-viewer') as HTMLImageElement | null;
-
-                if (imageElement) {
-                    // Update AppConfig using the new helper function
-                    AppConfig.votingTab.updateFromImageDataJSON(data);
-
-                    // Update the image source
-                    imageElement.src = AppConfig.votingTab.jpgURL;
-
-                    // Reset image size when a new image is loaded
-                    resetImageSize();
-
-                    // Populate the navbar based on textureTypes
-                    populateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
-                } else {
-                    console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
-                }
-            } else {
-                console.error(`Element with ID '${parentDiv}' not found.`);
-            }
-        })
         .catch(error => {
-            console.log('No texture data available or all data successfully tagged for this user/tag combination. Server error:', error);
-            
-            // Fallback image if an error occurs
-            const fallbackImageElement = parentDiv?.querySelector('.big-texture-viewer') as HTMLImageElement | null;
-            if (fallbackImageElement) {
-                fallbackImageElement.src = "/UXimg/image_not_available.png"; 
-            }
+            console.log(`No texture data available for textureID ${textureID}. Server error:`, error);
+            throw error;
         });
 }
 
-// Function to load a random untagged image for the user and tag
-function loadRandomUntaggedImage() {
-    requestUntaggedTextureData(1, 2);
+async function updateImageSrcAndAppConfig(textureID: number, parentDiv: HTMLElement | null) {
+    try {
+        // Fetch the image data using the provided textureID
+        const response = await fetch(`/textureData/${textureID}`);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        
+        if (parentDiv) {
+            // Find the <img> element with the class 'big-texture-viewer' inside the parent div
+            const imageElement = parentDiv.querySelector('.big-texture-viewer') as HTMLImageElement | null;
+            
+            if (imageElement) {
+                // Update AppConfig using the new helper function
+                AppConfig.analysisTab.updateFromImageDataJSON(data);
+
+                // Update the image source
+                imageElement.src = AppConfig.analysisTab.jpgURL;
+
+                // Reset image size when a new image is loaded
+                resetImageSize();
+            } else {
+                console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
+            }
+        } else {
+            console.error(`Element with ID '${parentDiv}' not found.`);
+        }
+    } catch (error) {
+        console.error('Error fetching image by ID:', error);
+    }
 }
 
-async function updateImageSrcAndAppConfig(textureID: number, parentDiv: HTMLElement | null) {
+async function OLDupdateImageSrcAndAppConfig(textureID: number, parentDiv: HTMLElement | null) {
     try {
         // Fetch the image data using the provided textureID
         const response = await fetch(`/textureData/${textureID}`);
@@ -141,4 +142,4 @@ function populateTextureTypesNavbar(parentDiv: HTMLElement, AppConfigPropertyGro
     }
 }
 
-export { updateImageSrcAndAppConfig, loadRandomUntaggedImage, populateTextureTypesNavbar, requestUntaggedTextureData };
+export { updateImageSrcAndAppConfig, populateTextureTypesNavbar, requestUntaggedTextureData, requestTextureData };

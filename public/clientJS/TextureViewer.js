@@ -77,5 +77,11 @@ class TextureViewer {
             tab.classList.remove('highlighted');
         });
     }
+    setFallbackImage() {
+        this.resetAllTabs();
+        this.setAllNavTabsToInactive();
+        this.imageElement.src = "/UXimg/image_not_available.png";
+        resetImageSize();
+    }
 }
 export { TextureViewer };

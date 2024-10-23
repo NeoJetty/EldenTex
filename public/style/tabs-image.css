@@ -2,7 +2,7 @@
 #tab1-content {
     display: grid;
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";
@@ -13,7 +13,7 @@
 #tab2-content {
     display: grid;
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";
@@ -24,7 +24,7 @@
 #tab3-content {
     display: grid;
     grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 30px 1fr; /* Tabs row height and content row height */
+    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";

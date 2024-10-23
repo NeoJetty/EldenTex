@@ -1,7 +1,8 @@
 // TabFilter.ts
 import { AppConfig } from "./AppConfig.js";
-import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestTextureData.js";
+import { requestTextureData } from "./requestTextureData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
+import { TextureViewer } from "./TextureViewer.js";
 var State;
 (function (State) {
     State[State["SearchSelection"] = 0] = "SearchSelection";
@@ -11,14 +12,22 @@ class TabFilter {
     constructor(contentDiv) {
         this.state = State.SearchSelection;
         this.contentDiv = contentDiv;
+        this.textureViewer = new TextureViewer(contentDiv);
     }
     async updateAll(textureID) {
         if (this.state == State.SearchSelection) {
         }
         else {
             // ------------------ update left hand image -------------
-            await updateImageSrcAndAppConfig(textureID, this.contentDiv);
-            populateTextureTypesNavbar(this.contentDiv, AppConfig.analysisTab);
+            // Update left-hand image
+            let data = await requestTextureData(textureID);
+            if (!data) {
+                this.textureViewer.setFallbackImage();
+                return;
+            }
+            AppConfig.filterTab.updateFromImageDataJSON(data);
+            this.textureViewer.replaceTexture(AppConfig.filterTab.jpgURL);
+            this.textureViewer.populateTextureTypesNavbar(AppConfig.filterTab);
             // ------------------ update right hand container -------------
             const rightMainDiv = this.contentDiv.querySelector('.right-main-container');
             if (!rightMainDiv) {

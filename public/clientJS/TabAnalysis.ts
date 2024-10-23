@@ -1,23 +1,34 @@
 // TabAnalysis.ts
 
 import { AppConfig } from "./AppConfig.js";
-import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestTextureData.js";
+import { requestTextureData, populateTextureTypesNavbar } from "./requestTextureData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
+import { TextureViewer } from "./TextureViewer.js";
 
 class TabAnalysis {
     private targetParentElement: HTMLElement;
-    private callbackUpdateAnalysisTab: (textureID: number) => void;
+    private textureViewer: TextureViewer;
 
-    constructor(targetParentElement: HTMLDivElement, callbackUpdateAnalysisTab: (textureID: number) => void) {
+    constructor(targetParentElement: HTMLDivElement) {
         this.targetParentElement = targetParentElement;
-        this.callbackUpdateAnalysisTab = callbackUpdateAnalysisTab;
+        this.textureViewer = new TextureViewer(targetParentElement);
     }
 
     // The new main function, renamed to updateAll
     public async updateAll(textureID: number): Promise<void> {
         // Update left-hand image
-        await this.updateImageAndNavbar(textureID);
+        let data = await requestTextureData(textureID);
+        if(!data){
+            this.textureViewer.setFallbackImage();
+            return;
+        } 
+
+        AppConfig.analysisTab.updateFromImageDataJSON(data);
+        this.textureViewer.replaceTexture(AppConfig.analysisTab.jpgURL);
+        this.textureViewer.populateTextureTypesNavbar(AppConfig.analysisTab);
         
+
+
         // Update right-hand container
         const analysisTagsDiv = this.targetParentElement.querySelector('.right-main-container') as HTMLDivElement;
         if (!analysisTagsDiv) {
@@ -40,8 +51,7 @@ class TabAnalysis {
     // Updates the left-hand image and populates the texture types navbar
     private async updateImageAndNavbar(textureID:number): Promise<void> {
         try {
-            await updateImageSrcAndAppConfig(textureID, this.targetParentElement);
-            populateTextureTypesNavbar(this.targetParentElement, AppConfig.analysisTab);
+            
         } catch (error) {
             console.error('Error updating image and navbar:', error);
         }
@@ -67,7 +77,7 @@ class TabAnalysis {
         okButton.addEventListener('click', () => {
             const textureIDValue = parseInt(formField.value, 10); // Convert the field value to integer
             if (!isNaN(textureIDValue)) {
-                this.callbackUpdateAnalysisTab(textureIDValue); // Call the callback function with the integer value
+                this.updateAll(textureIDValue); // Call the callback function with the integer value
             } else {
                 console.error('Invalid texture ID input');
             }

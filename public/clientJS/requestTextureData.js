@@ -14,27 +14,37 @@ function requestUntaggedTextureData(userID, tagID) {
         throw error;
     });
 }
-function OLDrequestUntaggedImageData(userID, tagID, parentDiv) {
-    fetch(`/untaggedTexture/${userID}/${tagID}`)
+function requestTextureData(textureID) {
+    return fetch(`/textureData/${textureID}`)
         .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         return response.json();
     })
-        .then(data => {
+        .catch(error => {
+        console.log(`No texture data available for textureID ${textureID}. Server error:`, error);
+        throw error;
+    });
+}
+async function updateImageSrcAndAppConfig(textureID, parentDiv) {
+    try {
+        // Fetch the image data using the provided textureID
+        const response = await fetch(`/textureData/${textureID}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
         if (parentDiv) {
             // Find the <img> element with the class 'big-texture-viewer' inside the parent div
             const imageElement = parentDiv.querySelector('.big-texture-viewer');
             if (imageElement) {
                 // Update AppConfig using the new helper function
-                AppConfig.votingTab.updateFromImageDataJSON(data);
+                AppConfig.analysisTab.updateFromImageDataJSON(data);
                 // Update the image source
-                imageElement.src = AppConfig.votingTab.jpgURL;
+                imageElement.src = AppConfig.analysisTab.jpgURL;
                 // Reset image size when a new image is loaded
                 resetImageSize();
-                // Populate the navbar based on textureTypes
-                populateTextureTypesNavbar(parentDiv, AppConfig.votingTab);
             }
             else {
                 console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
@@ -43,21 +53,12 @@ function OLDrequestUntaggedImageData(userID, tagID, parentDiv) {
         else {
             console.error(`Element with ID '${parentDiv}' not found.`);
         }
-    })
-        .catch(error => {
-        console.log('No texture data available or all data successfully tagged for this user/tag combination. Server error:', error);
-        // Fallback image if an error occurs
-        const fallbackImageElement = parentDiv === null || parentDiv === void 0 ? void 0 : parentDiv.querySelector('.big-texture-viewer');
-        if (fallbackImageElement) {
-            fallbackImageElement.src = "/UXimg/image_not_available.png";
-        }
-    });
+    }
+    catch (error) {
+        console.error('Error fetching image by ID:', error);
+    }
 }
-// Function to load a random untagged image for the user and tag
-function loadRandomUntaggedImage() {
-    requestUntaggedTextureData(1, 2);
-}
-async function updateImageSrcAndAppConfig(textureID, parentDiv) {
+async function OLDupdateImageSrcAndAppConfig(textureID, parentDiv) {
     try {
         // Fetch the image data using the provided textureID
         const response = await fetch(`/textureData/${textureID}`);
@@ -122,4 +123,4 @@ function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
         firstActiveTab.classList.add('active'); // Set the first highlighted tab as active
     }
 }
-export { updateImageSrcAndAppConfig, loadRandomUntaggedImage, populateTextureTypesNavbar, requestUntaggedTextureData };
+export { updateImageSrcAndAppConfig, populateTextureTypesNavbar, requestUntaggedTextureData, requestTextureData };
