@@ -1,34 +1,31 @@
 // TabVoting.ts
 
-import { loadRandomUntaggedImage } from "./requestTextureData.js";
+import { loadRandomUntaggedImage, requestUntaggedTextureData } from "./requestTextureData.js";
 import { createVotingUI } from './votingYesNo.js';
+import { TextureViewer } from "./TextureViewer.js";
+import { AppConfig } from "./AppConfig.js";
 
 class TabVoting {
-    private parentDiv: HTMLDivElement;
+    public contentDiv: HTMLDivElement;
+    public textureViewer: TextureViewer;
 
-    constructor(parentDiv: HTMLDivElement) {
-        this.parentDiv = parentDiv;
+    constructor(contentDiv: HTMLDivElement) {
+        this.contentDiv = contentDiv;
+        this.textureViewer = new TextureViewer(contentDiv);
     }
 
     // The new main function, renamed to updateAll
     public async updateAll(): Promise<void> {
-        await this.loadRandomUntaggedImage();
-        this.createVotingUI();
+        let data = await requestUntaggedTextureData(1,2);
+        
+        AppConfig.votingTab.updateFromImageDataJSON(data);
+
+        this.textureViewer.replaceTexture(AppConfig.votingTab.jpgURL);
+        this.textureViewer.populateTextureTypesNavbar(AppConfig.votingTab);
+
+        createVotingUI(this.contentDiv);
     }
 
-    // Load the random untagged image
-    private async loadRandomUntaggedImage(): Promise<void> {
-        try {
-            await loadRandomUntaggedImage(this.parentDiv);
-        } catch (error) {
-            console.error('Error loading random untagged image:', error);
-        }
-    }
-
-    // Create the voting UI
-    private createVotingUI(): void {
-        createVotingUI(this.parentDiv);
-    }
 }
 
 export default TabVoting;

@@ -24,6 +24,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.json());
+
 // ------------------------------------------------------
 // Serve modules
 // ------------------------------------------------------
@@ -42,6 +44,8 @@ app.use('/serveManyTextures', require('./server/serveManyTextures'));
 app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
 // serveMapsForTexture/:texture_id
 app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
+// serveTexturesByMultipleTags/:POST-JSON{tags:[{tag_id:number, vote:bool},{...},{...}]}
+app.use('/serveTexturesByMultipleTags', require('./server/serveTexturesByMultipleTags'));
 
 
 

@@ -1,83 +1,67 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { AppConfig } from './AppConfig.js';
 class TabGallery {
-    constructor() {
-        this.userId = AppConfig.user.ID;
+    constructor(contentDiv) {
+        this.contentDiv = contentDiv;
     }
     // Fetch textures based on user ID, tag ID, and page number
-    fetchManyTextures(userId, tagID, page) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch(`/serveManyTextures/${userId}/${tagID}?page=${page}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        });
+    async fetchManyTextures(userId, tagID, page) {
+        const response = await fetch(`/serveManyTextures/${userId}/${tagID}?page=${page}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
     }
     // Update the gallery tab content
-    updateAll(targetDiv) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (AppConfig.galleryTab.tagID === -1) {
-                yield this.constructTagsDropdownMenu(targetDiv);
-            }
-            else {
-                const textures = yield this.fetchTextureDataset(AppConfig.galleryTab.tagID, 1);
-                this.buildImageGrid(textures, 1);
-                this.updatePagination(textures.length, 1);
-            }
-        });
+    async updateAll() {
+        if (AppConfig.galleryTab.tagID === -1) {
+            await this.constructTagsDropdownMenu(this.contentDiv);
+        }
+        else {
+            const textures = await this.fetchTextureDataset(AppConfig.galleryTab.tagID, 1);
+            this.buildImageGrid(textures, 1);
+            this.updatePagination(textures.length, 1);
+        }
     }
     // Fetch the texture dataset based on tag ID and page number
-    fetchTextureDataset(tagID, page) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const textures = yield this.fetchManyTextures(this.userId, tagID, page);
-                if (AppConfig.debug.level === 2) {
-                    console.log(`Fetching textures with User ID: ${this.userId}, Tag ID: ${tagID}, Page: ${page}`);
-                    console.log('Fetched textures:', textures);
-                }
-                // Update AppConfig with the fetched texture data
-                AppConfig.updateGalleryDataset(textures, tagID);
-                return textures;
+    async fetchTextureDataset(tagID, page) {
+        try {
+            let userID = AppConfig.user.ID;
+            const textures = await this.fetchManyTextures(userID, tagID, page);
+            if (AppConfig.debug.level === 2) {
+                console.log(`Fetching textures with User ID: ${userID}, Tag ID: ${tagID}, Page: ${page}`);
+                console.log('Fetched textures:', textures);
             }
-            catch (error) {
-                console.error(`Error fetching textures for tag ID ${tagID}:`, error);
-                return []; // Return an empty array on error
-            }
-        });
+            // Update AppConfig with the fetched texture data
+            AppConfig.updateGalleryDataset(textures, tagID);
+            return textures;
+        }
+        catch (error) {
+            console.error(`Error fetching textures for tag ID ${tagID}:`, error);
+            return []; // Return an empty array on error
+        }
     }
     // Construct the tags dropdown menu
-    constructTagsDropdownMenu(targetDiv) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const response = yield this.fetchAllTags();
-                const tags = response.tags;
-                if (Array.isArray(tags)) {
-                    const dropdownMenuElement = targetDiv.querySelector('#textureType');
-                    if (!dropdownMenuElement) {
-                        console.error(`DropdownMenu HTML element not found in: ${targetDiv}`);
-                        return;
-                    }
-                    // Build the dropdown menu
-                    this.buildDropdownMenu(dropdownMenuElement, tags);
+    async constructTagsDropdownMenu(targetDiv) {
+        try {
+            const response = await this.fetchAllTags();
+            const tags = response.tags;
+            if (Array.isArray(tags)) {
+                const dropdownMenuElement = targetDiv.querySelector('#textureType');
+                if (!dropdownMenuElement) {
+                    console.error(`DropdownMenu HTML element not found in: ${targetDiv}`);
+                    return;
                 }
-                else {
-                    console.error('Expected an array of tags, but got:', tags);
-                }
+                // Build the dropdown menu
+                this.buildDropdownMenu(dropdownMenuElement, tags);
             }
-            catch (error) {
-                console.error('Error fetching tags:', error);
-                targetDiv.innerHTML = 'Error loading tags.';
+            else {
+                console.error('Expected an array of tags, but got:', tags);
             }
-        });
+        }
+        catch (error) {
+            console.error('Error fetching tags:', error);
+            targetDiv.innerHTML = 'Error loading tags.';
+        }
     }
     // Build the dropdown menu
     buildDropdownMenu(dropdown, tags) {
@@ -98,21 +82,19 @@ class TabGallery {
         });
     }
     // Change the gallery page and refresh the content
-    changeGalleryPage(tagID, page) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (AppConfig.debug.level === 2) {
-                console.log(`Refreshing gallery page: ${page} for tag: ${tagID}`);
-            }
-            if (tagID !== AppConfig.galleryTab.tagID) {
-                const textures = yield this.fetchTextureDataset(tagID, page);
-                this.buildImageGrid(textures, page);
-                this.updatePagination(textures.length, page);
-            }
-            else {
-                this.buildImageGrid(AppConfig.galleryTab.allTextureData, page);
-                this.updatePagination(AppConfig.galleryTab.allTextureData.length, page);
-            }
-        });
+    async changeGalleryPage(tagID, page) {
+        if (AppConfig.debug.level === 2) {
+            console.log(`Refreshing gallery page: ${page} for tag: ${tagID}`);
+        }
+        if (tagID !== AppConfig.galleryTab.tagID) {
+            const textures = await this.fetchTextureDataset(tagID, page);
+            this.buildImageGrid(textures, page);
+            this.updatePagination(textures.length, page);
+        }
+        else {
+            this.buildImageGrid(AppConfig.galleryTab.allTextureData, page);
+            this.updatePagination(AppConfig.galleryTab.allTextureData.length, page);
+        }
     }
     // Build the image grid
     buildImageGrid(textures, page) {
@@ -162,18 +144,16 @@ class TabGallery {
             nextButton.style.display = currentPage < totalPages ? 'inline' : 'none';
     }
     // Fetch all tags
-    fetchAllTags() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch('/allTags');
-            if (!response.ok) {
-                throw new Error('Failed to fetch tags');
-            }
-            const data = yield response.json();
-            if (AppConfig.debug.level === 2) {
-                console.log('Response from /allTags:', data);
-            }
-            return data;
-        });
+    async fetchAllTags() {
+        const response = await fetch('/allTags');
+        if (!response.ok) {
+            throw new Error('Failed to fetch tags');
+        }
+        const data = await response.json();
+        if (AppConfig.debug.level === 2) {
+            console.log('Response from /allTags:', data);
+        }
+        return data;
     }
 }
 export default TabGallery;

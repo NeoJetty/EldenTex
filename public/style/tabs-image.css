@@ -6,7 +6,7 @@
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";
-    height: 800px; /* Adjust as needed */
+    height: 850px; /* Adjust as needed */
 }
 
 /* Image Analysis Tab */
@@ -17,7 +17,7 @@
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";
-    height: 800px; /* Adjust as needed */
+    height: 850px; /* Adjust as needed */
 }
 
 /* Filter Tab */
@@ -28,7 +28,7 @@
     grid-template-areas: 
         "tabs zoom-controls right-main-container"
         "image zoom-controls right-main-container";
-    height: 800px; /* Adjust as needed */
+    height: 850px; /* Adjust as needed */
 }
 
 /* Tabs Container */
@@ -38,7 +38,7 @@
     display: flex;
     align-items: center;
     /*background-color: #f0f0f0; Background color for tabs */
-    border-bottom: 1px solid #ccc; /* Optional: Border for visual clarity */
+    border-bottom: 1px solid #555; /* Optional: Border for visual clarity */
 }
 
 /* Tabs */
@@ -49,18 +49,32 @@
 
 /* Tab Items */
 .tex-type-navitem {
-    padding: 10px;
+    width: 40px;
+    padding: 5px; /* Control padding on all sides */
     text-align: center;
     text-decoration: none;
-    color: white;
-    border: 1px solid #ccc; /* Border for visual clarity */
+    color: #575757;
+    border: 1px solid #777; /* Set top, left, and right borders */
+    border-bottom: 0px solid #777; /* Override bottom border */
     margin-right: 2px;
-    background-color: #888; /* Background color for tabs */
+    background-color: #202124; /* Background color for tabs */
     transition: background-color 0.3s;
+    box-sizing: border-box;
+    
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    height: 100%;
 }
 
 .tex-type-navitem.highlighted {
     background-color: #333; /* Example color, adjust as needed */
+    color:#e8eaed
+}
+
+.tex-type-navitem.active {
+    border: 3px solid #777; /* Set top, left, and right borders */
+    border-bottom: 0px solid #777; /* Override bottom border */
 }
 
 .tex-type-navitem.highlighted:hover {
@@ -71,7 +85,7 @@
 .image-container {
     grid-area: image;
     overflow: auto; /* Ensure scroll bars appear if needed */
-    border: 1px solid #ccc; /* Optional: Border for visual clarity */
+    border: 1px solid #555; /* Optional: Border for visual clarity */
 }
 
 /* Image */

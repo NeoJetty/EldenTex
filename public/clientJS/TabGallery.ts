@@ -1,10 +1,10 @@
 import { AppConfig } from './AppConfig.js';
 
 class TabGallery {
-    private userId: number;
+    public contentDiv: HTMLDivElement;
 
-    constructor() {
-        this.userId = AppConfig.user.ID;
+    constructor(contentDiv: HTMLDivElement) {
+        this.contentDiv = contentDiv;
     }
 
     // Fetch textures based on user ID, tag ID, and page number
@@ -17,9 +17,9 @@ class TabGallery {
     }
 
     // Update the gallery tab content
-    public async updateAll(targetDiv: HTMLElement): Promise<void> {
+    public async updateAll(): Promise<void> {
         if (AppConfig.galleryTab.tagID === -1) {
-            await this.constructTagsDropdownMenu(targetDiv);
+            await this.constructTagsDropdownMenu(this.contentDiv);
         } else {
             const textures = await this.fetchTextureDataset(AppConfig.galleryTab.tagID, 1);
             this.buildImageGrid(textures, 1);
@@ -30,9 +30,10 @@ class TabGallery {
     // Fetch the texture dataset based on tag ID and page number
     private async fetchTextureDataset(tagID: number, page: number): Promise<any[]> {
         try {
-            const textures = await this.fetchManyTextures(this.userId, tagID, page);
+            let userID = AppConfig.user.ID;
+            const textures = await this.fetchManyTextures(userID, tagID, page);
             if (AppConfig.debug.level === 2) {
-                console.log(`Fetching textures with User ID: ${this.userId}, Tag ID: ${tagID}, Page: ${page}`);
+                console.log(`Fetching textures with User ID: ${userID}, Tag ID: ${tagID}, Page: ${page}`);
                 console.log('Fetched textures:', textures);
             }
             // Update AppConfig with the fetched texture data

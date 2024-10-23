@@ -2,7 +2,21 @@
 import { AppConfig } from './AppConfig.js';
 import { resetImageSize } from './imageManipulation.js';
 
-function requestUntaggedImageData(userID: number, tagID: number, parentDiv: HTMLElement | null) {
+function requestUntaggedTextureData(userID: number, tagID: number): Promise<any> {
+    return fetch(`/untaggedTexture/${userID}/${tagID}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.log('No texture data available or all data successfully tagged for this user/tag combination. Server error:', error);
+            throw error;
+        });
+}
+
+function OLDrequestUntaggedImageData(userID: number, tagID: number, parentDiv: HTMLDivElement) {
     fetch(`/untaggedTexture/${userID}/${tagID}`)
         .then(response => {
             if (!response.ok) {
@@ -46,8 +60,8 @@ function requestUntaggedImageData(userID: number, tagID: number, parentDiv: HTML
 }
 
 // Function to load a random untagged image for the user and tag
-function loadRandomUntaggedImage(parentDiv: HTMLElement | null) {
-    requestUntaggedImageData(1, 4, parentDiv);
+function loadRandomUntaggedImage() {
+    requestUntaggedTextureData(1, 2);
 }
 
 async function updateImageSrcAndAppConfig(textureID: number, parentDiv: HTMLElement | null) {
@@ -127,4 +141,4 @@ function populateTextureTypesNavbar(parentDiv: HTMLElement, AppConfigPropertyGro
     }
 }
 
-export { updateImageSrcAndAppConfig, loadRandomUntaggedImage, populateTextureTypesNavbar };
+export { updateImageSrcAndAppConfig, loadRandomUntaggedImage, populateTextureTypesNavbar, requestUntaggedTextureData };

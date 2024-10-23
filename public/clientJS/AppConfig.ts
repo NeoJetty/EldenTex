@@ -23,6 +23,8 @@ class TextureTypes {
     public _vat: boolean = false;
 }
 
+type TextureTypeKeys = keyof TextureTypes;
+
 class TextureDataContainer {
     public textureID: number = -1;
     public jpgURL: string = '';
@@ -59,6 +61,7 @@ class User {
     public name: string = 'NeoJetty';
     public theme: string = 'dark';
     public language: string = 'en';
+    public priorityTextureType: keyof TextureTypes = '_n';
 }
 
 class Zoom {
@@ -92,8 +95,8 @@ class AppConfig {
     public votingTab: TextureDataContainer = new TextureDataContainer();
     public analysisTab: TextureDataContainer = new TextureDataContainer();
     public filterTab: TextureDataContainer = new TextureDataContainer();
-    public user: User = new User();
     public galleryTab: GalleryTab = new GalleryTab();
+    public user: User = new User();
 
     // Private constructor to prevent instantiation
     private constructor() {}
@@ -183,6 +186,6 @@ class AppConfig {
 
 // Exporting the AppConfig singleton instance
 const appConfigInstance = AppConfig.getInstance(); // Get the singleton instance
-export { appConfigInstance as AppConfig };
+export { appConfigInstance as AppConfig, TextureDataContainer, TextureTypeKeys };
 // @ts-ignore
 window.AppConfig = appConfigInstance; // Expose globally for debugging

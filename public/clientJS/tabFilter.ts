@@ -4,32 +4,41 @@ import { AppConfig } from "./AppConfig.js";
 import { updateImageSrcAndAppConfig, populateTextureTypesNavbar } from "./requestTextureData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
 
-class TabFilter {
-    private textureID: number;
+enum State {
+    SearchSelection = 0,
+    Tagging = 1,
+}
 
-    constructor() {
-        this.textureID = AppConfig.filterTab.textureID;
+class TabFilter {
+    public contentDiv: HTMLDivElement;
+    private state: State = State.SearchSelection;
+
+    constructor(contentDiv: HTMLDivElement) {
+        this.contentDiv = contentDiv;
     }
 
-    async updateAll(divElement: HTMLDivElement): Promise<void> {
-        // Manipulate the div element as needed
-        divElement.getElementsByClassName('.tag-container');
+    async updateAll(textureID: number): Promise<void> {
 
-        // ------------------ update left hand image -------------
-        await updateImageSrcAndAppConfig(this.textureID, divElement); 
-        populateTextureTypesNavbar(divElement, AppConfig.analysisTab);
+        if(this.state == State.SearchSelection){
 
-        // ------------------ update right hand container -------------
-        const analysisTagsDiv = divElement.querySelector('.right-main-container') as HTMLDivElement;
-        if (!analysisTagsDiv) {
-            console.error('Error: Container element not found...');
-            return;
+        } else {
+            // ------------------ update left hand image -------------
+            await updateImageSrcAndAppConfig(textureID, this.contentDiv); 
+            populateTextureTypesNavbar(this.contentDiv, AppConfig.analysisTab);
+
+            // ------------------ update right hand container -------------
+            const rightMainDiv = this.contentDiv.querySelector('.right-main-container') as HTMLDivElement;
+            if (!rightMainDiv) {
+                console.error('Error: Container element not found...');
+                return;
+            }
+            rightMainDiv.innerHTML = '';
+
+            // ------------------ tags -------------
+            const preCheckedTags = await requestTagsForImage(textureID);
+            populateTags(rightMainDiv, textureID, preCheckedTags);
         }
-        analysisTagsDiv.innerHTML = '';
-
-        // ------------------ tags -------------
-        const preCheckedTags = await requestTagsForImage(this.textureID);
-        populateTags(analysisTagsDiv, this.textureID, preCheckedTags);
+        
     }
 }
 

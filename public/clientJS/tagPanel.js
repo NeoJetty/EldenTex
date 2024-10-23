@@ -1,13 +1,4 @@
 // tagPanel.ts
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { AppConfig } from './AppConfig.js';
 /**
  * Fetches tags from the server and populates the specified container with toggles and labels.
@@ -162,26 +153,24 @@ function handleTagNeutralSelection(tagID, textureID) {
  * @param {number} textureID - The ID of the texture being analyzed.
  * @returns {Promise<TagVote[]>} - A promise that resolves to an array of objects containing tag_id and vote.
  */
-function requestTagsForImage(textureID) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const userId = AppConfig.user.ID; // Extract user ID from AppConfig
-        try {
-            const response = yield fetch(`/serveTagsForTexture/${userId}/${textureID}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch tags for the specified texture.');
-            }
-            const data = yield response.json();
-            // Ensure the textureTags field exists and is an array
-            if (!data.textureTags || !Array.isArray(data.textureTags)) {
-                throw new Error('Invalid response format.');
-            }
-            // Return the array of TagVote objects
-            return data.textureTags;
+async function requestTagsForImage(textureID) {
+    const userId = AppConfig.user.ID; // Extract user ID from AppConfig
+    try {
+        const response = await fetch(`/serveTagsForTexture/${userId}/${textureID}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch tags for the specified texture.');
         }
-        catch (error) {
-            console.error('Error fetching tags:', error);
-            return []; // Return an empty array if there was an error
+        const data = await response.json();
+        // Ensure the textureTags field exists and is an array
+        if (!data.textureTags || !Array.isArray(data.textureTags)) {
+            throw new Error('Invalid response format.');
         }
-    });
+        // Return the array of TagVote objects
+        return data.textureTags;
+    }
+    catch (error) {
+        console.error('Error fetching tags:', error);
+        return []; // Return an empty array if there was an error
+    }
 }
 export { populateTags, requestTagsForImage };

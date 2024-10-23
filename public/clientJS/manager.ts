@@ -7,29 +7,23 @@ import TabGallery   from './TabGallery.js';
 import { AppConfig } from './AppConfig.js';
 
 class Manager {
-    private tab1Div: HTMLDivElement;
-    private tab2Div: HTMLDivElement;
-    private tab3Div: HTMLDivElement;
-    private tab4Div: HTMLDivElement;
     private tabVoting  : TabVoting;
     private tabAnalysis: TabAnalysis;
     private tabFilter  : TabFilter;
     private tabGallery : TabGallery;
 
-    constructor() {
-        // Assign the tab content divs to member variables
-        // Use type assertion to cast the element to HTMLDivElement
-        this.tab1Div = document.getElementById('tab1-content') as HTMLDivElement;
-        this.tab2Div = document.getElementById('tab2-content') as HTMLDivElement;
-        this.tab3Div = document.getElementById('tab3-content') as HTMLDivElement;
-        this.tab4Div = document.getElementById('tab4-content') as HTMLDivElement;
-
+    constructor(
+        _tabVoting: TabVoting,
+        _tabAnalysis: TabAnalysis,
+        _tabFilter: TabFilter,
+        _tabGallery: TabGallery
+    ){
 
         // Initialize FilterTab instance
-        this.tabVoting   = new TabVoting(this.tab1Div);
-        this.tabAnalysis = new TabAnalysis(this.tab2Div, (textureID) => {this.analysisTab(textureID)});
-        this.tabFilter   = new TabFilter();
-        this.tabGallery  = new TabGallery();
+        this.tabVoting   = _tabVoting;
+        this.tabAnalysis = _tabAnalysis;
+        this.tabFilter   = _tabFilter;
+        this.tabGallery  = _tabGallery;
 
         this.setEventListenersCallingManager();
     }
@@ -69,14 +63,14 @@ class Manager {
         this.makeTabVisible('tab2');
         
         // Check if textureID is provided
-        if (textureID && this.tab2Div) {  // show texture by parameter
+        if (textureID) {  // show texture by parameter
 
             this.tabAnalysis.updateAll(textureID);
 
-        } else if (AppConfig.analysisTab.textureID === -1 && this.tab2Div) { // show default texture
+        } else if (AppConfig.analysisTab.textureID === -1) { // show default texture
             this.tabAnalysis.updateAll(3295);
 
-        } else if (this.tab2Div) { // show last viewed texture
+        } else { // show last viewed texture
             this.tabAnalysis.updateAll(AppConfig.analysisTab.textureID);
         }
     }
@@ -84,13 +78,13 @@ class Manager {
     filterTab(): void {
         this.makeTabVisible('tab3');
             // Call the updateAll method from FilterTab class
-            this.tabFilter.updateAll(this.tab3Div);
+            this.tabFilter.updateAll(3295);
     }
 
     galleryTab(): void {
         this.makeTabVisible('tab4');
             // Pass the callback to the analysisTab to runGalleryTab
-            this.tabGallery.updateAll(this.tab4Div);
+            this.tabGallery.updateAll();
     }
 
     makeTabVisible(nextActiveTab: string): void {

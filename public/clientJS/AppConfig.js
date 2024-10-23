@@ -60,6 +60,7 @@ class User {
         this.name = 'NeoJetty';
         this.theme = 'dark';
         this.language = 'en';
+        this.priorityTextureType = '_n';
     }
 }
 class Zoom {
@@ -97,8 +98,8 @@ class AppConfig {
         this.votingTab = new TextureDataContainer();
         this.analysisTab = new TextureDataContainer();
         this.filterTab = new TextureDataContainer();
-        this.user = new User();
         this.galleryTab = new GalleryTab();
+        this.user = new User();
     }
     // Method to get the singleton instance
     static getInstance() {
@@ -173,6 +174,6 @@ class AppConfig {
 }
 // Exporting the AppConfig singleton instance
 const appConfigInstance = AppConfig.getInstance(); // Get the singleton instance
-export { appConfigInstance as AppConfig };
+export { appConfigInstance as AppConfig, TextureDataContainer };
 // @ts-ignore
 window.AppConfig = appConfigInstance; // Expose globally for debugging

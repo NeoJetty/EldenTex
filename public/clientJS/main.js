@@ -1,20 +1,15 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 import { AppConfig } from './AppConfig.js';
-import Manager from './manager.js'; // Import the Manager class
+import Manager from './Manager.js'; // Import the Manager class
+import TabVoting from './TabVoting.js';
+import TabAnalysis from './TabAnalysis.js';
+import TabFilter from './TabFilter.js';
+import TabGallery from './TabGallery.js';
 // Declare the manager variable with a type annotation
 let manager; // This will hold the Manager instance
 function InitMainNavbarListener() {
     // Event listener for tab clicks
     document.querySelectorAll('.tab-link').forEach(link => {
-        link.addEventListener('click', (e) => __awaiter(this, void 0, void 0, function* () {
+        link.addEventListener('click', async (e) => {
             e.preventDefault();
             // Ensure the target is an HTML element before accessing its attributes
             const target = e.target;
@@ -40,29 +35,31 @@ function InitMainNavbarListener() {
                         console.error('Unknown tab:', nextActiveTabName);
                 }
             }
-        }));
+        });
     });
-    if (AppConfig.debug.level === 2)
-        console.log('Main navbar listener initialized.');
 }
 // Readable sequence of execution
-function InitInOrder() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            if (AppConfig.debug.level === 2)
-                console.log('loadAllTabHTMLs loaded');
-            // Create an instance of the Manager class
-            manager = new Manager(); // Initialize here
-            // Initialize the main navbar listener after all tabs are loaded
-            InitMainNavbarListener();
-            manager.votingTab();
-            // Automatically click the first tab to load its content and set it active
-            // document.querySelector('.tab-link[data-tab="tab1"]')?.click();
-        }
-        catch (error) {
-            console.error('Error during initialization:', error);
-        }
-    });
+async function InitInOrder() {
+    try {
+        // Create instances of the tab classes
+        const tabVoting = new TabVoting(document.getElementById('tab1-content'));
+        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content'), (textureID) => { manager.analysisTab(textureID); });
+        const tabFilter = new TabFilter(document.getElementById('tab3-content'));
+        const tabGallery = new TabGallery(document.getElementById('tab4-content'));
+        // Create an instance of the Manager class and pass the tab instances and divs
+        manager = new Manager(tabVoting, tabAnalysis, tabFilter, tabGallery);
+        if (AppConfig.debug.level === 2)
+            console.log('Manager created');
+        // Initialize the main navbar listener after all tabs are loaded
+        InitMainNavbarListener();
+        if (AppConfig.debug.level === 2)
+            console.log('Main navbar listener initialized.');
+        // Activate the first tab on startup
+        manager.votingTab();
+    }
+    catch (error) {
+        console.error('Error during initialization:', error);
+    }
 }
 // Start the initialization process
 InitInOrder();

@@ -1,5 +1,9 @@
 import { AppConfig } from './AppConfig.js';
-import Manager from './manager.js'; // Import the Manager class
+import Manager      from './Manager.js'; // Import the Manager class
+import TabVoting    from './TabVoting.js';
+import TabAnalysis  from './TabAnalysis.js';
+import TabFilter    from './TabFilter.js';
+import TabGallery   from './TabGallery.js';
 
 // Declare the manager variable with a type annotation
 let manager: Manager; // This will hold the Manager instance
@@ -8,6 +12,7 @@ function InitMainNavbarListener(): void {
     // Event listener for tab clicks
     document.querySelectorAll('.tab-link').forEach(link => {
         link.addEventListener('click', async (e: Event) => {
+            
             e.preventDefault();
 
             // Ensure the target is an HTML element before accessing its attributes
@@ -38,24 +43,30 @@ function InitMainNavbarListener(): void {
             }
         });
     });
-    if (AppConfig.debug.level === 2) console.log('Main navbar listener initialized.');
+    
 }
 
 // Readable sequence of execution
 async function InitInOrder(): Promise<void> {
     try {
-        if (AppConfig.debug.level === 2) console.log('loadAllTabHTMLs loaded');
-
-        // Create an instance of the Manager class
-        manager = new Manager(); // Initialize here
+        
+         // Create instances of the tab classes
+        const tabVoting   = new TabVoting  (document.getElementById('tab1-content') as HTMLDivElement);
+        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content') as HTMLDivElement, (textureID) => { manager.analysisTab(textureID); });
+        const tabFilter   = new TabFilter  (document.getElementById('tab3-content') as HTMLDivElement);
+        const tabGallery  = new TabGallery (document.getElementById('tab4-content') as HTMLDivElement);
+ 
+        // Create an instance of the Manager class and pass the tab instances and divs
+        manager = new Manager(tabVoting, tabAnalysis, tabFilter, tabGallery);
+        if (AppConfig.debug.level === 2) console.log('Manager created');
 
         // Initialize the main navbar listener after all tabs are loaded
         InitMainNavbarListener();
+        if (AppConfig.debug.level === 2) console.log('Main navbar listener initialized.');
+        
+        // Activate the first tab on startup
+        manager.votingTab(); 
 
-        manager.votingTab();
-
-        // Automatically click the first tab to load its content and set it active
-        // document.querySelector('.tab-link[data-tab="tab1"]')?.click();
     } catch (error) {
         console.error('Error during initialization:', error);
     }
