@@ -1,18 +1,21 @@
-// serveTexturesByTags.js
 const express = require('express');
 const router = express.Router();
 
-
 // /serveTexturesByMultipleTags.js
 router.post('/', (req, res) => {
-    const tags = req.body.tags;  // Array of tags with { tag_id, vote }
+    const { tags, user_id } = req.body;  // Destructure tags and user_id from request body
     const db = req.db;
 
+    // Validate that tags are an array and user_id is provided
     if (!Array.isArray(tags) || tags.length === 0) {
         return res.status(400).send('Tags must be an array and cannot be empty.');
     }
 
-    // Prepare SQL WHERE clause based on tag_id and vote pairs
+    if (!user_id) {
+        return res.status(400).send('User ID is required.');
+    }
+
+    // Prepare SQL WHERE clause based on tag_id, vote pairs, and user_id
     let whereClause = tags.map((_, index) => `(tag_id = ? AND vote = ?)`).join(' OR ');
     let params = [];
 
@@ -21,17 +24,18 @@ router.post('/', (req, res) => {
         params.push(tag.tag_id, tag.vote);
     });
 
-    // Add the GROUP BY and HAVING clause to ensure all tags must match (AND search)
+    // SQL query will now include a check for user_id in the WHERE clause
     const query = `
         SELECT texture_id 
         FROM tag_texture_associations 
-        WHERE ${whereClause}
+        WHERE (${whereClause}) AND user_id = ?
         GROUP BY texture_id
         HAVING COUNT(DISTINCT tag_id) = ?
     `;
+
     console.log(query);
-    // Execute the query with params and number of tags (for HAVING clause)
-    db.all(query, [...params, tags.length], (err, rows) => {
+    // Execute the query with params (including user_id and the number of tags for HAVING clause)
+    db.all(query, [...params, user_id, tags.length], (err, rows) => {
         if (err) {
             console.error('Error querying database:', err);
             return res.status(500).send('Database error');
@@ -46,7 +50,6 @@ router.post('/', (req, res) => {
         fetchTexturesDataByIds(textureIDs, db, res);
     });
 });
-
 
 // Function to fetch texture data for multiple image IDs (same as before)
 function fetchTexturesDataByIds(textureIDs, db, res) {

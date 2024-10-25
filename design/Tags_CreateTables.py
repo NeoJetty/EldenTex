@@ -55,6 +55,18 @@ CREATE TABLE IF NOT EXISTS tag_texture_associations (
 )
 ''')
 
+# Create the table for favourite tag-filters/searches
+cursor.execute('''
+CREATE TABLE saved_tag_searches (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  search_name TEXT NOT NULL,
+  tag_filters JSON NOT NULL,  -- JSON string to store tag_id and vote pairs
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+)
+''')
+
 # Check if the 'tags' table is empty
 cursor.execute('SELECT COUNT(*) FROM tags')
 tag_count = cursor.fetchone()[0]

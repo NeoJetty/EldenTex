@@ -1,7 +1,7 @@
 // TabAnalysis.ts
 
 import { AppConfig } from "./AppConfig.js";
-import { requestTextureData, populateTextureTypesNavbar } from "./requestTextureData.js";
+import { requestTextureData } from "./requestTextureData.js";
 import { populateTags, requestTagsForImage } from "./tagPanel.js";
 import { TextureViewer } from "./TextureViewer.js";
 

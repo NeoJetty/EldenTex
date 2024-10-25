@@ -44,7 +44,7 @@ app.use('/serveManyTextures', require('./server/serveManyTextures'));
 app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
 // serveMapsForTexture/:texture_id
 app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
-// serveTexturesByMultipleTags/:POST-JSON{tags:[{tag_id:number, vote:bool},{...},{...}]}
+// serveTexturesByMultipleTags/:POST-JSON{user_id,tags:[{tag_id:number, vote:bool},{...},{...}]}
 app.use('/serveTexturesByMultipleTags', require('./server/serveTexturesByMultipleTags'));
 
 
@@ -59,6 +59,8 @@ app.use('/dbDeleteTagFromTexture', require('./server/dbDeleteTagFromTexture'));
 app.use('/dbCreateNewTag', require('./server/dbCreateNewTag'));
 // dbAddTagToTexture/:user_id/:tag_id/:texture_id/:vote 
 app.use('/dbAddTagToTexture', require('./server/dbAddTagToTexture'));
+// dbSaveTagSearches/:POST-JSON{user_id,search_name,tags:[{tag_id:number, vote:bool},{...},{...}]}
+app.use('/dbSaveTagSearches', require('./server/dbSaveTagSearches'));
 
 // Start the server and listen on all network interfaces (LAN accessible)
 app.listen(port, '0.0.0.0', () => {

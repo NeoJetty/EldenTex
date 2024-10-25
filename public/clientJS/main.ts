@@ -52,7 +52,7 @@ async function InitInOrder(): Promise<void> {
         
          // Create instances of the tab classes
         const tabVoting   = new TabVoting  (document.getElementById('tab1-content') as HTMLDivElement);
-        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content') as HTMLDivElement, (textureID) => { manager.analysisTab(textureID); });
+        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content') as HTMLDivElement);
         const tabFilter   = new TabFilter  (document.getElementById('tab3-content') as HTMLDivElement);
         const tabGallery  = new TabGallery (document.getElementById('tab4-content') as HTMLDivElement);
  

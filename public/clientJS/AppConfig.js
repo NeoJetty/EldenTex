@@ -26,6 +26,7 @@ class TextureTypes {
 class TextureDataContainer {
     constructor() {
         this.textureID = -1;
+        this.textureName = '';
         this.jpgURL = '';
         this.pngURL = '';
         this.textureTypes = new TextureTypes();
@@ -49,6 +50,7 @@ class TextureDataContainer {
             _van: (_7 = (_6 = data.textureTypes) === null || _6 === void 0 ? void 0 : _6._van) !== null && _7 !== void 0 ? _7 : false,
             _vat: (_9 = (_8 = data.textureTypes) === null || _8 === void 0 ? void 0 : _8._vat) !== null && _9 !== void 0 ? _9 : false,
         };
+        this.textureName = data.textureName;
         this.textureID = data.id;
         this.jpgURL = AppConfig.getInstance().buildJPGPath(data.textureName, this.textureTypes);
         this.pngURL = AppConfig.getInstance().buildPNGPath(this.jpgURL);

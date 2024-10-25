@@ -27,6 +27,7 @@ type TextureTypeKeys = keyof TextureTypes;
 
 class TextureDataContainer {
     public textureID: number = -1;
+    public textureName: string = '';
     public jpgURL: string = '';
     public pngURL: string = '';
     public textureTypes: TextureTypes = new TextureTypes();
@@ -50,6 +51,7 @@ class TextureDataContainer {
             _vat: data.textureTypes?._vat ?? false,
         };
 
+        this.textureName = data.textureName;
         this.textureID = data.id;
         this.jpgURL = AppConfig.getInstance().buildJPGPath(data.textureName, this.textureTypes);
         this.pngURL = AppConfig.getInstance().buildPNGPath(this.jpgURL);

@@ -1,5 +1,5 @@
 /* Zoom Controls */
-.zoom-controls {
+.control-buttons {
     grid-area: zoom-controls;
     display: flex;
     flex-direction: column;

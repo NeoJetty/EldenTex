@@ -43,7 +43,7 @@ async function InitInOrder() {
     try {
         // Create instances of the tab classes
         const tabVoting = new TabVoting(document.getElementById('tab1-content'));
-        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content'), (textureID) => { manager.analysisTab(textureID); });
+        const tabAnalysis = new TabAnalysis(document.getElementById('tab2-content'));
         const tabFilter = new TabFilter(document.getElementById('tab3-content'));
         const tabGallery = new TabGallery(document.getElementById('tab4-content'));
         // Create an instance of the Manager class and pass the tab instances and divs

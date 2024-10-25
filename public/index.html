@@ -41,6 +41,13 @@
         </div>
     </div>
 
+    <div id="popup-container" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 2px solid black; z-index: 100;">
+        <h3>Enter Search Name</h3>
+        <input type="text" id="search-name-input" placeholder="Search Name" />
+        <button id="send-button">Send</button>
+        <button id="cancel-button">Cancel</button>
+    </div>
+
     <!-- Tab1 = Voting Tab -->
     <div id="tab1" class="content active">
         <div id="tab1-content">
@@ -159,19 +166,15 @@
             </div>
         
             <!-- Zoom Controls -->
-            <div class="zoom-controls">
+            <div class="control-buttons">
+                <button class="forward-button">&gt;&gt;</button>
+                <button class="backward-button">&lt;&lt;</button>
                 <button class="zoom-button zoom-in">+</button>
                 <button class="zoom-button zoom-out">-</button>
             </div>
         
             <!-- Tag Container -->
             <div class="right-main-container">
-                <!-- Placeholder for title -->
-                <div id="vote-title"></div>
-                
-                <!-- "No" and "Yes" buttons -->
-                <button id="vote-no">No</button>
-                <button id="vote-yes">Yes</button>
             </div>
         </div>    
     </div>

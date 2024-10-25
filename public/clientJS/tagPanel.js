@@ -23,7 +23,7 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
         data.tags.forEach((tag) => {
             const toggleDiv = createToggleElement(tag, preCheckedTagIDs);
             // Add the event listener for toggle click
-            toggleDiv.addEventListener('click', (event) => on3StateToggleClick(event, textureID));
+            toggleDiv.addEventListener('click', (event) => on3StateToggleClickDBUpdate(event, textureID));
             // Append the toggle to the container
             tagContainer.appendChild(toggleDiv);
             // Create and append the label for the toggle
@@ -36,6 +36,42 @@ function populateTags(tagContainer, textureID, preCheckedTagIDs = []) {
         .catch(error => {
         console.error('Error fetching tags:', error);
     });
+}
+/**
+ * Fetches tags from the server and populates the specified container with toggles and labels.
+ * Adds a form field for textureID and listeners for check/uncheck events.
+ * Initiates all toggles in a neutral state by passing an empty array to createToggleElement(...,EmptyArray)
+ *
+ * @param {HTMLElement} tagContainer - The container element (usually a <div>) where the tags will be populated.
+ * @returns {void}
+ */
+async function populateAllNeutralTags(tagContainer, preCheckedTagIDs = []) {
+    try {
+        // Fetch all tags from the server
+        const response = await fetch('/allTags');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        // Iterate over each tag and create a toggle element
+        data.tags.forEach((tag) => {
+            // Initialize preCheckedTagIDs as an empty array
+            // Create a toggle element in a neutral state
+            const toggleDiv = createToggleElement(tag, preCheckedTagIDs);
+            // Add the event listener for toggle click
+            toggleDiv.addEventListener('click', (event) => on3StateToggleClickHTMLChangeOnly(event));
+            // Append the toggle to the container
+            tagContainer.appendChild(toggleDiv);
+            // Create and append the label for the toggle
+            const label = document.createElement('label');
+            label.textContent = `${tag.name} (${tag.category})`;
+            tagContainer.appendChild(label);
+            tagContainer.appendChild(document.createElement('br')); // Optional line break
+        });
+    }
+    catch (error) {
+        console.error('Error fetching tags:', error);
+    }
 }
 /**
  * Creates a toggle element for a given tag.
@@ -66,12 +102,12 @@ function createToggleElement(tag, preCheckedTagIDs) {
     return toggle;
 }
 /**
- * Handles the toggle click event.
+ * Handles the toggle click event. Passes the call on to a database update.
  *
  * @param {MouseEvent} event - The click event.
  * @param {number} textureID - The ID of the texture.
  */
-function on3StateToggleClick(event, textureID) {
+function on3StateToggleClickDBUpdate(event, textureID) {
     const toggle = event.currentTarget; // Get the toggle element from the event
     const toggleImage = toggle.querySelector('.toggle-image');
     // Extract tag ID from data attribute and ensure it is a valid number
@@ -96,6 +132,35 @@ function on3StateToggleClick(event, textureID) {
         toggleImage.src = 'UXimg/toggle_on.png';
         toggle.dataset.state = 'on';
         handleTagSelection(true, tagID, textureID);
+    }
+}
+/**
+ * Handles the toggle click event.
+ *
+ * @param {MouseEvent} event - The click event.
+ */
+function on3StateToggleClickHTMLChangeOnly(event) {
+    const toggle = event.currentTarget; // Get the toggle element from the event
+    const toggleImage = toggle.querySelector('.toggle-image');
+    // Extract tag ID from data attribute and ensure it is a valid number
+    const tagIDStr = toggle.dataset.tagId;
+    if (!tagIDStr) {
+        console.error('Tag ID is not defined in the data attributes.');
+        return; // Exit if tagID is not found
+    }
+    const tagID = parseInt(tagIDStr); // Convert to number
+    const currentState = toggle.dataset.state;
+    if (currentState === 'on') {
+        toggleImage.src = 'UXimg/toggle_off.png';
+        toggle.dataset.state = 'off';
+    }
+    else if (currentState === 'off') {
+        toggleImage.src = 'UXimg/toggle_neutral.png';
+        toggle.dataset.state = 'neutral';
+    }
+    else {
+        toggleImage.src = 'UXimg/toggle_on.png';
+        toggle.dataset.state = 'on';
     }
 }
 /**
@@ -173,4 +238,42 @@ async function requestTagsForImage(textureID) {
         return []; // Return an empty array if there was an error
     }
 }
-export { populateTags, requestTagsForImage };
+/**
+ * Submits the filtered search with a search name and selected tags.
+ * Sends a JSON object containing the search name, tags, and user_id to the server.
+ * @param filterData - An object containing the search name and selected tags.
+ * @returns Promise resolving to the server response.
+ */
+function submitFilterSearch(filterData) {
+    // Build the data object to send, including the search name, user ID, and tags
+    const dataToSend = {
+        search_name: filterData.searchName, // Append the search name to the data
+        tags: filterData.tags,
+        user_id: AppConfig.user.ID // Append the user ID from AppConfig
+    };
+    if (AppConfig.debug.level > 0) {
+        console.log(`Server request: /dbSaveTagSearches POST: ${JSON.stringify(dataToSend)}`);
+    }
+    return fetch(`/dbSaveTagSearches`, {
+        method: 'POST', // Use POST method to save the filter search
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend) // Send the filter data as a JSON string
+    })
+        .then(async (response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const jsonData = await response.json();
+        if (AppConfig.debug.level > 0) {
+            console.log(`Server response:`, jsonData);
+        }
+        return jsonData;
+    })
+        .catch(error => {
+        console.error('Error submitting filter search. Server error:', error);
+        throw error;
+    });
+}
+export { populateTags, requestTagsForImage, populateAllNeutralTags, submitFilterSearch };

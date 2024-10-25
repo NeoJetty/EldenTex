@@ -1,126 +1,83 @@
 // requestImagedata.ts
-import { AppConfig } from './AppConfig.js';
-import { resetImageSize } from './imageManipulation.js';
+import { AppConfig } from "./AppConfig.js";
+/**
+ * Fetches untagged texture data for a specific user and tag combination.
+ * @param userID - The user ID.
+ * @param tagID - The tag ID.
+ * @returns Promise resolving to the texture data or an error if none found.
+ */
 function requestUntaggedTextureData(userID, tagID) {
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /untaggedTexture/${userID}/${tagID}`);
     return fetch(`/untaggedTexture/${userID}/${tagID}`)
-        .then(response => {
+        .then(async (response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json();
+        const jsonData = await response.json();
+        if (AppConfig.debug.level > 0)
+            console.log(`Server response:`, jsonData);
+        return jsonData;
     })
         .catch(error => {
         console.log('No texture data available or all data successfully tagged for this user/tag combination. Server error:', error);
         throw error;
     });
 }
+/**
+ * Fetches texture data for a specific texture ID.
+ * @param textureID - The texture ID.
+ * @returns Promise resolving to the texture data or an error if none found.
+ */
 function requestTextureData(textureID) {
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /textureData/${textureID}`);
     return fetch(`/textureData/${textureID}`)
-        .then(response => {
+        .then(async (response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json();
+        const jsonData = await response.json();
+        if (AppConfig.debug.level > 0)
+            console.log(`Server response:`, jsonData);
+        return jsonData;
     })
         .catch(error => {
         console.log(`No texture data available for textureID ${textureID}. Server error:`, error);
         throw error;
     });
 }
-async function updateImageSrcAndAppConfig(textureID, parentDiv) {
-    try {
-        // Fetch the image data using the provided textureID
-        const response = await fetch(`/textureData/${textureID}`);
+/**
+ * Fetches filtered texture data based on selected tags.
+ * Sends a JSON object with tags to the server, each containing a tag_id and a vote (true/false).
+ * @param filterData - An object containing the selected tags and their votes.
+ * @returns Promise resolving to the filtered texture data.
+ */
+function requestMultiFilterTextureData(filterData) {
+    // Add user_id to the filterData object
+    const dataWithUserID = Object.assign(Object.assign({}, filterData), { user_id: AppConfig.user.ID // Append the user ID from AppConfig
+     });
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /serveTexturesByMultipleTags POST: ${dataWithUserID}`);
+    return fetch(`/serveTexturesByMultipleTags`, {
+        method: 'POST', // Use POST method to send the tags for filtering
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataWithUserID) // Send the modified object with user_id
+    })
+        .then(async (response) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        if (parentDiv) {
-            // Find the <img> element with the class 'big-texture-viewer' inside the parent div
-            const imageElement = parentDiv.querySelector('.big-texture-viewer');
-            if (imageElement) {
-                // Update AppConfig using the new helper function
-                AppConfig.analysisTab.updateFromImageDataJSON(data);
-                // Update the image source
-                imageElement.src = AppConfig.analysisTab.jpgURL;
-                // Reset image size when a new image is loaded
-                resetImageSize();
-            }
-            else {
-                console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
-            }
-        }
-        else {
-            console.error(`Element with ID '${parentDiv}' not found.`);
-        }
-    }
-    catch (error) {
-        console.error('Error fetching image by ID:', error);
-    }
-}
-async function OLDupdateImageSrcAndAppConfig(textureID, parentDiv) {
-    try {
-        // Fetch the image data using the provided textureID
-        const response = await fetch(`/textureData/${textureID}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        if (parentDiv) {
-            // Find the <img> element with the class 'big-texture-viewer' inside the parent div
-            const imageElement = parentDiv.querySelector('.big-texture-viewer');
-            if (imageElement) {
-                // Update AppConfig using the new helper function
-                AppConfig.analysisTab.updateFromImageDataJSON(data);
-                // Update the image source
-                imageElement.src = AppConfig.analysisTab.jpgURL;
-                // Reset image size when a new image is loaded
-                resetImageSize();
-            }
-            else {
-                console.error(`No <img> element with class 'big-texture-viewer' found inside the div.`);
-            }
-        }
-        else {
-            console.error(`Element with ID '${parentDiv}' not found.`);
-        }
-    }
-    catch (error) {
-        console.error('Error fetching image by ID:', error);
-    }
-}
-// Populate the texture types navbar within a specific parentDiv
-function populateTextureTypesNavbar(parentDiv, AppConfigPropertyGroup) {
-    // Select the tab links only within the provided parentDiv
-    const tabLinks = parentDiv.querySelectorAll('.tex-type-navitem');
-    // Remove the 'highlighted' class from all tabs before adding new highlights
-    tabLinks.forEach(tab => {
-        tab.classList.remove('highlighted'); // Clear previous highlights
+        const jsonData = await response.json();
+        if (AppConfig.debug.level > 0)
+            console.log(`Server response:`, jsonData);
+        return jsonData;
+    })
+        .catch(error => {
+        console.log('Error fetching filtered texture data. Server error:', error);
+        throw error;
     });
-    // Loop through all tabs to highlight the relevant ones
-    tabLinks.forEach(tab => {
-        // Determine the corresponding data-type ending
-        const typeEnding = tab.getAttribute('data-type');
-        // Highlight the tab if its type is true in textureTypes
-        if (typeEnding && AppConfigPropertyGroup.textureTypes[typeEnding]) {
-            tab.classList.add('highlighted'); // Add a class to highlight the tab
-            // Add click event listener to the tab
-            tab.addEventListener('click', () => {
-                let imageUrl = AppConfigPropertyGroup.jpgURL;
-                // Replace _n with the type ending
-                imageUrl = imageUrl.replace(/_n\.jpg$/, `${typeEnding}.jpg`);
-                // Update the image source
-                const imageElement = parentDiv.querySelector('.big-texture-viewer');
-                if (imageElement) {
-                    imageElement.src = imageUrl;
-                }
-            });
-        }
-    });
-    // After populating the navbar, set the initial active tab
-    const firstActiveTab = Array.from(tabLinks).find(tab => tab.classList.contains('highlighted'));
-    if (firstActiveTab) {
-        firstActiveTab.classList.add('active'); // Set the first highlighted tab as active
-    }
 }
-export { updateImageSrcAndAppConfig, populateTextureTypesNavbar, requestUntaggedTextureData, requestTextureData };
+export { requestUntaggedTextureData, requestTextureData, requestMultiFilterTextureData };
