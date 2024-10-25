@@ -46,8 +46,8 @@ app.use('/serveTagsForTexture', require('./server/serveTagsForTexture'));
 app.use('/serveMapsForTexture', require('./server/serveMapsForTexture'));
 // serveTexturesByMultipleTags/:POST-JSON{user_id,tags:[{tag_id:number, vote:bool},{...},{...}]}
 app.use('/serveTexturesByMultipleTags', require('./server/serveTexturesByMultipleTags'));
-
-
+// serveAllSavedFilterSearches/:user_id
+app.use('/serveAllSavedFilterSearches', require('./server/serveAllSavedFilterSearches'));
 
 // ------------------------------------------------------
 // DB write modules

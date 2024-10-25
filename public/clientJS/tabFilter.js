@@ -14,7 +14,9 @@ class TabFilter {
         this.state = State.SearchSelection;
         this.filteredTextureData = [];
         this.filteredTextureActiveIndex = 0;
+        this.savedSearches = [];
         this.contentDiv = contentDiv;
+        this.rightMainDiv = this.contentDiv.querySelector('.right-main-container');
         this.textureViewer = new TextureViewer(contentDiv);
         let forward_button = contentDiv.querySelector('.forward-button');
         let backward_button = contentDiv.querySelector('.backward-button');
@@ -29,10 +31,11 @@ class TabFilter {
     // Member functions
     // -----------------------------
     async updateAll() {
+        this.rightMainDiv.innerHTML = '';
+        await this.createSavedFilterSearchDropdown(this.rightMainDiv);
+        this.rightMainDiv.appendChild(document.createElement('br'));
         if (this.state == State.SearchSelection) {
-            const rightMainDiv = this.contentDiv.querySelector('.right-main-container');
-            rightMainDiv.innerHTML = '';
-            await populateAllNeutralTags(rightMainDiv);
+            await populateAllNeutralTags(this.rightMainDiv);
             // Create the "Search" button
             const searchButton = document.createElement('button');
             searchButton.textContent = 'Search';
@@ -42,8 +45,8 @@ class TabFilter {
             saveButton.textContent = 'Save Filter';
             saveButton.classList.add('search-button');
             // Append the button below the tags
-            rightMainDiv.appendChild(searchButton);
-            rightMainDiv.appendChild(saveButton);
+            this.rightMainDiv.appendChild(searchButton);
+            this.rightMainDiv.appendChild(saveButton);
             // Add event listener for the "Search" button click
             searchButton.addEventListener('click', async () => {
                 this.onSearchButtonClick();
@@ -65,18 +68,65 @@ class TabFilter {
             AppConfig.filterTab.updateFromImageDataJSON(data);
             this.textureViewer.replaceTexture(AppConfig.filterTab.jpgURL);
             this.textureViewer.populateTextureTypesNavbar(AppConfig.filterTab);
-            // ------------------ update right hand container -------------
-            const rightMainDiv = this.contentDiv.querySelector('.right-main-container');
-            if (!rightMainDiv) {
-                console.error('Error: Container element not found...');
-                return;
-            }
-            rightMainDiv.innerHTML = '';
             // ------------------ tags -------------
             const textureID = data.textureID; // Use the textureID from the first image
             const preCheckedTags = await requestTagsForImage(textureID);
-            populateTags(rightMainDiv, textureID, preCheckedTags);
+            populateTags(this.rightMainDiv, textureID, preCheckedTags);
         }
+    }
+    async createSavedFilterSearchDropdown(rightMainDiv) {
+        // Clear any existing content in the dropdown
+        rightMainDiv.innerHTML = ''; // Make sure to clear any existing content
+        try {
+            // Fetch saved searches from the server for the specified user ID
+            const response = await fetch(`/serveAllSavedFilterSearches/${AppConfig.user.ID}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            this.savedSearches = data.savedSearches; // Store the fetched searches
+            // Create a select element for the dropdown
+            const selectElement = document.createElement('select');
+            selectElement.id = 'savedFilterDropdown';
+            // Add the default option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- new filter --';
+            selectElement.appendChild(defaultOption);
+            // Populate dropdown with saved searches
+            this.savedSearches.forEach((search) => {
+                const option = document.createElement('option');
+                option.value = search.search_name; // Set the value to search_name
+                option.textContent = search.search_name; // Display the search name
+                selectElement.appendChild(option);
+            });
+            // Append the select element to the provided div
+            rightMainDiv.appendChild(selectElement);
+            // Add event listener for dropdown changes
+            selectElement.addEventListener('change', () => this.onDropDownChange(selectElement));
+        }
+        catch (error) {
+            console.error('Error fetching saved filter searches:', error);
+            // Optionally, you can show an error message to the user
+        }
+    }
+    async onDropDownChange(selectElement) {
+        const selectedValue = selectElement.value; // Get the selected option value
+        if (selectedValue === '') {
+            // Handle the case for the default option, if needed
+            return;
+        }
+        // Find the selected saved search
+        const selectedSearch = this.savedSearches.find(search => search.search_name === selectedValue);
+        if (!selectedSearch) {
+            console.error('Selected search not found:', selectedValue);
+            return;
+        }
+        // Parse the tag filters from the saved search
+        const tagFilters = JSON.parse(selectedSearch.tag_filters);
+        this.rightMainDiv.innerHTML = '';
+        // Refresh the tag list based on the tag filters
+        populateAllNeutralTags(this.rightMainDiv, tagFilters);
     }
     onSaveButtonClick() {
         // Show the popup
@@ -138,7 +188,7 @@ class TabFilter {
             this.updateAll();
         }
         else {
-            console.log('Change image Button, but no data');
+            console.log('Change Texture Button pressed, but no data');
         }
     }
     // increase/decrease index, but loop around if end of array is reached
