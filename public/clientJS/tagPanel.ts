@@ -1,6 +1,6 @@
 // tagPanel.ts
 
-import { AppConfig } from './AppConfig.js';
+import { AppConfig } from './AppConfig';
 
 /**
  * Fetches tags from the server and populates the specified container with toggles and labels.
