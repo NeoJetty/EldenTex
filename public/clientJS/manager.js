@@ -52,7 +52,7 @@ class Manager {
     filterTab() {
         this.makeTabVisible('tab3');
         // Call the updateAll method from FilterTab class
-        this.tabFilter.updateAll(3295);
+        this.tabFilter.updateAll();
     }
     galleryTab() {
         this.makeTabVisible('tab4');

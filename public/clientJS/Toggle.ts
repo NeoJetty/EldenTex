@@ -1,8 +1,6 @@
 // toggle.ts
-import { AppConfig } from "./AppConfig";
+import { AppConfig } from "./AppConfig.js";
 
-// a simple checkbox-adjacent element and it's self-contained functionality. Wraps around this:
-// <div class="tag-toggle" data-tag-id="1" data-state="neutral"><img src="UXimg/toggle_neutral.png" class="toggle-image"></div>
 enum ToggleState {
     ON = 'on',
     OFF = 'off',
@@ -15,7 +13,12 @@ class Toggle {
     private imgElement: HTMLImageElement;
     private dbWriteListenerActive: boolean = true;
     
-    constructor(private tagID: number, private textureID: number, initialState: ToggleState = ToggleState.NEUTRAL) {
+    constructor(
+        private tagID: number,
+        private textureID: number,
+        private name: string,
+        initialState: ToggleState = ToggleState.NEUTRAL
+    ) {
         this.state = initialState;
         this.element = this.createToggleElement();
         this.imgElement = this.element.querySelector('.toggle-image') as HTMLImageElement;
@@ -24,6 +27,9 @@ class Toggle {
     }
 
     private createToggleElement(): HTMLElement {
+        const toggleContainer = document.createElement('div');
+        toggleContainer.classList.add('tag-toggle-container');
+
         const toggle = document.createElement('div');
         toggle.classList.add('tag-toggle');
         toggle.dataset.tagId = this.tagID.toString();
@@ -34,7 +40,16 @@ class Toggle {
         toggleImage.src = this.getImageForState(this.state);
         
         toggle.appendChild(toggleImage);
-        return toggle;
+
+        // Add the label for the tag toggle
+        const label = document.createElement('label');
+        label.textContent = `${this.name}`;
+
+        // Append label and toggle elements to the container 
+        toggleContainer.appendChild(toggle);
+        toggleContainer.appendChild(label);
+
+        return toggleContainer;
     }
 
     private onToggleClick(): void {
@@ -61,9 +76,7 @@ class Toggle {
         this.state = newState;
         this.element.dataset.state = this.state;
         this.updateImage();
-        // explicitly no DB update
     }
-    
 
     private updateImage(): void {
         this.imgElement.src = this.getImageForState(this.state);

@@ -2,7 +2,7 @@
 
 import TabVoting    from './TabVoting.js';
 import TabAnalysis  from './TabAnalysis.js';
-import TabFilter    from './TabFilter.js';
+import { TabFilter } from './TabFilter.js';
 import TabGallery   from './TabGallery.js';
 import { AppConfig } from './AppConfig.js';
 
@@ -78,7 +78,7 @@ class Manager {
     filterTab(): void {
         this.makeTabVisible('tab3');
             // Call the updateAll method from FilterTab class
-            this.tabFilter.updateAll(3295);
+            this.tabFilter.updateAll();
     }
 
     galleryTab(): void {

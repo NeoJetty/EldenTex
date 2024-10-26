@@ -2,7 +2,7 @@ import { AppConfig } from './AppConfig.js';
 import Manager      from './Manager.js'; // Import the Manager class
 import TabVoting    from './TabVoting.js';
 import TabAnalysis  from './TabAnalysis.js';
-import TabFilter    from './TabFilter.js';
+import { TabFilter } from './TabFilter.js';
 import TabGallery   from './TabGallery.js';
 
 // Declare the manager variable with a type annotation
