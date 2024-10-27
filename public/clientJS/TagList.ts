@@ -84,8 +84,6 @@ class TagList {
                this.onSaveButtonClick();
             });
 
-
-
         } catch (error) {
             console.error("Failed to build tag list:", error);
         }

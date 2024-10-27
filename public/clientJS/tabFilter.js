@@ -19,6 +19,8 @@ class TabFilter {
         // Save commonly accessed div elements
         this.contentDiv = contentDiv;
         this.rightMainDiv = this.contentDiv.querySelector('.right-main-container');
+        // workaround
+        this.mapsContainer = this.rightMainDiv;
         // set up managing classes
         this.tagList = new TagList(this.rightMainDiv, (filter) => {
             this.filterTexturesAndShowFirst(filter);
@@ -43,6 +45,13 @@ class TabFilter {
         //--------------------------------------
         if (this.initialized == false) {
             await this.tagList.buildFilterSelection(); // initiate tag list as neutral
+            // Create the new div container
+            const mapsContainer = document.createElement('div');
+            mapsContainer.classList.add('maps-container'); // Assign a class for styling if needed
+            // Append the mapsContainer below the buttons
+            this.rightMainDiv.appendChild(mapsContainer);
+            // Save to this.maps_container for future reference
+            this.mapsContainer = mapsContainer;
             this.initialized = true;
         }
         //--------------------------------------
@@ -73,6 +82,7 @@ class TabFilter {
             //--------------------------------------
             const textureTags = await requestTagsForImage(data.textureID);
             this.tagList.refreshWithTextureData(data.textureID, textureTags);
+            this.updateRelatedMaps(this.mapsContainer, data.textureID);
         }
     }
     async filterTexturesAndShowFirst(filter) {
@@ -116,6 +126,37 @@ class TabFilter {
         }
         catch (error) {
             console.error('Error filtering textures:', error);
+        }
+    }
+    // Fetches and displays related maps for the given texture ID
+    async updateRelatedMaps(div, textureID) {
+        div.innerHTML = '';
+        try {
+            const response = await fetch(`/serveMapsForTexture/${textureID}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch maps for textureID: ${textureID}`);
+            }
+            const data = await response.json();
+            const heading = document.createElement('h3');
+            heading.textContent = 'Related Maps:';
+            div.appendChild(heading);
+            if (data.related_maps && data.related_maps.length > 0) {
+                const list = document.createElement('ul');
+                data.related_maps.forEach((map) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Map ID: ${map.map_id} (Texture Type: ${map.texture_type})`;
+                    list.appendChild(listItem);
+                });
+                div.appendChild(list);
+            }
+            else {
+                const noMapsMessage = document.createElement('p');
+                noMapsMessage.textContent = 'No related maps found for this texture.';
+                div.appendChild(noMapsMessage);
+            }
+        }
+        catch (error) {
+            console.error('Error fetching related maps:', error);
         }
     }
 }
