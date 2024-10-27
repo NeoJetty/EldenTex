@@ -74,15 +74,32 @@ class TagList {
         });
         // Group tags by category for a more organized UI
         let currentCategory = '';
-        sortedTags.forEach(tag => {
+        let categoryContainer = null;
+        let rowDiv = null;
+        sortedTags.forEach((tag, index) => {
+            // Check if we're in a new category
             if (tag.category !== currentCategory) {
-                // Add a header for each new category
+                // Create and append a new container for the category
+                categoryContainer = document.createElement('div');
+                categoryContainer.classList.add('category-container');
+                // Create and add the category header
                 const categoryHeader = document.createElement('h3');
                 categoryHeader.textContent = tag.category;
-                this.tagContainer.appendChild(categoryHeader);
+                categoryContainer.appendChild(categoryHeader);
+                // Append the category container to the main tag container
+                this.tagContainer.appendChild(categoryContainer);
                 currentCategory = tag.category;
+                rowDiv = null; // Reset the row div for a new category
             }
-            this.createToggleForTag(tag, preCheckedTagIDs);
+            // Create a new row div every three items
+            if (index % 4 === 0) {
+                rowDiv = document.createElement('div');
+                rowDiv.classList.add('tag-row');
+                categoryContainer === null || categoryContainer === void 0 ? void 0 : categoryContainer.appendChild(rowDiv);
+            }
+            // Create and add the toggle for the tag
+            const toggleDiv = this.createToggleForTag(tag, preCheckedTagIDs);
+            rowDiv === null || rowDiv === void 0 ? void 0 : rowDiv.appendChild(toggleDiv);
         });
     }
     createToggleForTag(tag, preCheckedTagIDs) {
@@ -93,8 +110,8 @@ class TagList {
         // Create and add the Toggle instance
         const toggle = new Toggle(tag.id, this.textureID, tag.name, initialState);
         this.toggles.push(toggle);
-        // Attach the toggle element to the container
-        this.tagContainer.appendChild(toggle.elementNode);
+        // Return the toggle element so it can be appended in buildToggleItems
+        return toggle.elementNode;
     }
     setModeTo(state) {
         if (state == FilterTabState.FilterSelectionMode) {

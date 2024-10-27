@@ -114,19 +114,44 @@ class TagList {
     
         // Group tags by category for a more organized UI
         let currentCategory = '';
-        sortedTags.forEach(tag => {
+        let categoryContainer: HTMLDivElement | null = null;
+        let rowDiv: HTMLDivElement | null = null;
+    
+        sortedTags.forEach((tag, index) => {
+            // Check if we're in a new category
             if (tag.category !== currentCategory) {
-                // Add a header for each new category
+                // Create and append a new container for the category
+                categoryContainer = document.createElement('div');
+                categoryContainer.classList.add('category-container');
+                
+                // Create and add the category header
                 const categoryHeader = document.createElement('h3');
                 categoryHeader.textContent = tag.category;
-                this.tagContainer.appendChild(categoryHeader);
+                categoryContainer.appendChild(categoryHeader);
+    
+                // Append the category container to the main tag container
+                this.tagContainer.appendChild(categoryContainer);
+    
                 currentCategory = tag.category;
+                rowDiv = null; // Reset the row div for a new category
             }
-            this.createToggleForTag(tag, preCheckedTagIDs);
+    
+            // Create a new row div every three items
+            if (index % 4 === 0) {
+                rowDiv = document.createElement('div');
+                rowDiv.classList.add('tag-row');
+                categoryContainer?.appendChild(rowDiv);
+            }
+    
+            // Create and add the toggle for the tag
+            const toggleDiv = this.createToggleForTag(tag, preCheckedTagIDs);
+            rowDiv?.appendChild(toggleDiv);
         });
     }
     
-    private createToggleForTag(tag: Tag, preCheckedTagIDs: TagVote[]): void {
+    
+    
+    private createToggleForTag(tag: Tag, preCheckedTagIDs: TagVote[]): HTMLElement {
         // Find the TagVote object for this tag, if it exists
         const tagVote = preCheckedTagIDs.find(tv => tv.tag_id === tag.id);
     
@@ -137,9 +162,11 @@ class TagList {
         const toggle = new Toggle(tag.id, this.textureID, tag.name, initialState);
         this.toggles.push(toggle);
     
-        // Attach the toggle element to the container
-        this.tagContainer.appendChild(toggle.elementNode);
+        // Return the toggle element so it can be appended in buildToggleItems
+        return toggle.elementNode;
     }
+    
+    
     
     private setModeTo(state: FilterTabState){
         if(state == FilterTabState.FilterSelectionMode){

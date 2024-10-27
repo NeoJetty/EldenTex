@@ -22,3 +22,16 @@
 .right-main-container {
     margin: 10px;
 }
+
+.category-container {
+    margin-bottom: 20px; /* Space between categories */
+}
+
+.tag-row {
+    display: flex;
+    gap: 10px; /* Space between toggles */
+}
+
+.tag-row > div {
+    flex: 1; /* Ensure each item takes equal space within the row */
+}

@@ -30,7 +30,7 @@ class TabFilter {
         // Save commonly accessed div elements
         this.contentDiv = contentDiv;
         this.rightMainDiv = this.contentDiv.querySelector('.right-main-container') as HTMLDivElement;
-        
+
         // workaround
         this.mapsContainer = this.rightMainDiv;
 
@@ -184,7 +184,7 @@ class TabFilter {
 
                 data.related_maps.forEach((map: { map_id: number, texture_type: string }) => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `Map ID: ${map.map_id} (Texture Type: ${map.texture_type})`;
+                    listItem.textContent = `${map.texture_type}: ${map.map_id}`;
                     list.appendChild(listItem);
                 });
 

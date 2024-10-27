@@ -144,7 +144,7 @@ class TabFilter {
                 const list = document.createElement('ul');
                 data.related_maps.forEach((map) => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `Map ID: ${map.map_id} (Texture Type: ${map.texture_type})`;
+                    listItem.textContent = `${map.texture_type}: ${map.map_id}`;
                     list.appendChild(listItem);
                 });
                 div.appendChild(list);
