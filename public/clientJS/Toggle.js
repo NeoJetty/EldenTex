@@ -1,5 +1,4 @@
-// toggle.ts
-import { AppConfig } from "./AppConfig.js";
+import { addTagtoTexture, removeTagFromTexture } from "./requestTagRelatedData.js";
 var ToggleState;
 (function (ToggleState) {
     ToggleState["ON"] = "on";
@@ -64,24 +63,24 @@ class Toggle {
         this.imgElement.src = this.getImageForState(this.state);
     }
     handleDBWrite() {
-        const vote = this.state === ToggleState.ON ? 'true' : this.state === ToggleState.OFF ? 'false' : null;
+        if (this.textureID === -1) { // Use comparison operator (===)
+            console.error('Tried to edit tag from image_id -1.');
+            return;
+        }
+        let vote = null; // Initialize vote as null
+        // Set vote to true or false based on the current state
+        if (this.state === ToggleState.ON) {
+            vote = true;
+        }
+        else if (this.state === ToggleState.OFF) {
+            vote = false;
+        }
         if (vote !== null) {
-            const url = `/dbAddTagToTexture?user_id=${AppConfig.user.ID}&tag_id=${this.tagID}&texture_id=${this.textureID}&vote=${vote}`;
-            fetch(url)
-                .then(response => response.ok ? response.json() : Promise.reject(response))
-                .then(data => console.log(`Tag ${this.tagID} set to ${this.state}. Response:`, data))
-                .catch(error => console.error('Error updating tag:', error));
+            addTagtoTexture(this.tagID, this.textureID, vote);
         }
         else {
-            this.removeTagFromDB();
+            removeTagFromTexture(this.tagID, this.textureID);
         }
-    }
-    removeTagFromDB() {
-        const url = `/dbDeleteTagFromTexture/${AppConfig.user.ID}/${this.tagID}/${this.textureID}`;
-        fetch(url)
-            .then(response => response.ok ? response.json() : Promise.reject(response))
-            .then(data => console.log(`Tag ${this.tagID} removed. Response:`, data))
-            .catch(error => console.error('Error removing tag:', error));
     }
     getImageForState(state) {
         switch (state) {

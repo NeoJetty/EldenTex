@@ -25,6 +25,7 @@ interface serializedFilter {
 }
 
 class TagList {
+    
     private toggles: Toggle[] = [];
     private tagContainer: HTMLDivElement;
     private textureID: number = -1;
@@ -76,7 +77,7 @@ class TagList {
 
             // Add event listener for the "Search" button click
             searchButton.addEventListener('click', async () => {
-                this.onSearchButtonClick();
+                this.onRunFilterButtonClick();
             });
             // Add event listener for the "Save" button click
             saveButton.addEventListener('click', async () => {
@@ -89,6 +90,22 @@ class TagList {
             console.error("Failed to build tag list:", error);
         }
     }
+
+    refreshWithTextureData(textureID: number, textureTags: TagVote[]) {
+        this.setModeTo(FilterTabState.TextureTaggingMode);
+
+        this.textureID = textureID;
+        this.toggles.forEach(toggle => {
+            // Set the textureID to the provided one
+            toggle.textureID = textureID;
+    
+            // Find the TagVote that matches the current toggle's tagID
+            const tagVote = textureTags.find(tv => tv.tag_id === toggle.tagID);
+            let nextToggleState = translateToToggleState(tagVote);
+            toggle.forceState(nextToggleState); // also renders the toggle-img
+        });
+    }
+
 
     private buildToggleItems(tags: Tag[], preCheckedTagIDs: TagVote[] = []): void {
         // Sort tags by the specified order: General, Region, then Cultures
@@ -250,40 +267,44 @@ class TagList {
         // populateAllNeutralTags(this.tagContainer, tagFilters);
     }
 
-    async onSearchButtonClick() {
-        const tagToggles = this.tagContainer.querySelectorAll('.tag-toggle'); // Adjust the selector as needed
-        const tags: { tag_id: number; vote: boolean }[] = []; // Initialize an empty array to hold the tags
-    
-        tagToggles.forEach((toggle: Element) => {
-            // Assert toggle as HTMLElement
-            const tagToggle = toggle as HTMLElement;
-    
-            const tagId = parseInt(tagToggle.getAttribute('data-tag-id') || '0', 10);
-            const state = tagToggle.getAttribute('data-state');
-    
-            // Translate the state to vote boolean
-            if (state === 'on') {
-                tags.push({ tag_id: tagId, vote:true });
-            } else if (state === 'off') {
-                tags.push({ tag_id: tagId, vote:false });
-            } else if (state === 'neutral') {
-                // Neutral state is ignored, we can return early
-                return; 
-            }
-        });
+    async onRunFilterButtonClick() {
+        const tags: TagVote[] = []; // Initialize an empty array to hold the tags
         
+        this.toggles.forEach(toggle => {
+            const tagId = toggle.tagID;
+            const state = toggle.currentState;
+            // Translate ToggleState to vote boolean
+            if (state === ToggleState.ON) {
+                tags.push({ tag_id: tagId, vote: true });
+            } else if (state === ToggleState.OFF) {
+                tags.push({ tag_id: tagId, vote: false });
+            }
+            // ToggleState.NEUTRAL is ignored, no action needed
+        });
+        // Now, tags array is ready to be used for further processing
         this.textureUpdateCallback(tags);
     }
 
+    public updateTextureID(id: number){
+        this.textureID = id;
+        this.toggles.forEach(toggle => {
+            toggle.textureID = id;
+        });
+    }
+
+
 }
 
-function translateToToggleState(vote: TagVote): ToggleState {
-    if (vote.vote === true) {
+function translateToToggleState(vote: TagVote | undefined): ToggleState {
+    if (vote == null) {
+        // If vote is undefined or null, return NEUTRAL state immediately
+        return ToggleState.NEUTRAL;
+    } else if (vote.vote === true) {
         return ToggleState.ON;
     } else if (vote.vote === false) {
         return ToggleState.OFF;
     } else {
-        // In case vote is null, undefined, or doesn't match expected values
+        // Any other case that doesn’t match expected boolean values
         return ToggleState.NEUTRAL;
     }
 }

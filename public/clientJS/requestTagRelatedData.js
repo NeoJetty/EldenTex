@@ -1,27 +1,38 @@
 // requestTagrelatedData.js
 import { AppConfig } from "./AppConfig.js";
 async function fetchAllTags() {
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /allTags`);
     const response = await fetch('/allTags');
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const data = await response.json();
-    return data.tags;
+    const jsonData = await response.json();
+    if (AppConfig.debug.level > 0) {
+        console.log(`Server response:`, jsonData);
+    }
+    return jsonData.tags;
 }
 async function fetchSavedFilterSearches() {
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /serveAllSavedFilterSearches/${AppConfig.user.ID}`);
     const response = await fetch(`/serveAllSavedFilterSearches/${AppConfig.user.ID}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    return response.json();
+    const jsonData = await response.json();
+    if (AppConfig.debug.level > 0) {
+        console.log(`Server response:`, jsonData);
+    }
+    return jsonData;
 }
 /**
  * Submits the filtered search with a search name and selected tags.
  * Sends a JSON object containing the search name, tags, and user_id to the server.
  * @param filterData - An object containing the search name and selected tags.
- * @returns Promise resolving to the server response.
+ * @returns A dataset containing all textures found by the filter.
  */
-function submitFilterSearch(filterData) {
+async function submitFilterSearch(filterData) {
     // Build the data object to send, including the search name, user ID, and tags
     const dataToSend = {
         search_name: filterData.searchName, // Append the search name to the data
@@ -53,4 +64,23 @@ function submitFilterSearch(filterData) {
         throw error;
     });
 }
-export { fetchAllTags, fetchSavedFilterSearches, submitFilterSearch };
+function addTagtoTexture(tagID, textureID, vote) {
+    if (AppConfig.debug.level > 0) {
+        console.log(`Server request: /dbAddTagToTexture?user_id=${AppConfig.user.ID}&tag_id=${tagID}&texture_id=${textureID}&vote=${vote}`);
+    }
+    const url = `/dbAddTagToTexture?user_id=${AppConfig.user.ID}&tag_id=${tagID}&texture_id=${textureID}&vote=${vote}`;
+    fetch(url)
+        .then(response => response.ok ? response.json() : Promise.reject(response))
+        .then(data => console.log(`Tag ${tagID} set to ${vote} for Texture ${textureID}. Response:`, data))
+        .catch(error => console.error('Error updating tag:', error));
+}
+function removeTagFromTexture(tagID, textureID) {
+    if (AppConfig.debug.level > 0)
+        console.log(`Server request: /dbDeleteTagFromTexture/${AppConfig.user.ID}/${tagID}/${textureID}`);
+    const url = `/dbDeleteTagFromTexture/${AppConfig.user.ID}/${tagID}/${textureID}`;
+    fetch(url)
+        .then(response => response.ok ? response.json() : Promise.reject(response))
+        .then(data => console.log(`Tag ${tagID} removed from Texture ${textureID}. Response:`, data))
+        .catch(error => console.error('Error removing tag:', error));
+}
+export { fetchAllTags, fetchSavedFilterSearches, submitFilterSearch, addTagtoTexture, removeTagFromTexture };

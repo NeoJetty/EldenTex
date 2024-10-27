@@ -3,7 +3,7 @@
 import { AppConfig,TextureDataContainer } from "./AppConfig.js";
 import { requestMultiFilterTextureData } from "./requestTextureData.js";
 import { TagList, TagVote } from "./TagList.js";
-import { populateTags, requestTagsForImage, populateAllNeutralTags, submitFilterSearch } from "./tagPanel.js";
+import { requestTagsForImage } from "./tagPanel.js";
 import { TextureViewer } from "./TextureViewer.js";
 
 enum FilterTabState {
@@ -17,6 +17,7 @@ class TabFilter {
     private textureViewer: TextureViewer;
     private rightMainDiv: HTMLDivElement;
     private tagList: TagList;
+    private initialized: boolean = false;
     
     // filter-specific
     private state: FilterTabState = FilterTabState.FilterSelectionMode;
@@ -47,7 +48,6 @@ class TabFilter {
         backward_button?.addEventListener( 'click', () => {
             this.changeActiveTexture(-1);
         })
-
     }
 
     // -----------------------------
@@ -55,14 +55,31 @@ class TabFilter {
     // -----------------------------
 
     async updateAll(): Promise<void> {
-        this.rightMainDiv.innerHTML = '';
 
+        //--------------------------------------
+        //       Initialize Tag List Once                
+        //--------------------------------------
+        if(this.initialized == false){
+            await this.tagList.buildFilterSelection(); // initiate tag list as neutral
+            this.initialized = true;
+        }
+
+        //--------------------------------------
+        //      Filter and Request Textures                
+        //--------------------------------------
         if(this.state == FilterTabState.FilterSelectionMode){
-            await this.tagList.buildFilterSelection();  // empty call should initiate as neutral
 
-        } else {
+            // nothing for now
 
-            // ------------------ update left hand image -------------
+
+        //--------------------------------------
+        //       Show and Tag Textures                
+        //--------------------------------------    
+        } else { // FilterTabState.TextureTaggingMode
+
+            //--------------------------------------
+            //            Texture viewer                
+            //--------------------------------------
             if (this.filteredTextureData.length === 0) {
                 this.textureViewer.setFallbackImage();
                 return;
@@ -76,22 +93,28 @@ class TabFilter {
             this.textureViewer.replaceTexture(AppConfig.filterTab.jpgURL);
             this.textureViewer.populateTextureTypesNavbar(AppConfig.filterTab);
 
-            // ------------------ tags -------------
-            const textureID = data.textureID; // Use the textureID from the first image
-            const preCheckedTags = await requestTagsForImage(textureID);
-            populateTags(this.rightMainDiv, textureID, preCheckedTags);
-
+            //--------------------------------------
+            //            Tagging App             
+            //--------------------------------------
+            const textureTags = await requestTagsForImage(data.textureID);
+            this.tagList.refreshWithTextureData(data.textureID, textureTags);
         }    
     }
       
-    filterTexturesAndShowFirst(filter: TagVote[]){
-        console.log(filter);
-        
+    async filterTexturesAndShowFirst(filter: TagVote[]){
+        this.state = FilterTabState.TextureTaggingMode;
+        await this.getTexturesByTags(filter); 
+        this.updateAll();  
     }
 
     changeActiveTexture(amount:number){
         if(this.filteredTextureData.length > 0){
             this.increaseFilteredTextureIndex(amount);
+
+            // inform tagList so that the db-entries use the right textureID
+            let textureID = this.filteredTextureData[this.filteredTextureActiveIndex].textureID;
+            this.tagList.updateTextureID(textureID);
+
             this.updateAll();
         } else {
             console.log('Change Texture Button pressed, but no data');
@@ -106,9 +129,10 @@ class TabFilter {
     }
 
     // New function to filter textures based on selected tags
-    async getTexturesByTags(tags: { tag_id: number, vote: boolean }[]): Promise<void> {
+    async getTexturesByTags(filter: TagVote[]): Promise<void> {
         try {
-            const filteredData = await requestMultiFilterTextureData({ tags });
+            const filteredData = await requestMultiFilterTextureData({ tags: filter });
+            this.filteredTextureActiveIndex = 0;
             this.filteredTextureData = filteredData.map((item: any) => {
                 const textureData = new TextureDataContainer();
                 textureData.textureID = item.id;

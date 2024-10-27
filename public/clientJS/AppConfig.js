@@ -88,7 +88,7 @@ class GalleryTab {
 }
 class Debug {
     constructor() {
-        this.level = 1; // Debug level, can be expanded later if needed
+        this.level = 2; // Debug level, can be expanded later if needed. higher = more logging
     }
 }
 class AppConfig {

@@ -15,6 +15,8 @@ function InitMainNavbarListener() {
             const target = e.target;
             const nextActiveTabName = target.getAttribute('data-tab');
             if (nextActiveTabName) {
+                if (AppConfig.debug.level === 2)
+                    console.log(`--- Tab activated: ${nextActiveTabName} ---`);
                 // Change visibility of the tab (not the content)
                 manager.makeTabVisible(nextActiveTabName);
                 // Update tab content based on the active tab

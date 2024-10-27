@@ -85,7 +85,7 @@ class GalleryTab {
 }
 
 class Debug {
-    public level: number = 1; // Debug level, can be expanded later if needed
+    public level: number = 2; // Debug level, can be expanded later if needed. higher = more logging
 }
 
 class AppConfig {
