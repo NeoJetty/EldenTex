@@ -20,9 +20,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
-
 // Middleware to inject the db connection into all routes
 app.use((req, res, next) => {
     req.db = db; // Attach the database connection to the request object
@@ -70,30 +67,12 @@ async function registerRoutes() {
 
 // Call the async function to register the routes
 registerRoutes().then(() => {
-    // Start the server and listen on all network interfaces (LAN accessible)
-    app.listen(port, '0.0.0.0', () => {
-        console.log(`Server running at http://${getLocalIPAddress()}:${port}`);
+    // Start the server and listen on localhost only (not network accessible)
+    app.listen(port, '127.0.0.1', () => {
+        console.log(`Server running at http://localhost:${port}`);
     });
 }).catch(err => {
     console.error('Error registering routes:', err);
 });
 
-// Import the os module using ES module syntax
-import { networkInterfaces } from 'os';
-
-// Utility function to get local IP address for display purposes
-function getLocalIPAddress() {
-    const nets = networkInterfaces();
-    let localAddress = 'localhost'; // Fallback
-
-    for (const name of Object.keys(nets)) {
-        for (const net of nets[name]) {
-            if (net.family === 'IPv4' && !net.internal) {
-                localAddress = net.address;
-                break;
-            }
-        }
-    }
-    return localAddress;
-}
 

@@ -171,8 +171,7 @@ function on3StateToggleClickHTMLChangeOnly(event: MouseEvent): void {
         console.error('Tag ID is not defined in the data attributes.');
         return; // Exit if tagID is not found
     }
-    const tagID = parseInt(tagIDStr); // Convert to number
-
+    
     const currentState = toggle.dataset.state;
 
     if (currentState === 'on') {

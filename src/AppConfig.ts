@@ -188,6 +188,7 @@ class AppConfig {
 
 // Exporting the AppConfig singleton instance
 const appConfigInstance = AppConfig.getInstance(); // Get the singleton instance
-export { appConfigInstance as AppConfig, TextureDataContainer, TextureTypeKeys };
+export { appConfigInstance as AppConfig, TextureDataContainer };
+export type { TextureTypeKeys };
 // @ts-ignore
 window.AppConfig = appConfigInstance; // Expose globally for debugging

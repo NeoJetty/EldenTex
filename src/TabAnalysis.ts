@@ -48,15 +48,6 @@ class TabAnalysis {
         this.updateRelatedMaps(analysisTagsDiv, textureID);
     }
 
-    // Updates the left-hand image and populates the texture types navbar
-    private async updateImageAndNavbar(textureID:number): Promise<void> {
-        try {
-            
-        } catch (error) {
-            console.error('Error updating image and navbar:', error);
-        }
-    }
-
     // Creates a texture ID input field and an OK button
     private createTextureIdInput(analysisTagsDiv: HTMLDivElement, textureID: number): void {
         const formField = document.createElement('input');

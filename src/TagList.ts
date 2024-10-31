@@ -1,6 +1,4 @@
 // tagList.ts
-
-import { AppConfig } from './AppConfig.js';
 import { Toggle, ToggleState } from './Toggle.js';
 import { FilterTabState } from './TabFilter.js';
 
@@ -29,7 +27,6 @@ class TagList {
     private toggles: Toggle[] = [];
     private tagContainer: HTMLDivElement;
     private textureID: number = -1;
-    private filter: TagVote[] = [];
     private savedSearches: serializedFilter[] = [];
     private textureUpdateCallback: (filter: TagVote[]) => void;
 
@@ -45,7 +42,6 @@ class TagList {
             //--------------------------------------
             //           Dropdown               
             //--------------------------------------
-            this.filter = preCheckedTagIDs;
             // Build the saved search dropdown
             await this.createFavouriteFiltersDropdown();
             
@@ -284,7 +280,7 @@ class TagList {
         }
     
         // Parse the tag filters from the saved search
-        const tagFilters = JSON.parse(selectedSearch.tag_filters) as { tag_id: number, vote: boolean }[];
+        //const tagFilters = JSON.parse(selectedSearch.tag_filters) as { tag_id: number, vote: boolean }[];
     
         this.tagContainer.innerHTML = '';
         // Refresh the tag list based on the tag filters
@@ -334,4 +330,5 @@ function translateToToggleState(vote: TagVote | undefined): ToggleState {
     }
 }
 
-export { TagList, TagVote, Tag };
+export { TagList };
+export type { TagVote, Tag };
