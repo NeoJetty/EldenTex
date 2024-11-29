@@ -1,37 +1,32 @@
 /* Content Section Styles */
 .content {
-    padding: 20px; /* Distance from the top main navbar and left/right browser-edge */
-    display: none; /* Hide content sections by default */
-}
-
-.content.active {
-    display: block; /* Show only the active tab */
+  padding: 20px; /* Distance from the top main navbar and left/right browser-edge */
 }
 
 .tag-toggle {
-    display: inline-block;
-    cursor: pointer;
-    margin-right: 3px; /* Optional spacing */
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 3px; /* Optional spacing */
 }
 
 .toggle-image {
-    width: 24px; /* Adjust the size of the toggle */
-    height: 13px;
+  width: 24px; /* Adjust the size of the toggle */
+  height: 13px;
 }
 
 .right-main-container {
-    margin: 10px;
+  margin: 10px;
 }
 
 .category-container {
-    margin-bottom: 20px; /* Space between categories */
+  margin-bottom: 20px; /* Space between categories */
 }
 
 .tag-row {
-    display: flex;
-    gap: 10px; /* Space between toggles */
+  display: flex;
+  gap: 10px; /* Space between toggles */
 }
 
 .tag-row > div {
-    flex: 1; /* Ensure each item takes equal space within the row */
+  flex: 1; /* Ensure each item takes equal space within the row */
 }

@@ -1,235 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Elden Ring Texture Lore</title>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
 
-
-    <link rel="stylesheet" href="style/general.css">
-    <link rel="stylesheet" href="style/main_top_navbar.css">
-    <link rel="stylesheet" href="style/content.css">
-    <link rel="stylesheet" href="style/tabs-image.css">
-    <link rel="stylesheet" href="style/zoom.css">
-    <link rel="stylesheet" href="style/gallery.css">
-</head>
-<body>
-
-    <div class="main_top_navbar">
-        <a href="#" class="tab-link" data-tab="tab1">Community Voting</a>
-        <a href="#" class="tab-link" data-tab="tab2">Single Texture Analysis</a>
-        <a href="#" class="tab-link" data-tab="tab3">Filter Voting</a>
-        <a href="#" class="tab-link" data-tab="tab4">Gallery by Tag</a>
-        
-        <!-- Debug Link with Dropdown -->
-        <div class="dropdown-container">
-            <a href="#" class="tab-link dropdown-toggle">Debug</a>
-            <div class="dropdown-menu">
-                <a href="/api/textureData/-1" class="dropdown-item" target="_blank">Texture Data</a>
-                <a href="/api/allTags" class="dropdown-item" target="_blank">All Tags</a>
-                <a href="/api/untaggedTexture/1/4" class="dropdown-item" target="_blank">Untagged Texture</a>
-                <a href="/api/countTaggingProgress/1/4" class="dropdown-item" target="_blank">Count Tagging Progress</a>
-                <a href="/api/serveManyTextures/1/4" class="dropdown-item" target="_blank">Serve Many Textures</a>
-                <a href="/api/serveTagsForTexture/1/598" class="dropdown-item" target="_blank">Serve Tags For Texture</a>
-                <a href="/api/serveMapsForTexture/3295" class="dropdown-item" target="_blank">Serve Maps For Texture</a>
-                <a href="/api/serveAllSavedFilterSearches/1" class="dropdown-item" target="_blank">Serve Saved Filter Searches</a>                 
-            </div>
-        </div>
-    </div>
-
-    <div id="popup-container" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border: 2px solid black; z-index: 100;">
-        <h3>Enter Search Name</h3>
-        <input type="text" id="search-name-input" placeholder="Search Name" />
-        <button id="send-button">Send</button>
-        <button id="cancel-button">Cancel</button>
-    </div>
-
-    <!-- Tab1 = Voting Tab -->
-    <div id="tab1" class="content active">
-        <div id="tab1-content">
-            <!-- Tabs Container -->
-            <div class="tex-type-navbar-container">
-                <div class="tex-type-navbar">
-                    <a href="#" class="tex-type-navitem" data-type="_vat">vat</a>
-                    <a href="#" class="tex-type-navitem" data-type="_van">van</a>
-                    <a href="#" class="tex-type-navitem" data-type="_1m">1m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_m">m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_g">g</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_n">b_n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_a">b_a</a>
-                    <a href="#" class="tex-type-navitem" data-type="_3m">3m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_em">em</a>
-                    <a href="#" class="tex-type-navitem" data-type="_d">d</a>
-                    <a href="#" class="tex-type-navitem" data-type="_v">v</a>
-                    <a href="#" class="tex-type-navitem" data-type="_r">r</a>
-                    <a href="#" class="tex-type-navitem" data-type="_n">n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_a">a</a>
-                </div>
-            </div>
-        
-            <!-- Image Container -->
-            <div class="image-container">
-                <img class="big-texture-viewer" src="" alt="Elden Ring Texture">
-            </div>
-        
-            <!-- Zoom Controls -->
-            <div class="zoom-controls">
-                <button class="zoom-button zoom-in">+</button>
-                <button class="zoom-button zoom-out">-</button>
-            </div>
-        
-            <!-- Tag Container -->
-            <div class="right-main-container">
-                <!-- Placeholder for title -->
-                <div id="vote-title"></div>
-                
-                <!-- "No" and "Yes" buttons -->
-                <button id="vote-no">No</button>
-                <button id="vote-yes">Yes</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tab2 = Analysis Tab -->
-    <div id="tab2" class="content">
-        <div id="tab2-content">
-    <!-- Tabs Container -->
-            <div class="tex-type-navbar-container">
-                <div class="tex-type-navbar">
-                    <a href="#" class="tex-type-navitem" data-type="_vat">vat</a>
-                    <a href="#" class="tex-type-navitem" data-type="_van">van</a>
-                    <a href="#" class="tex-type-navitem" data-type="_1m">1m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_m">m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_g">g</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_n">b_n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_a">b_a</a>
-                    <a href="#" class="tex-type-navitem" data-type="_3m">3m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_em">em</a>
-                    <a href="#" class="tex-type-navitem" data-type="_d">d</a>
-                    <a href="#" class="tex-type-navitem" data-type="_v">v</a>
-                    <a href="#" class="tex-type-navitem" data-type="_r">r</a>
-                    <a href="#" class="tex-type-navitem" data-type="_n">n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_a">a</a>
-                </div>
-            </div>
-
-            <!-- Image Container -->
-            <div class="image-container">
-                <img class="big-texture-viewer" src="" alt="Elden Ring Texture">
-            </div>
-
-            <!-- Zoom Controls -->
-            <div class="zoom-controls">
-                <button class="zoom-button zoom-in">+</button>
-                <button class="zoom-button zoom-out">-</button>
-            </div>
-
-            <!-- Tag Container -->
-            <div class="right-main-container">
-                <!-- Placeholder for title -->
-                <div id="vote-title"></div>
-                
-            </div>
-        </div>
-    </div>
-
-    <!-- Tab3 = Empty Tab -->
-    <div id="tab3" class="content">
-        <div id="tab3-content">
-            <!-- Tabs Container -->
-            <div class="tex-type-navbar-container">
-                <div class="tex-type-navbar">
-                    <a href="#" class="tex-type-navitem" data-type="_vat">vat</a>
-                    <a href="#" class="tex-type-navitem" data-type="_van">van</a>
-                    <a href="#" class="tex-type-navitem" data-type="_1m">1m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_m">m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_g">g</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_n">b_n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_Billboards_a">b_a</a>
-                    <a href="#" class="tex-type-navitem" data-type="_3m">3m</a>
-                    <a href="#" class="tex-type-navitem" data-type="_em">em</a>
-                    <a href="#" class="tex-type-navitem" data-type="_d">d</a>
-                    <a href="#" class="tex-type-navitem" data-type="_v">v</a>
-                    <a href="#" class="tex-type-navitem" data-type="_r">r</a>
-                    <a href="#" class="tex-type-navitem" data-type="_n">n</a>
-                    <a href="#" class="tex-type-navitem" data-type="_a">a</a>
-                </div>
-            </div>
-        
-            <!-- Image Container -->
-            <div class="image-container">
-                <img class="big-texture-viewer" src="/UXimg/image_not_available.png" alt="Elden Ring Texture">
-            </div>
-        
-            <!-- Zoom Controls -->
-            <div class="control-buttons">
-                <button class="forward-button">&gt;&gt;</button>
-                <button class="backward-button">&lt;&lt;</button>
-                <button class="zoom-button zoom-in">+</button>
-                <button class="zoom-button zoom-out">-</button>
-            </div>
-        
-            <!-- Tag Container -->
-            <div class="right-main-container">
-            </div>
-        </div>    
-    </div>
-
-    <!-- Tab4 = Gallery Tab -->
-    <div id="tab4" class="content">
-        <div id="tab4-content">
-            <div class="dropdown">
-                <label for="textureType">Select Texture Type:</label>
-                <select id="textureType">
-                    <option value="Symbol">Symbol</option>
-                    <option value="Leyndell">Leyndell</option>
-                    <option value="Nox">Nox</option>
-                </select>
-            </div>
-
-            <div id="gallery-image-grid">
-                <!-- Image placeholders -->
-                <img src="/UXimg/image_not_available.png" alt="Image 1">
-                <img src="/UXimg/image_not_available.png" alt="Image 2">
-                <img src="/UXimg/image_not_available.png" alt="Image 3">
-                <img src="/UXimg/image_not_available.png" alt="Image 4">
-                <img src="/UXimg/image_not_available.png" alt="Image 5">
-                <img src="/UXimg/image_not_available.png" alt="Image 6">
-                <img src="/UXimg/image_not_available.png" alt="Image 7">
-                <img src="/UXimg/image_not_available.png" alt="Image 8">
-                <img src="/UXimg/image_not_available.png" alt="Image 9">
-                <img src="/UXimg/image_not_available.png" alt="Image 10">
-                <img src="/UXimg/image_not_available.png" alt="Image 11">
-                <img src="/UXimg/image_not_available.png" alt="Image 12">
-                <img src="/UXimg/image_not_available.png" alt="Image 13">
-                <img src="/UXimg/image_not_available.png" alt="Image 14">
-                <img src="/UXimg/image_not_available.png" alt="Image 15">
-                <img src="/UXimg/image_not_available.png" alt="Image 16">
-                <img src="/UXimg/image_not_available.png" alt="Image 17">
-                <img src="/UXimg/image_not_available.png" alt="Image 18">
-                <img src="/UXimg/image_not_available.png" alt="Image 19">
-                <img src="/UXimg/image_not_available.png" alt="Image 20">
-                <img src="/UXimg/image_not_available.png" alt="Image 21">
-            </div>
-
-            <div class="pagination" id="pagination">
-                <a href="#" class="prev">« Previous</a>
-                <span class="page-numbers" id="pageNumbers"></span>
-                <a href="#" class="next">Next »</a>
-            </div>
-        </div>
- 
-    </div>
-   
-    <!-- Scripts -->
-    <script type="module" src="src/main.ts" defer></script>
-
- 
-
-</body>
+    <link rel="stylesheet" href="style/general.css" />
+    <link rel="stylesheet" href="style/main_top_navbar.css" />
+    <link rel="stylesheet" href="style/content.css" />
+    <link rel="stylesheet" href="style/tabs-image.css" />
+    <link rel="stylesheet" href="style/zoom.css" />
+    <link rel="stylesheet" href="style/gallery.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/data/main.tsx"></script>
+  </body>
 </html>
