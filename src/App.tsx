@@ -15,18 +15,15 @@ function App() {
       <MainNavBar />
       <PopupContainer />
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/voting" element={<VotingTab varA={3} varB={"home"} />} />
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="voting" element={<VotingTab varA={3} varB={"home"} />} />
         <Route
-          path="/analysis"
+          path="analysis"
           element={<AnalysisTab varA={3} varB={"home"} />}
         />
-        <Route path="/filter" element={<FilterTab varA={3} varB={"home"} />} />
-        <Route
-          path="/gallery"
-          element={<GalleryTab varA={3} varB={"home"} />}
-        />
+        <Route path="filter" element={<FilterTab varA={3} varB={"home"} />} />
+        <Route path="gallery" element={<GalleryTab varA={3} varB={"home"} />} />
 
         <Route path="*" element={<AnalysisTab varA={3} varB={"home"} />} />
       </Routes>

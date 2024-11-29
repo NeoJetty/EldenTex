@@ -6,6 +6,7 @@ import {
   login as loginAction,
   logout as logoutAction,
 } from "../../redux/slices/authSlice";
+import axios from "axios";
 
 // Define the shape of the response from the server
 interface LoginResponse {
@@ -51,33 +52,29 @@ const Login: React.FC = () => {
     }
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+    axios
+      .post<LoginResponse>("/api/login", { email, password })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+
+          dispatch(loginAction(response.data.username));
+          setMessage(`Login successful! Welcome, ${response.data.username}.`);
+        } else {
+          setMessage("Login failed. Please check your credentials.");
+          dispatch(logoutAction());
+        }
+      })
+      .catch((error) => {
+        setMessage(
+          `An error occurred. Please try again. Error: ${
+            error.response?.data?.message || error.message
+          }`
+        );
       });
-
-      if (response.ok) {
-        console.log(response);
-
-        const data: LoginResponse = await response.json();
-        console.log(data);
-
-        dispatch(loginAction(data.username));
-        setMessage(`Login successful! Welcome, ${data.username}.`);
-      } else {
-        setMessage("Login failed. Please check your credentials.");
-        dispatch(logoutAction());
-      }
-    } catch (error) {
-      setMessage("An error occurred. Please try again.");
-    }
   };
 
   return (
