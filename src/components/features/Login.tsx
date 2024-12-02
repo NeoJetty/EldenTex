@@ -7,6 +7,16 @@ import {
   logout as logoutAction,
 } from "../../redux/slices/authSlice";
 import axios from "axios";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 
 // Define the shape of the response from the server
 interface LoginResponse {
@@ -27,7 +37,6 @@ const Login: React.FC = () => {
   }
 
   const example_users = [
-    // this data + encrypted password is on the server
     { id: 1, name: "Alice", email: "alice@example.com", pass: "pass123" },
     { id: 2, name: "Bob", email: "bob@example.com", pass: "secure123" },
     {
@@ -79,57 +88,70 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <Container>
+      <Typography variant="h5" gutterBottom>
+        Login
+      </Typography>
       {!isLoggedIn ? (
         <form onSubmit={handleSubmit}>
-          <div>
-            <label>
-              Username:
-              <input
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              Password:
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </label>
-          </div>
-          <button type="submit">Login</button>
-          <Link to="/register">
-            <button>Register</button>
+          <TextField
+            label="Username"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <TextField
+            label="Password"
+            type="password"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <Button variant="contained" color="primary" type="submit">
+            Login
+          </Button>
+          <Link
+            to="/register"
+            style={{ textDecoration: "none", marginLeft: "10px" }}
+          >
+            <Button variant="outlined">Register</Button>
           </Link>
         </form>
       ) : (
-        <button onClick={logout} type="button">
+        <Button variant="contained" color="secondary" onClick={logout}>
           Logout
-        </button>
+        </Button>
       )}
-      {message && <p>{message}</p>}
+      {message && <Typography color="error">{message}</Typography>}
 
       {!isLoggedIn && (
         <>
-          <h4>Test Users</h4>
-          <select onChange={(e) => setExampleUser(Number(e.target.value))}>
-            {example_users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </select>
+          <Typography variant="h6" gutterBottom>
+            Test Users
+          </Typography>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id="example-user-select-label">Select User</InputLabel>
+            <Select
+              labelId="example-user-select-label"
+              value=""
+              onChange={(e) => setExampleUser(Number(e.target.value))}
+            >
+              {example_users.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </>
       )}
-    </div>
+    </Container>
   );
 };
 

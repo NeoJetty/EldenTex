@@ -1,23 +1,32 @@
-import { Database } from "better-sqlite3";
+import express from "express";
+
 const router = express.Router();
 
-// THIS SEEMS INCOMPLETE
-// a tag is created with tag_id and user_id, but there is no name saved for it? not even passed
+// Helper function: Whitelist table names to prevent SQL injection
+function validateTableName(table) {
+  const allowedTables = ["tags_from_users"];
+  if (!allowedTables.includes(table)) {
+    throw new Error("Invalid table name");
+  }
+  return table;
+}
 
 // Function to count entries in the database
 function countInDatabase(db, table, user_id, tag_id) {
   return new Promise((resolve, reject) => {
-    const sqlQueryCheck = db.prepare(`
-            SELECT COUNT(*) AS count
-            FROM ${table}
-            WHERE user_id = ? AND tag_id = ?;
-        `);
+    try {
+      validateTableName(table);
 
-    const row = sqlQueryCheck.get(user_id, tag_id);
-    if (row) {
-      resolve(row.count);
-    } else {
-      reject("Database error during count check");
+      const sqlQueryCheck = db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM ${table}
+        WHERE user_id = ? AND tag_id = ?;
+      `);
+
+      const row = sqlQueryCheck.get(user_id, tag_id);
+      resolve(row?.count || 0);
+    } catch (error) {
+      reject(`Error during count check: ${error.message}`);
     }
   });
 }
@@ -25,20 +34,23 @@ function countInDatabase(db, table, user_id, tag_id) {
 // Function to insert entries into the database
 function insertToDatabase(db, table, user_id, tag_id) {
   return new Promise((resolve, reject) => {
-    const sqlQuery = db.prepare(`
-            INSERT INTO ${table} (user_id, tag_id)
-            VALUES (?, ?);
-        `);
-
     try {
-      sqlQuery.run(user_id, tag_id);
-      resolve(this.lastInsertROWID);
-    } catch (err) {
-      reject("Database error during insertion");
+      validateTableName(table);
+
+      const sqlQuery = db.prepare(`
+        INSERT INTO ${table} (user_id, tag_id)
+        VALUES (?, ?);
+      `);
+
+      const info = sqlQuery.run(user_id, tag_id);
+      resolve(info.lastInsertRowid);
+    } catch (error) {
+      reject(`Error during insertion: ${error.message}`);
     }
   });
 }
 
+// Route to handle adding a tag
 router.post("/:user_id/:tag_id", async (req, res) => {
   const { user_id, tag_id } = req.params;
 
@@ -58,10 +70,13 @@ router.post("/:user_id/:tag_id", async (req, res) => {
 
     // Insert into the database
     const lastInsertRowid = await insertToDatabase(db, table, user_id, tag_id);
-    return res.json({ message: "Tag added successfully", id: lastInsertRowid });
+    return res.json({
+      message: "Tag added successfully",
+      id: lastInsertRowid,
+    });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: error });
+    return res.status(500).json({ error: error.message });
   }
 });
 

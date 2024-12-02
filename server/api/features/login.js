@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt"; // For securely comparing passwords (install it: `npm install bcrypt`)
+import bcrypt from "bcrypt";
 import { JWT_SECRET, COOKIE_NAME } from "../../constants.js";
 const router = express.Router();
 
@@ -18,11 +18,8 @@ router.post("/", (req, res) => {
 
   // Query the database for the user by email
   const query = `SELECT id, name, password FROM users WHERE email = ?`;
-  db.get(query, [email], (err, user) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).send("Internal server error.");
-    }
+  try {
+    const user = db.prepare(query).get(email);
     console.log(`dbdata = id: ${user.id}, dbpassword: ${user.password}`);
     if (!user) {
       return res.status(401).send("Invalid email or password.");
@@ -46,10 +43,10 @@ router.post("/", (req, res) => {
 
       // Set the token as an HTTP-only cookie
       res.cookie(COOKIE_NAME, token, {
-        httpOnly: true, // Prevents JavaScript access to the cookie
-        secure: true, // Ensures the cookie is sent over HTTPS only
-        sameSite: "strict", // Protects against CSRF attacks
-        maxAge: 30 * 24 * 3600000, // a month
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 30 * 24 * 3600000,
       });
 
       res.status(200).json({
@@ -57,7 +54,10 @@ router.post("/", (req, res) => {
         username: user.name,
       });
     });
-  });
+  } catch (err) {
+    console.error("Database error:", err);
+    return res.status(500).send("Internal server error.");
+  }
 });
 
 export default router;

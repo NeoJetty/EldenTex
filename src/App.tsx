@@ -1,14 +1,13 @@
-//import "./App.css";
-
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 import MainNavBar from "./components/layout/MainNavBar.tsx";
 import PopupContainer from "./components/layout/PopupContainer.tsx";
 import Routing from "./Routing.tsx";
-import { ThemeProvider } from "@emotion/react";
 import { ThemeOptions } from "@mui/material/styles";
 
+// Define theme options
 export const themeOptions: ThemeOptions = {
   palette: {
-    mode: "dark",
+    mode: "dark", // Explicitly type as "dark"
     primary: {
       main: "#D4AF37",
     },
@@ -30,9 +29,12 @@ export const themeOptions: ThemeOptions = {
   },
 };
 
+// Create the theme using `createTheme`
+const theme = createTheme(themeOptions);
+
 function App() {
   return (
-    <ThemeProvider theme={themeOptions}>
+    <ThemeProvider theme={theme}>
       <MainNavBar />
       <PopupContainer />
       <Routing />
