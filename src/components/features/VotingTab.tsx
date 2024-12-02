@@ -1,18 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-interface VotingTabProps {
-  varA?: number; // Optional prop with a default value
-  varB: string; // Required prop
-}
-
-const VotingTab: React.FC<VotingTabProps> = ({ varA = 0, varB }) => {
-  // State declaration
-  const [myState, setMyState] = useState<number>(3);
-
-  // Prop usage
-  const test1 = varA;
-  const test2 = varB;
-
+const VotingTab: React.FC = () => {
   return (
     <div id="tab1" className="content active">
       <div id="tab1-content">

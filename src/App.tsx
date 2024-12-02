@@ -1,33 +1,42 @@
 //import "./App.css";
-import { Route, Routes } from "react-router-dom";
-import VotingTab from "./components/features/VotingTab.tsx";
-import FilterTab from "./components/features/FilterTab.tsx";
-import GalleryTab from "./components/features/GalleryTab.tsx";
+
 import MainNavBar from "./components/layout/MainNavBar.tsx";
 import PopupContainer from "./components/layout/PopupContainer.tsx";
-import AnalysisTab from "./components/features/AnalysisTab.tsx";
-import Login from "./components/features/Login.tsx";
-import Register from "./components/features/Register.tsx";
+import Routing from "./Routing.tsx";
+import { ThemeProvider } from "@emotion/react";
+import { ThemeOptions } from "@mui/material/styles";
+
+export const themeOptions: ThemeOptions = {
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#D4AF37",
+    },
+    secondary: {
+      main: "#C0C0C0",
+    },
+    text: {
+      primary: "#A8A9AD",
+    },
+    background: {
+      default: "#000000",
+      paper: "#090909",
+    },
+  },
+  typography: {
+    fontFamily: "Droid Serif",
+    fontSize: 14,
+    htmlFontSize: 16,
+  },
+};
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={themeOptions}>
       <MainNavBar />
       <PopupContainer />
-      <Routes>
-        <Route path="login" element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="voting" element={<VotingTab varA={3} varB={"home"} />} />
-        <Route
-          path="analysis"
-          element={<AnalysisTab varA={3} varB={"home"} />}
-        />
-        <Route path="filter" element={<FilterTab varA={3} varB={"home"} />} />
-        <Route path="gallery" element={<GalleryTab varA={3} varB={"home"} />} />
-
-        <Route path="*" element={<AnalysisTab varA={3} varB={"home"} />} />
-      </Routes>
-    </>
+      <Routing />
+    </ThemeProvider>
   );
 }
 

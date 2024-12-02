@@ -1,17 +1,7 @@
 import React, { useState } from "react";
 
-interface GalleryTabProps {
-  varA?: number; // Optional prop with a default value
-  varB: string; // Required prop
-}
-
-const GalleryTab: React.FC<GalleryTabProps> = ({ varA = 0, varB }) => {
+const GalleryTab: React.FC = () => {
   // State declaration
-  const [myState, setMyState] = useState<number>(3);
-
-  // Prop usage
-  const test1 = varA;
-  const test2 = varB;
 
   return (
     <div id="tab4" className="content">

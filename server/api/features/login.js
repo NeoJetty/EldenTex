@@ -1,11 +1,8 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"; // For securely comparing passwords (install it: `npm install bcrypt`)
+import { JWT_SECRET, COOKIE_NAME } from "../../constants.js";
 const router = express.Router();
-
-// JWT Secret (should be stored in an environment variable in production)
-const JWT_SECRET = "your-secure-secret-key";
-const COOKIE_NAME = "authToken";
 
 // POST route for login
 router.post("/", (req, res) => {

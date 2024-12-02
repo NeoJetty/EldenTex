@@ -1,19 +1,7 @@
 import React, { useState } from "react";
 import TextureViewerApp from "./TextureViewerApp";
 
-interface AnalysisTabProps {
-  varA?: number; // Optional prop with a default value
-  varB: string; // Required prop
-}
-
-const AnalysisTab: React.FC<AnalysisTabProps> = ({ varA = 0, varB }) => {
-  // State declaration
-  const [myState, setMyState] = useState<number>(3);
-
-  // Prop usage
-  const test1 = varA;
-  const test2 = varB;
-
+const AnalysisTab: React.FC = () => {
   console.log("Analysis");
 
   return (

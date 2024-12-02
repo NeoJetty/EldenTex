@@ -27,6 +27,7 @@ const Login: React.FC = () => {
   }
 
   const example_users = [
+    // this data + encrypted password is on the server
     { id: 1, name: "Alice", email: "alice@example.com", pass: "pass123" },
     { id: 2, name: "Bob", email: "bob@example.com", pass: "secure123" },
     {

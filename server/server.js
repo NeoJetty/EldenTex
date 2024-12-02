@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import sqlite3 from "sqlite3";
+import Database from "better-sqlite3";
 import { fileURLToPath } from "url";
 
 // Use fileURLToPath to get the __dirname equivalent
@@ -12,13 +12,16 @@ const port = 3030;
 
 // Create a central SQLite database connection
 const dbPath = path.resolve(__dirname, "8a2f6b3c9e4f7ab.db");
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) {
-    console.error("Error connecting to the database:", err.message);
-  } else {
-    console.log("Connected to the SQLite database");
-  }
-});
+let db;
+
+// Initialize the database
+try {
+  db = new Database(dbPath, { verbose: console.log }); // Optionally, verbose logging for SQL queries
+  console.log("Connected to the SQLite database using better-sqlite3");
+} catch (err) {
+  console.error("Error connecting to the database:", err.message);
+  process.exit(1); // Exit the process if the database fails to connect
+}
 
 // Middleware to inject the db connection into all routes
 app.use((req, res, next) => {
@@ -104,7 +107,7 @@ async function registerRoutes() {
   // Utility modules
   // ------------------------------------------------------
   // login/:POST-JSON{email:string, password:string}
-  app.use("/api/login", (await import("./api/login.js")).default);
+  app.use("/api/login", (await import("./api/features/login.js")).default);
 }
 
 // Call the async function to register the routes

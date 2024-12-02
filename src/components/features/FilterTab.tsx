@@ -1,18 +1,6 @@
 import React, { useState } from "react";
 
-interface FilterTabProps {
-  varA?: number; // Optional prop with a default value
-  varB: string; // Required prop
-}
-
-const FilterTab: React.FC<FilterTabProps> = ({ varA = 0, varB }) => {
-  // State declaration
-  const [myState, setMyState] = useState<number>(3);
-
-  // Prop usage
-  const test1 = varA;
-  const test2 = varB;
-
+const FilterTab: React.FC = () => {
   return (
     <div id="tab3" className="content">
       <div id="tab3-content">
