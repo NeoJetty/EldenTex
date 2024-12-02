@@ -24,7 +24,11 @@ const AnalysisTab: React.FC = () => {
     <div id="tab2" className="content">
       Texture: {textureName}
       <div id="tab2-content">
-        <TextureViewerApp textureID={textureID} textureTypes={textureTypes} />
+        <TextureViewerApp
+          textureID={textureID}
+          textureTypes={textureTypes}
+          textureName={textureName}
+        />
 
         <div className="image-container">
           <img className="big-texture-viewer" src="" alt="Elden Ring Texture" />
