@@ -1,39 +1,28 @@
 import React from "react";
+import { TextureTypes } from "../../data/models/sharedTypes";
 
 interface TextureTypeMenubarProps {
-  //varA?: number;
-  //varB: string;
+  textureTypes: TextureTypes;
 }
 
-interface TextureTypes {
-  _a: boolean;
-  _n: boolean;
-  _r: boolean;
-  _v: boolean;
-  _d: boolean;
-  _em: boolean;
-  _3m: boolean;
-  _Billboards_a: boolean;
-  _Billboards_n: boolean;
-  _g: boolean;
-  _m: boolean;
-  _1m: boolean;
-  _van: boolean;
-  _vat: boolean;
-}
+const texTypeMapping = {
+  _vat: "vat",
+  _van: "van",
+  _1m: "1m",
+  _m: "m",
+  _g: "g",
+  _Billboards_n: "b_n",
+  _Billboards_a: "b_a",
+  _3m: "3m",
+  _em: "em",
+  _d: "d",
+  _v: "v",
+  _r: "r",
+  _n: "n",
+  _a: "a",
+};
 
-const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = (
-  {
-    /*varA = 0, varB */
-  }
-) => {
-  // State declaration
-  //const [myState, setMyState] = useState<number>(3);
-
-  // Prop usage
-  //const test1 = varA;
-  //const test2 = varB;
-
+const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = (props) => {
   return (
     <div className="tex-type-navbar-container">
       <div className="tex-type-navbar">

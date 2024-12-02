@@ -6,23 +6,25 @@ import { requestTextureData } from "../../data/requestTextureData";
 const AnalysisTab: React.FC = () => {
   const [textureID, setTextureID] = useState<number>(1);
   const [textureName, setTextureName] = useState<string>("");
-  const [textureType, setTextureType] =
+  const [textureTypes, setTextureTypes] =
     useState<TextureTypes>(emptyTextureTypes);
 
   useEffect(() => {
     requestTextureData(1)
       .then((data) => {
-        setTextureID(data.texture_id);
-        setTextureName(data.texture_name);
-        setTextureType(data.texture_type);
+        console.log(data.textureID);
+        setTextureID(data.id);
+        setTextureName(data.textureName);
+        setTextureTypes(data.textureTypes);
       })
       .catch((error) => console.error("Error fetching texture:", error));
   }, []);
 
   return (
     <div id="tab2" className="content">
+      Texture: {textureName}
       <div id="tab2-content">
-        <TextureViewerApp textureID={textureID} />
+        <TextureViewerApp textureID={textureID} textureTypes={textureTypes} />
 
         <div className="image-container">
           <img className="big-texture-viewer" src="" alt="Elden Ring Texture" />

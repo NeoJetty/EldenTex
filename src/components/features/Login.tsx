@@ -27,7 +27,7 @@ interface LoginResponse {
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [exampleUserSelected, setExampleUserSelected] = useState<Number>(-1);
+  const [exampleUserSelected, setExampleUserSelected] = useState<string>(``);
   const [message, setMessage] = useState<string>("");
 
   const dispatch = useDispatch();
@@ -56,10 +56,10 @@ const Login: React.FC = () => {
     { id: 10, name: "Judy", email: "judy@example.com", pass: "sunshine" },
   ];
 
-  function setExampleUser(id: number): void {
+  function setExampleUser(id: string): void {
     setExampleUserSelected(id);
-    if (id != -1) {
-      const user = example_users.find((user) => user.id === id);
+    if (id != ``) {
+      const user = example_users.find((user) => user.id === Number(id));
       if (user) {
         setEmail(user.email);
         setPassword(user.pass);
@@ -148,10 +148,11 @@ const Login: React.FC = () => {
             <Select
               labelId="example-user-select-label"
               value={exampleUserSelected}
-              onChange={(e) => setExampleUser(Number(e.target.value))}
+              onChange={(e) => setExampleUser(e.target.value)}
+              defaultValue={``}
             >
-              <MenuItem key={-1} value={``}>
-                {"- choose -"}
+              <MenuItem key={``} value={``} disabled>
+                {"- pick -"}
               </MenuItem>
               {example_users.map((user) => (
                 <MenuItem key={user.id} value={user.id}>
