@@ -27,12 +27,14 @@ interface LoginResponse {
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [exampleUserSelected, setExampleUserSelected] = useState<Number>(-1);
   const [message, setMessage] = useState<string>("");
 
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state: StoreTypes) => state.auth.isLoggedIn);
 
   function logout(): void {
+    setMessage("");
     dispatch(logoutAction());
   }
 
@@ -55,10 +57,13 @@ const Login: React.FC = () => {
   ];
 
   function setExampleUser(id: number): void {
-    const user = example_users.find((user) => user.id === id);
-    if (user) {
-      setEmail(user.email);
-      setPassword(user.pass);
+    setExampleUserSelected(id);
+    if (id != -1) {
+      const user = example_users.find((user) => user.id === id);
+      if (user) {
+        setEmail(user.email);
+        setPassword(user.pass);
+      }
     }
   }
 
@@ -73,6 +78,8 @@ const Login: React.FC = () => {
 
           dispatch(loginAction(response.data.username));
           setMessage(`Login successful! Welcome, ${response.data.username}.`);
+          setEmail("");
+          setPassword("");
         } else {
           setMessage("Login failed. Please check your credentials.");
           dispatch(logoutAction());
@@ -88,7 +95,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container>
+    <Container maxWidth="sm" style={{ padding: "20px" }}>
       <Typography variant="h5" gutterBottom>
         Login
       </Typography>
@@ -128,20 +135,24 @@ const Login: React.FC = () => {
           Logout
         </Button>
       )}
-      {message && <Typography color="error">{message}</Typography>}
+      {message && <Typography color="textPrimary">{message}</Typography>}
 
       {!isLoggedIn && (
         <>
+          <br />
           <Typography variant="h6" gutterBottom>
             Test Users
           </Typography>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="example-user-select-label">Select User</InputLabel>
+          <FormControl margin="dense" style={{ width: "50%" }}>
+            <InputLabel id="example-user-select-label"></InputLabel>
             <Select
               labelId="example-user-select-label"
-              value=""
+              value={exampleUserSelected}
               onChange={(e) => setExampleUser(Number(e.target.value))}
             >
+              <MenuItem key={-1} value={``}>
+                {"- choose -"}
+              </MenuItem>
               {example_users.map((user) => (
                 <MenuItem key={user.id} value={user.id}>
                   {user.name}

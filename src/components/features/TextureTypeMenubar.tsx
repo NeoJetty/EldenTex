@@ -5,6 +5,23 @@ interface TextureTypeMenubarProps {
   //varB: string;
 }
 
+interface TextureTypes {
+  _a: boolean;
+  _n: boolean;
+  _r: boolean;
+  _v: boolean;
+  _d: boolean;
+  _em: boolean;
+  _3m: boolean;
+  _Billboards_a: boolean;
+  _Billboards_n: boolean;
+  _g: boolean;
+  _m: boolean;
+  _1m: boolean;
+  _van: boolean;
+  _vat: boolean;
+}
+
 const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = (
   {
     /*varA = 0, varB */
