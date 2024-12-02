@@ -22,52 +22,24 @@ const texTypeMapping = {
   _a: "a",
 };
 
-const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = (props) => {
+const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
+  textureTypes,
+}) => {
   return (
     <div className="tex-type-navbar-container">
       <div className="tex-type-navbar">
-        <a href="#" className="tex-type-navitem" data-type="_vat">
-          vat
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_van">
-          van
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_1m">
-          1m
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_m">
-          m
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_g">
-          g
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_Billboards_n">
-          b_n
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_Billboards_a">
-          b_a
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_3m">
-          3m
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_em">
-          em
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_d">
-          d
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_v">
-          v
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_r">
-          r
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_n">
-          n
-        </a>
-        <a href="#" className="tex-type-navitem" data-type="_a">
-          a
-        </a>
+        {Object.keys(texTypeMapping).map((key) => (
+          <a
+            href="#"
+            className={`tex-type-navitem ${
+              textureTypes[key as keyof TextureTypes] ? "active" : "inactive"
+            }`}
+            data-type={key}
+            key={key}
+          >
+            {texTypeMapping[key as keyof typeof texTypeMapping]}
+          </a>
+        ))}
       </div>
     </div>
   );

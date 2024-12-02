@@ -1,4 +1,5 @@
 export interface TextureTypes {
+  [key: string]: boolean;
   _a: boolean;
   _n: boolean;
   _r: boolean;
