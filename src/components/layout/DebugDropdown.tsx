@@ -105,11 +105,11 @@ export default function DebugDropdown() {
         <MenuItem
           onClick={handleClose}
           component="a"
-          href="/api/serveAllSavedFilterSearches/1"
+          href="/api/defaultFilters"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Serve Saved Filter Searches
+          Serve default Filters
         </MenuItem>
       </Menu>
     </Box>

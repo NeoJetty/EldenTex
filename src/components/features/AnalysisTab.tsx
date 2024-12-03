@@ -7,6 +7,7 @@ import {
   requestTextureDataByName,
 } from "../../data/requestTextureData";
 import XORdoubleInput from "../shared/XORdoubleInput";
+import TaggingApp from "./TaggingApp";
 
 const AnalysisTab: React.FC = () => {
   const params = useParams();
@@ -95,6 +96,7 @@ const AnalysisTab: React.FC = () => {
                   handleNextTextureInput(nextTexture);
                 }}
               />
+              <TaggingApp textureID={textureID} />
             </div>
           </>
         )}

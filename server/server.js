@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import Database from "better-sqlite3";
 import { fileURLToPath } from "url";
+import routeFilter from "./api/routing/routeFilter.js";
 
 // Use fileURLToPath to get the __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
@@ -80,11 +81,8 @@ async function registerRoutes() {
     "/api/serveTexturesByMultipleTags",
     (await import("./api/serveTexturesByMultipleTags.js")).default
   );
-  // serveAllSavedFilterSearches/:user_id
-  app.use(
-    "/api/serveAllSavedFilterSearches",
-    (await import("./api/serveAllSavedFilterSearches.js")).default
-  );
+
+  routeFilter(app);
 
   // ------------------------------------------------------
   // DB write modules
