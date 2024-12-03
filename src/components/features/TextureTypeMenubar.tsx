@@ -4,7 +4,8 @@ import { Tabs, Tab } from "@mui/material";
 
 interface TextureTypeMenubarProps {
   textureTypes: TextureTypes;
-  onTabClick: (key: string) => void;
+  currentTab: string; // Current active tab
+  onTabClick: (key: string) => void; // Callback to set the active tab
 }
 
 const texTypeMapping = {
@@ -26,47 +27,59 @@ const texTypeMapping = {
 
 const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
   textureTypes,
+  currentTab,
   onTabClick,
 }) => {
   return (
     <Tabs
-      value={false}
+      value={currentTab}
       onChange={() => {}}
-      variant="scrollable" // Make tabs scrollable if necessary
+      variant="scrollable"
       scrollButtons="auto"
+      sx={{
+        "& .MuiTabs-indicator": {
+          display: "none", // Removes the underline (indicator)
+        },
+      }}
     >
-      {Object.keys(texTypeMapping).map(
-        (
-          key // create a small tab for every element of texTypeMapping
-        ) => (
+      {Object.keys(texTypeMapping).map((key) => {
+        const isActive = textureTypes[key as keyof TextureTypes];
+        const isCurrent = currentTab === key;
+
+        return (
           <Tab
             label={texTypeMapping[key as keyof typeof texTypeMapping]}
             key={key}
             value={key}
-            onClick={() => onTabClick(key)}
-            className={`tex-type-navitem ${
-              textureTypes[key as keyof TextureTypes] ? "active" : "inactive"
-            }`}
+            onClick={() => isActive && onTabClick(key)} // Only clickable if active
+            className="tex-type-navitem"
             sx={{
               maxHeight: "30px",
               minHeight: "20px",
-              minWidth: "40px", // Control tab width
-              maxWidth: "40px", // Control tab width
-              border: "1px solid #ccc", // Apply a light gray border
-              borderRadius: "4px", // Round the corners slightly
-              padding: "4px 8px", // Adjust padding for density
-              margin: "0 2px", // Slight space between tabs
-              "&:hover": {
-                borderColor: "#888", // Change border color on hover
-              },
-              "&.Mui-selected": {
-                borderColor: "#007bff", // Change border color when selected
-                backgroundColor: "#e6f7ff", // Add background color when selected
-              },
+              minWidth: "40px",
+              maxWidth: "40px",
+              border: "1px solid",
+              borderRadius: "4px",
+              padding: "4px 8px",
+              margin: "0 1px",
+              borderColor: isCurrent
+                ? "primary.light"
+                : isActive
+                ? "secondary.main"
+                : "#555",
+              color: isCurrent
+                ? "primary.light"
+                : isActive
+                ? "secondary.main"
+                : "#555", // Set text color same as border color
+              "&:hover": isActive
+                ? { borderColor: "primary.main", color: "primary.main" }
+                : undefined,
+              cursor: isActive ? "pointer" : "default",
             }}
           />
-        )
-      )}
+        );
+      })}
     </Tabs>
   );
 };

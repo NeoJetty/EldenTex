@@ -12,40 +12,35 @@ interface TextureViewerAppProps {
 
 const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
   const [imgURL, setImageURL] = React.useState<string>("");
-  const [imgSuffix, setImgSuffix] = React.useState<string>("");
+  const [currentTab, setCurrentTab] = React.useState<string>(""); // Active texture type
 
   const buildJPGPath = (
     textureName: string,
-    textureTypes: TextureTypes
+    textureTypes: TextureTypes,
+    suffix: string
   ): string => {
-    let basePath = IMAGE_FOLDERS.jpgs + textureName;
-
-    if (textureTypes._n) {
-      return basePath + "_n.jpg";
-    }
-
-    for (let key of Object.keys(textureTypes)) {
-      if (textureTypes[key as keyof TextureTypes]) {
-        return basePath + key + ".jpg";
-      }
-    }
-
-    console.error(
-      `200 Error: No valid texture type found for texture name "${textureName}". Returning false path.`
-    );
-    return basePath + ".jpg"; // Default path
+    const basePath = IMAGE_FOLDERS.jpgs + textureName;
+    return suffix ? basePath + suffix + ".jpg" : basePath + "_n.jpg";
   };
 
   React.useEffect(() => {
-    const jpgURL = buildJPGPath(props.textureName, props.textureTypes);
+    const suffix =
+      currentTab ||
+      Object.keys(props.textureTypes).find(
+        (key) => props.textureTypes[key as keyof TextureTypes]
+      ) ||
+      "_n";
+
+    const jpgURL = buildJPGPath(props.textureName, props.textureTypes, suffix);
     setImageURL(jpgURL);
-  }, [props.textureName, props.textureTypes]);
+  }, [props.textureName, props.textureTypes, currentTab]);
 
   return (
     <>
       <TextureTypeMenubar
         textureTypes={props.textureTypes}
-        onTabClick={setImgSuffix}
+        currentTab={currentTab} // Pass current tab
+        onTabClick={setCurrentTab} // Update current tab
       />
       <TextureViewPort textureID={props.textureID} imgURL={imgURL} />
     </>
