@@ -35,34 +35,38 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
       variant="scrollable" // Make tabs scrollable if necessary
       scrollButtons="auto"
     >
-      {Object.keys(texTypeMapping).map((key) => (
-        <Tab
-          label={texTypeMapping[key as keyof typeof texTypeMapping]}
-          key={key}
-          value={key}
-          onClick={() => onTabClick(key)}
-          className={`tex-type-navitem ${
-            textureTypes[key as keyof TextureTypes] ? "active" : "inactive"
-          }`}
-          sx={{
-            maxHeight: "30px",
-            minHeight: "20px",
-            minWidth: "40px", // Control tab width
-            maxWidth: "40px", // Control tab width
-            border: "1px solid #ccc", // Apply a light gray border
-            borderRadius: "4px", // Round the corners slightly
-            padding: "4px 8px", // Adjust padding for density
-            margin: "0 2px", // Slight space between tabs
-            "&:hover": {
-              borderColor: "#888", // Change border color on hover
-            },
-            "&.Mui-selected": {
-              borderColor: "#007bff", // Change border color when selected
-              backgroundColor: "#e6f7ff", // Add background color when selected
-            },
-          }}
-        />
-      ))}
+      {Object.keys(texTypeMapping).map(
+        (
+          key // create a small tab for every element of texTypeMapping
+        ) => (
+          <Tab
+            label={texTypeMapping[key as keyof typeof texTypeMapping]}
+            key={key}
+            value={key}
+            onClick={() => onTabClick(key)}
+            className={`tex-type-navitem ${
+              textureTypes[key as keyof TextureTypes] ? "active" : "inactive"
+            }`}
+            sx={{
+              maxHeight: "30px",
+              minHeight: "20px",
+              minWidth: "40px", // Control tab width
+              maxWidth: "40px", // Control tab width
+              border: "1px solid #ccc", // Apply a light gray border
+              borderRadius: "4px", // Round the corners slightly
+              padding: "4px 8px", // Adjust padding for density
+              margin: "0 2px", // Slight space between tabs
+              "&:hover": {
+                borderColor: "#888", // Change border color on hover
+              },
+              "&.Mui-selected": {
+                borderColor: "#007bff", // Change border color when selected
+                backgroundColor: "#e6f7ff", // Add background color when selected
+              },
+            }}
+          />
+        )
+      )}
     </Tabs>
   );
 };

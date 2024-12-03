@@ -41,6 +41,13 @@ async function registerRoutes() {
     "/api/textureData",
     (await import("./api/serveTextureData.js")).default
   );
+
+  // textureDataByName/:textureName
+  app.use(
+    "/api/textureDataByName",
+    (await import("./api/serveTextureDataByName.js")).default
+  );
+
   // allTags
   app.use("/api/allTags", (await import("./api/serveAllTags.js")).default);
   // untaggedTexture/:user_id/:tag_id
