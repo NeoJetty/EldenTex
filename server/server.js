@@ -3,6 +3,7 @@ import path from "path";
 import Database from "better-sqlite3";
 import { fileURLToPath } from "url";
 import routeFilter from "./api/routing/routeFilter.js";
+import routeTextureTagging from "./api/routing/routeTextureTagging.js";
 
 // Use fileURLToPath to get the __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
@@ -83,25 +84,18 @@ async function registerRoutes() {
   );
 
   routeFilter(app);
+  routeTextureTagging(app);
 
   // ------------------------------------------------------
   // DB write modules
   // ------------------------------------------------------
-  // dbDeleteTagFromTexture/:user_id/:tag_id
-  app.use(
-    "/api/dbDeleteTagFromTexture",
-    (await import("./api/dbDeleteTagFromTexture.js")).default
-  );
+
   // dbCreateNewTag/:user_id/:tag_id
   app.use(
     "/api/dbCreateNewTag",
     (await import("./api/dbCreateNewTag.js")).default
   );
-  // dbAddTagToTexture/:user_id/:tag_id/:texture_id/:vote
-  app.use(
-    "/api/dbAddTagToTexture",
-    (await import("./api/dbAddTagToTexture.js")).default
-  );
+
   // dbSaveTagSearches/:POST-JSON{user_id,search_name,tags:[{tag_id:number, vote:bool},{...},{...}]}
   app.use(
     "/api/dbSaveTagSearches",

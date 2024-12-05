@@ -32,3 +32,14 @@ export const emptyTextureTypes: TextureTypes = {
   _van: false,
   _vat: false,
 };
+
+export interface Tag {
+  id: number;
+  name: string;
+  category: string;
+}
+
+export interface TagVote {
+  tag_id: number;
+  vote: boolean;
+}

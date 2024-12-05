@@ -1,37 +1,43 @@
-import express from 'express';
-const router = express.Router();
+export const handleDeleteTagFromTexture = (req, res) => {
+  try {
+    const { user_id, tag_id, texture_id } = req.params;
 
-// Define the route for deleting a tag from a texture for a specific user
-router.get('/:user_id/:tag_id/:texture_id', (req, res) => {
-    const userId = parseInt(req.params.user_id);
-    const tagId = parseInt(req.params.tag_id);
-    const textureId = parseInt(req.params.texture_id);
-    const db = req.db; // Use the database connection from the request
+    // Parse IDs to ensure they are integers
+    const userId = parseInt(user_id, 10);
+    const tagId = parseInt(tag_id, 10);
+    const textureId = parseInt(texture_id, 10);
 
-    console.log('Received deletion request:', { userId, tagId, textureId });
+    if (isNaN(userId) || isNaN(tagId) || isNaN(textureId)) {
+      return res
+        .status(400)
+        .json({ error: "Invalid user ID, tag ID, or texture ID" });
+    }
 
+    const db = req.db; // Use the database connection from the middleware
 
-    // SQL query to delete the tag for the given user and tag ID
+    console.log("Received deletion request:", { userId, tagId, textureId });
+
     const sqlQuery = `
         DELETE FROM tag_texture_associations
-        WHERE user_id = ? AND tag_id = ? AND texture_id = ?;
-    `;
+        WHERE user_id = ? AND tag_id = ? AND texture_id = ?
+      `;
 
-    db.run(sqlQuery, [userId, tagId, textureId], function(err) {
-        if (err) {
-            console.error('Database error during deletion:', err);
-            return res.status(500).json({ error: 'Database error' });
-        }
-    
-        // Check if any row was affected (deleted)
-        if (this.changes === 0) {
-            return res.status(404).json({ error: 'No tag found to delete for the given user and tag ID' });
-        }
-    
-        // Respond with success message in JSON format
-        res.status(200).json({ message: 'Tag successfully deleted' });
-    });
-    
-});
+    // Execute the deletion query
+    const result = db.prepare(sqlQuery).run(userId, tagId, textureId);
 
-export default router;
+    // Check if any row was affected (deleted)
+    if (result.changes === 0) {
+      return res
+        .status(404)
+        .json({
+          error: "No tag found to delete for the given user and tag ID",
+        });
+    }
+
+    // Respond with success message
+    res.status(200).json({ message: "Tag successfully deleted" });
+  } catch (err) {
+    console.error("Error during deletion:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -102,7 +102,7 @@ const Login: React.FC = () => {
       {!isLoggedIn ? (
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Username"
+            label="eMail"
             variant="outlined"
             fullWidth
             margin="normal"
