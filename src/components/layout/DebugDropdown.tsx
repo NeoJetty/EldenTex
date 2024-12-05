@@ -78,11 +78,11 @@ export default function DebugDropdown() {
         <MenuItem
           onClick={handleClose}
           component="a"
-          href="/api/serveManyTextures/1/4"
+          href="/api/filteredTexturesBatch/1/4"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Serve Many Textures
+          Serve Filtered Textures Batch
         </MenuItem>
         <MenuItem
           onClick={handleClose}

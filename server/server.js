@@ -4,6 +4,7 @@ import Database from "better-sqlite3";
 import { fileURLToPath } from "url";
 import routeFilter from "./api/routing/routeFilter.js";
 import routeTextureTagging from "./api/routing/routeTextureTagging.js";
+import routeFilteredTextures from "./api/routing/routerFilteredTextures.js";
 
 // Use fileURLToPath to get the __dirname equivalent
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +19,9 @@ let db;
 
 // Initialize the database
 try {
-  db = new Database(dbPath, { verbose: console.log }); // Optionally, verbose logging for SQL queries
+  db = new Database(dbPath, {
+    /*verbose: console.log */
+  }); // Optionally, verbose logging for SQL queries
   console.log("Connected to the SQLite database using better-sqlite3");
 } catch (err) {
   console.error("Error connecting to the database:", err.message);
@@ -62,11 +65,6 @@ async function registerRoutes() {
     "/api/countTaggingProgress",
     (await import("./api/serveCountTaggingProgress.js")).default
   );
-  // serveManyTextures/:user_id/:tag_id
-  app.use(
-    "/api/serveManyTextures",
-    (await import("./api/serveManyTextures.js")).default
-  );
   // serveMapsForTexture/:texture_id
   app.use(
     "/api/serveMapsForTexture",
@@ -78,6 +76,7 @@ async function registerRoutes() {
     (await import("./api/serveTexturesByMultipleTags.js")).default
   );
 
+  routeFilteredTextures(app);
   routeFilter(app);
   routeTextureTagging(app);
 

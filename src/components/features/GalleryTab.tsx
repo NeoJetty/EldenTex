@@ -1,56 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  SelectChangeEvent,
+} from "@mui/material";
+import GalleryView from "./GalleryView";
 
 const GalleryTab: React.FC = () => {
-  // State declaration
+  const [tags, setTags] = useState<any[]>([]); // Store fetched tags
+  const [selectedTagID, setSelectedTagID] = useState<number>(3); // Default tagID
+
+  // Fetch all tags from the server
+  const fetchTags = async () => {
+    try {
+      const response = await fetch("/api/allTags");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setTags(data.tags); // Set the tags data to state
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+    }
+  };
+
+  // Fetch tags on component mount
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  // Handle the change of selected tag in dropdown
+  const handleTagChange = (event: SelectChangeEvent<number>) => {
+    setSelectedTagID(event.target.value as number);
+  };
 
   return (
-    <div id="tab4" className="content">
-      <div id="tab4-content">
-        <div className="dropdown">
-          <label>Select Texture Type:</label>
-          <select id="textureType">
-            <option value="Symbol">Symbol</option>
-            <option value="Leyndell">Leyndell</option>
-            <option value="Nox">Nox</option>
-          </select>
-        </div>
+    <Box>
+      {/* Dropdown for selecting a tag */}
+      <FormControl style={{ width: "25%" }} margin="normal">
+        <InputLabel>Tag</InputLabel>
+        <Select
+          value={selectedTagID}
+          onChange={handleTagChange}
+          label="Single Tag"
+        >
+          {tags.length === 0 ? (
+            <MenuItem disabled>Loading...</MenuItem> // Show loading if tags are being fetched
+          ) : (
+            tags.map((tag) => (
+              <MenuItem key={tag.id} value={tag.id}>
+                {tag.name}
+              </MenuItem>
+            ))
+          )}
+        </Select>
+      </FormControl>
 
-        <div id="gallery-image-grid">
-          <img src="/UXimg/image_not_available.png" alt="Image 1" />
-          <img src="/UXimg/image_not_available.png" alt="Image 2" />
-          <img src="/UXimg/image_not_available.png" alt="Image 3" />
-          <img src="/UXimg/image_not_available.png" alt="Image 4" />
-          <img src="/UXimg/image_not_available.png" alt="Image 5" />
-          <img src="/UXimg/image_not_available.png" alt="Image 6" />
-          <img src="/UXimg/image_not_available.png" alt="Image 7" />
-          <img src="/UXimg/image_not_available.png" alt="Image 8" />
-          <img src="/UXimg/image_not_available.png" alt="Image 9" />
-          <img src="/UXimg/image_not_available.png" alt="Image 10" />
-          <img src="/UXimg/image_not_available.png" alt="Image 11" />
-          <img src="/UXimg/image_not_available.png" alt="Image 12" />
-          <img src="/UXimg/image_not_available.png" alt="Image 13" />
-          <img src="/UXimg/image_not_available.png" alt="Image 14" />
-          <img src="/UXimg/image_not_available.png" alt="Image 15" />
-          <img src="/UXimg/image_not_available.png" alt="Image 16" />
-          <img src="/UXimg/image_not_available.png" alt="Image 17" />
-          <img src="/UXimg/image_not_available.png" alt="Image 18" />
-          <img src="/UXimg/image_not_available.png" alt="Image 19" />
-          <img src="/UXimg/image_not_available.png" alt="Image 20" />
-          <img src="/UXimg/image_not_available.png" alt="Image 21" />
-        </div>
-
-        <div className="pagination" id="pagination">
-          <a href="#" className="prev">
-            « Previous
-          </a>
-          <span className="page-numbers" id="pageNumbers"></span>
-          <a href="#" className="next">
-            Next »
-          </a>
-        </div>
-      </div>
-      ;
-    </div>
+      <GalleryView tagID={selectedTagID} />
+    </Box>
   );
 };
 

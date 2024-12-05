@@ -30,6 +30,7 @@ const MainNavBar: React.FC = () => {
             value="Community Voting"
             component={NavLink}
             to="voting"
+            disabled={true}
           />
           <Tab
             label="Texture Analysis"
@@ -42,6 +43,7 @@ const MainNavBar: React.FC = () => {
             value="Filter Voting"
             component={NavLink}
             to="filter"
+            disabled={true}
           />
           <Tab
             label="Gallery"
