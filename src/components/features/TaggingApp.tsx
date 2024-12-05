@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   addTagToTexture,
   deleteTagFromTexture,
+  getTagsForTexture, // Assuming a function to fetch tag votes for a specific texture
 } from "../../data/api/requestTagRelatedData";
 import {
   Accordion,
@@ -10,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Tag } from "../../data/models/sharedTypes";
+import { Tag, TagVote } from "../../data/models/sharedTypes";
 import { getAllTags } from "../../data/api/requestTagRelatedData";
 import Toggle, { ToggleState } from "../shared/Toogle"; // Import the Toggle component
 
@@ -26,30 +27,48 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
   const [expandedCategory, setExpandedCategory] = useState<string | false>(
     false
   ); // Track the expanded category
+  const [tagVotes, setTagVotes] = useState<TagVote[]>([]); // State to store tag votes for the texture
 
-  // Fetch tags on component mount
+  // Fetch tags and votes on component mount
   useEffect(() => {
-    const fetchTags = async () => {
+    const fetchTagsAndVotes = async () => {
       try {
+        // Fetch tags and tag votes for the texture
         const tags = await getAllTags();
+        const votes = await getTagsForTexture(1, textureID); // Fetch tag votes for the texture
+
         setTags(tags);
-        initializeTagStates(tags);
+        setTagVotes(votes);
+
+        // Initialize tag states with fetched votes
+        initializeTagStates(tags, votes);
+
         // After tags are fetched and grouped, pre-open the first category
         initializeExpandedCategory(tags);
       } catch (error) {
-        console.error("Error fetching tags:", error);
+        console.error("Error fetching tags or votes:", error);
       }
     };
 
-    fetchTags();
-  }, []);
+    fetchTagsAndVotes();
+  }, [textureID]);
 
-  // Initialize tag states to NEUTRAL
-  const initializeTagStates = (tags: Tag[]) => {
+  const initializeTagStates = (tags: Tag[], tagVotes: TagVote[]) => {
+    // Initialize tag states with all tags as 'NEUTRAL' by default
     const initialStates = tags.reduce((acc, tag) => {
-      acc[tag.id] = ToggleState.NEUTRAL;
+      // Find if there's a vote for this tag
+      const vote = tagVotes.find((vote) => vote.tag_id === tag.id);
+
+      // If the vote exists, set the state based on the vote, otherwise set it to 'NEUTRAL'
+      acc[tag.id] = vote
+        ? vote.vote
+          ? ToggleState.ON
+          : ToggleState.OFF
+        : ToggleState.NEUTRAL;
       return acc;
     }, {} as { [key: number]: ToggleState });
+
+    // Assuming setTagStates is a function to set the state
     setTagStates(initialStates);
   };
 

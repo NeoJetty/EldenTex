@@ -67,11 +67,6 @@ async function registerRoutes() {
     "/api/serveManyTextures",
     (await import("./api/serveManyTextures.js")).default
   );
-  // serveTagsForTexture/:user_id/:texture_id
-  app.use(
-    "/api/serveTagsForTexture",
-    (await import("./api/serveTagsForTexture.js")).default
-  );
   // serveMapsForTexture/:texture_id
   app.use(
     "/api/serveMapsForTexture",

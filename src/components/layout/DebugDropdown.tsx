@@ -87,7 +87,7 @@ export default function DebugDropdown() {
         <MenuItem
           onClick={handleClose}
           component="a"
-          href="/api/serveTagsForTexture/1/598"
+          href="/api/TagToTexture/1/598"
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -88,6 +88,7 @@ async function submitFilterSearch(filterData: {
     });
 }
 
+// on the server side this a mixed POST/ PUT request
 function addTagToTexture(
   tagID: number,
   textureID: number,
@@ -122,7 +123,7 @@ function addTagToTexture(
 
 function deleteTagFromTexture(tagID: number, textureID: number): void {
   const userID = AppConfig.user.ID;
-  const url = `/api/TagToTexture/Delete`; // Updated to a more generic delete endpoint
+  const url = `/api/TagToTexture`; // Updated to a more generic delete endpoint
 
   const requestBody = {
     user_id: userID,
@@ -147,10 +148,47 @@ function deleteTagFromTexture(tagID: number, textureID: number): void {
     });
 }
 
+function getTagsForTexture(
+  userID: number,
+  textureID: number
+): Promise<TagVote[]> {
+  const url = `/api/TagToTexture/${userID}/${textureID}`;
+
+  if (AppConfig.debug.level > 0) {
+    console.log(`Server request to ${url}`);
+  }
+
+  return axios
+    .get(url) // Perform a GET request to fetch the tags
+    .then((response) => {
+      console.log(
+        `Fetched tags for Texture ${textureID} and User ${userID}. Response:`,
+        response.data
+      );
+
+      // Assuming response.data.textureTags is the array of tags and votes
+      const textureTags: TagVote[] = response.data.textureTags || [];
+
+      if (textureTags.length === 0) {
+        console.log(`No tags found for Texture ${textureID}`);
+      } else {
+        console.log(`Tags for Texture ${textureID}:`, textureTags);
+      }
+
+      // Return the fetched tags (as TagVote[])
+      return textureTags;
+    })
+    .catch((error) => {
+      console.error("Error fetching tags:", error.response || error.message);
+      return []; // Return an empty array in case of an error
+    });
+}
+
 export {
   getAllTags,
   fetchSavedFilterSearches,
   submitFilterSearch,
+  getTagsForTexture,
   addTagToTexture,
   deleteTagFromTexture,
 };

@@ -101,3 +101,47 @@ export const handleDeleteTagFromTexture = (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+// get all tags for one texture
+export const handleGetTagsForTexture = (req, res) => {
+  try {
+    const { user_id, texture_id } = req.params;
+
+    // Ensure user_id and texture_id are valid integers
+    const userId = parseInt(user_id, 10);
+    const textureId = parseInt(texture_id, 10);
+
+    if (isNaN(userId) || isNaN(textureId)) {
+      return res.status(400).json({ error: "Invalid user ID or texture ID" });
+    }
+
+    const db = req.db; // Use the database connection from the request
+
+    // SQL query to find tags for the given user and image
+    const sqlQuery = `
+          SELECT tag_id, vote
+          FROM tag_texture_associations
+          WHERE user_id = ? AND texture_id = ?;
+        `;
+
+    // Use better-sqlite3 to query the database
+    const rows = db.prepare(sqlQuery).all(userId, textureId);
+
+    // If no tags are found, return 200 OK with an empty array
+    if (rows.length === 0) {
+      return res.status(200).json({ textureTags: [] });
+    }
+
+    // Map rows to include boolean values for 'vote'
+    const textureTags = rows.map((row) => ({
+      tag_id: row.tag_id,
+      vote: !!row.vote, // Convert to boolean
+    }));
+
+    // Send the array of tag IDs and votes as JSON response
+    return res.status(200).json({ textureTags });
+  } catch (err) {
+    console.error("Error processing request:", err.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};

@@ -1,6 +1,7 @@
 import {
   handleTagOnTextureVote,
   handleDeleteTagFromTexture,
+  handleGetTagsForTexture,
 } from "../handlerTextureTagging/TagOnTexture.js";
 
 // Import validation middleware and schema
@@ -9,7 +10,6 @@ import { emptySchema } from "../../middleware/validationSchemas/emptySchema.js";
 
 // associating textures with tags
 function routeTextureTagging(app) {
-  // Route for serving default filters
   app.post(
     "/api/TagToTexture",
     validateResource(emptySchema),
@@ -17,9 +17,15 @@ function routeTextureTagging(app) {
   );
 
   app.delete(
-    "/api/TagToTexture/:user_id/:tag_id/:texture_id",
+    "/api/TagToTexture",
     validateResource(emptySchema),
     handleDeleteTagFromTexture
+  );
+
+  app.get(
+    "/api/TagToTexture/:user_id/:texture_id",
+    validateResource(emptySchema),
+    handleGetTagsForTexture
   );
 }
 
