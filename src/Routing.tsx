@@ -14,7 +14,7 @@ const Routing: React.FC = () => {
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="voting" element={<VotingTab />} />
-      <Route path="analysis/:id/:textureName" element={<AnalysisTab />} />
+      <Route path="analysis/:texture/" element={<AnalysisTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
 

@@ -59,6 +59,7 @@ const GalleryTab: React.FC = () => {
         </Select>
       </FormControl>
 
+      {/* Gallery view based on selected tag */}
       <GalleryView tagID={selectedTagID} />
     </Box>
   );

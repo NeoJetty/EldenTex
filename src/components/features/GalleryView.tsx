@@ -8,6 +8,7 @@ import {
   CardContent,
   CardMedia,
 } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link
 import { AppConfig } from "../../data/AppConfig";
 
 interface GalleryViewProps {
@@ -50,36 +51,27 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
   // Build image grid with textures and their types
   const buildImageGrid = () => {
     return (textures || []).map((texture) => (
-      <Grid item xs={12} sm={6} md={4} key={texture.id}>
-        <Card>
-          {/* Render the texture image */}
-          <CardMedia
-            component="img"
-            height="140"
-            image={AppConfig.buildLowQualityJPGPath(
-              texture.textureName,
-              texture.textureTypes
-            )}
-            alt={texture.textureName}
-          />
-          <CardContent>
-            {/* Render texture name */}
-            <Typography variant="h6">{texture.textureName}</Typography>
-
-            {/* Render texture types that are active (value of 1) */}
-            <Box>
-              {Object.keys(texture.textureTypes).map(
-                (key) =>
-                  texture.textureTypes[key] === 1 && (
-                    <Typography key={key} variant="body2">
-                      {key.replace("_", " ").toUpperCase()}{" "}
-                      {/* Show active types */}
-                    </Typography>
-                  )
+      <Grid item xs={12} sm={6} md={2} key={texture.id}>
+        <Link to={`/analysis/${texture.id}`} target="_blank">
+          {" "}
+          {/* Open in a new tab */}
+          <Card>
+            {/* Render the texture image */}
+            <CardMedia
+              component="img"
+              height="140"
+              image={AppConfig.buildLowQualityJPGPath(
+                texture.textureName,
+                texture.textureTypes
               )}
-            </Box>
-          </CardContent>
-        </Card>
+              alt={texture.textureName}
+            />
+            <CardContent>
+              {/* Render texture name */}
+              <Typography variant="h6">{texture.textureName}</Typography>
+            </CardContent>
+          </Card>
+        </Link>
       </Grid>
     ));
   };
