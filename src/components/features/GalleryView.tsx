@@ -52,7 +52,14 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
   const buildImageGrid = () => {
     return (textures || []).map((texture) => (
       <Grid item xs={12} sm={6} md={2} key={texture.id}>
-        <Link to={`/analysis/${texture.id}`} target="_blank">
+        <Link
+          style={{
+            textDecoration: "none",
+            color: "inherit",
+          }}
+          to={`/analysis/${texture.id}`}
+          target="_blank"
+        >
           {" "}
           {/* Open in a new tab */}
           <Card>
@@ -81,10 +88,12 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
       {loading ? (
         // Show a loading spinner if data is being fetched
         <CircularProgress />
-      ) : (
+      ) : textures.length > 0 ? (
         <Grid container spacing={2}>
           {buildImageGrid()} {/* Render image grid */}
         </Grid>
+      ) : (
+        <p>No textures found</p>
       )}
     </Box>
   );

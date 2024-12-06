@@ -15,10 +15,11 @@ const Routing: React.FC = () => {
       <Route path="register" element={<Register />} />
       <Route path="voting" element={<VotingTab />} />
       <Route path="analysis/:texture/" element={<AnalysisTab />} />
+      <Route path="analysis" element={<AnalysisTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
 
-      <Route path="*" element={<AnalysisTab />} />
+      <Route path="*" element={<Login />} />
     </Routes>
   );
 };

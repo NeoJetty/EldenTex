@@ -40,7 +40,7 @@ const GalleryTab: React.FC = () => {
   return (
     <Box>
       {/* Dropdown for selecting a tag */}
-      <FormControl style={{ width: "25%" }} margin="normal">
+      <FormControl style={{ width: "20%" }} margin="normal">
         <InputLabel>Tag</InputLabel>
         <Select
           value={selectedTagID}

@@ -1,7 +1,9 @@
+// vite.config.js
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
+  root: "E:/EldenTex",
   plugins: [react()],
   server: {
     proxy: {
@@ -9,7 +11,7 @@ export default defineConfig({
     },
     watch: {
       // Ignore only the two specific folders with images
-      ignored: ["public/AllAET_PNG/**", "public/AllAET_JPG/**"], // Relative paths
+      ignored: ["**/public/AllAET_PNG/**", "**/public/AllAET_JPG/**"],
     },
   },
 });
