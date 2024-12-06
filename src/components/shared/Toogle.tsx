@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 export enum ToggleState {
   ON = "on",
@@ -7,22 +7,12 @@ export enum ToggleState {
 }
 
 interface ToggleProps {
-  tagID: number;
-  textureID: number;
   name: string;
-  initialState: ToggleState;
-  onChange: (newState: ToggleState) => void;
+  state: ToggleState;
+  onChange: (newState: ToggleState) => void; // curried version of the callback
 }
 
-const Toggle: React.FC<ToggleProps> = ({
-  tagID,
-  textureID,
-  name,
-  initialState,
-  onChange,
-}) => {
-  const [state, setState] = useState<ToggleState>(initialState);
-
+const Toggle: React.FC<ToggleProps> = ({ name, state, onChange }) => {
   const handleToggleClick = () => {
     const newState =
       state === ToggleState.ON
@@ -31,29 +21,24 @@ const Toggle: React.FC<ToggleProps> = ({
         ? ToggleState.NEUTRAL
         : ToggleState.ON;
 
-    setState(newState);
     onChange(newState); // Notify the parent about the state change
   };
 
   const getImageForState = (state: ToggleState): string => {
     switch (state) {
       case ToggleState.ON:
-        return "UXimg/toggle_on.png";
+        return "/UXimg/toggle_on.png";
       case ToggleState.OFF:
-        return "UXimg/toggle_off.png";
+        return "/UXimg/toggle_off.png";
       case ToggleState.NEUTRAL:
       default:
-        return "UXimg/toggle_neutral.png";
+        return "/UXimg/toggle_neutral.png";
     }
   };
 
   return (
     <div className="tag-toggle-container">
-      <div
-        className="tag-toggle"
-        data-tag-id={tagID}
-        onClick={handleToggleClick}
-      >
+      <div className="tag-toggle" onClick={handleToggleClick}>
         <img
           className="toggle-image"
           src={getImageForState(state)}

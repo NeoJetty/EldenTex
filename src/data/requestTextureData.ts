@@ -39,7 +39,7 @@ function requestUntaggedTextureData(
  */
 function requestTextureData(textureID: number): Promise<any> {
   if (AppConfig.debug.level > 0)
-    console.log(`Server request: /api/textureData/${textureID}`);
+    console.log(`Server request: GET /api/textureData/${textureID}`);
 
   return fetch(`/api/textureData/${textureID}`)
     .then(async (response) => {

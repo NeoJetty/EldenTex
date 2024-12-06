@@ -3,6 +3,8 @@ import MainNavBar from "./components/layout/MainNavBar.tsx";
 import PopupContainer from "./components/layout/PopupContainer.tsx";
 import Routing from "./Routing.tsx";
 import { ThemeOptions } from "@mui/material/styles";
+import { useEffect } from "react";
+import { preloadAppData } from "./data/api/preload.ts";
 
 // Define theme options
 export const themeOptions: ThemeOptions = {
@@ -33,6 +35,16 @@ export const themeOptions: ThemeOptions = {
 const theme = createTheme(themeOptions);
 
 function App() {
+  useEffect(() => {
+    preloadAppData()
+      .then(() => {
+        console.log("App data preloaded successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to preload app data:", error);
+      });
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <MainNavBar />

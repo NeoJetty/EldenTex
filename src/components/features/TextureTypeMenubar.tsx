@@ -1,10 +1,10 @@
 import React from "react";
-import { TextureTypes } from "../../data/models/sharedTypes";
+import { TextureTypes } from "../../data/utils/sharedTypes";
 import { Tabs, Tab } from "@mui/material";
 
 interface TextureTypeMenubarProps {
   textureTypes: TextureTypes;
-  currentTab: string; // Current active tab
+  currentTab: string | null; // Allow `null` for no current tab
   onTabClick: (key: string) => void; // Callback to set the active tab
 }
 
@@ -32,7 +32,7 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
 }) => {
   return (
     <Tabs
-      value={currentTab}
+      value={currentTab || false} // If currentTab is null, set value to false to avoid invalid value warnings
       onChange={() => {}}
       variant="scrollable"
       scrollButtons="auto"
@@ -76,6 +76,9 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
                 ? { borderColor: "primary.main", color: "primary.main" }
                 : undefined,
               cursor: isActive ? "pointer" : "default",
+              // Gray out and disable tabs when no currentTab
+              opacity: currentTab === null ? 0.5 : 1, // Gray out when no current tab
+              pointerEvents: currentTab === null ? "none" : "auto", // Disable interaction when no current tab
             }}
           />
         );

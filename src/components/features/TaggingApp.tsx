@@ -1,103 +1,122 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   addTagToTexture,
   deleteTagFromTexture,
-  getTagsForTexture, // Assuming a function to fetch tag votes for a specific texture
+  getTagsForTexture,
 } from "../../data/api/requestTagRelatedData";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Tag, TagVote } from "../../data/models/sharedTypes";
-import { getAllTags } from "../../data/api/requestTagRelatedData";
+import { Tag } from "../../data/utils/sharedTypes";
 import Toggle, { ToggleState } from "../shared/Toogle"; // Import the Toggle component
+import { StoreTypes } from "../../redux/store";
+
+interface TagsForToggles {
+  id: number;
+  name: string;
+  state: ToggleState;
+}
+
+interface TagsState {
+  [category: string]: TagsForToggles[];
+}
 
 interface TaggingAppProps {
   textureID: number;
 }
 
 const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [tagStates, setTagStates] = useState<{ [key: number]: ToggleState }>(
-    {}
-  );
+  const dispatch = useDispatch();
+
+  // Accessing the tags from the Redux store
+  const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);
+  const [tagsState, setTagsState] = useState<TagsState>({});
   const [expandedCategory, setExpandedCategory] = useState<string | false>(
     false
-  ); // Track the expanded category
-  const [tagVotes, setTagVotes] = useState<TagVote[]>([]); // State to store tag votes for the texture
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Add isLoading state
 
-  // Fetch tags and votes on component mount
+  // Fetch tags and initialize tag states on component mount
   useEffect(() => {
-    const fetchTagsAndVotes = async () => {
+    const fetchTagsAndInitializeStates = async () => {
+      setIsLoading(true); // Start loading
       try {
-        // Fetch tags and tag votes for the texture
-        const tags = await getAllTags();
-        const votes = await getTagsForTexture(1, textureID); // Fetch tag votes for the texture
+        // Assuming tags are already available in Redux state
+        if (!tags || tags.length === 0) {
+          setIsLoading(false); // Stop loading if no tags available
+          return;
+        }
 
-        setTags(tags);
-        setTagVotes(votes);
+        // (userID, textureID)
+        const votes = await getTagsForTexture(1, textureID);
+        const newTagsState = buildTagsState(tags, votes);
+        setTagsState(newTagsState);
 
-        // Initialize tag states with fetched votes
-        initializeTagStates(tags, votes);
-
-        // After tags are fetched and grouped, pre-open the first category
-        initializeExpandedCategory(tags);
+        // Automatically expand the first category
+        const firstCategory = Object.keys(newTagsState)[0];
+        if (firstCategory) {
+          setExpandedCategory(firstCategory);
+        }
       } catch (error) {
         console.error("Error fetching tags or votes:", error);
+      } finally {
+        setIsLoading(false); // Stop loading after fetch completes
       }
     };
 
-    fetchTagsAndVotes();
-  }, [textureID]);
+    fetchTagsAndInitializeStates();
+  }, [textureID, tags, dispatch]); // Added tags and dispatch to dependencies
 
-  const initializeTagStates = (tags: Tag[], tagVotes: TagVote[]) => {
-    // Initialize tag states with all tags as 'NEUTRAL' by default
-    const initialStates = tags.reduce((acc, tag) => {
-      // Find if there's a vote for this tag
-      const vote = tagVotes.find((vote) => vote.tag_id === tag.id);
-
-      // If the vote exists, set the state based on the vote, otherwise set it to 'NEUTRAL'
-      acc[tag.id] = vote
-        ? vote.vote
-          ? ToggleState.ON
-          : ToggleState.OFF
-        : ToggleState.NEUTRAL;
+  const buildTagsState = (
+    tags: Tag[],
+    votes: { tag_id: number; vote: boolean }[]
+  ): TagsState => {
+    return tags.reduce((acc: TagsState, tag) => {
+      const vote = votes.find((v) => v.tag_id === tag.id);
+      const tagState: TagsForToggles = {
+        id: tag.id,
+        name: tag.name,
+        state: vote
+          ? vote.vote
+            ? ToggleState.ON
+            : ToggleState.OFF
+          : ToggleState.NEUTRAL,
+      };
+      if (!acc[tag.category]) {
+        acc[tag.category] = [];
+      }
+      acc[tag.category].push(tagState);
       return acc;
-    }, {} as { [key: number]: ToggleState });
-
-    // Assuming setTagStates is a function to set the state
-    setTagStates(initialStates);
+    }, {});
   };
 
-  // Initialize expanded category to the first one
-  const initializeExpandedCategory = (tags: Tag[]) => {
-    const firstCategory = tags[0]?.category;
-    if (firstCategory) {
-      setExpandedCategory(firstCategory); // Set the first category to be expanded
-    }
-  };
-
-  const handleToggleChange = async (tagID: number, newState: ToggleState) => {
-    setTagStates((prevStates) => ({
-      ...prevStates,
-      [tagID]: newState,
-    }));
+  const handleToggleChange = async (
+    category: string,
+    tagID: number,
+    newState: ToggleState
+  ) => {
+    setTagsState((prevState) => {
+      const updatedCategory = prevState[category].map((tag) =>
+        tag.id === tagID ? { ...tag, state: newState } : tag
+      );
+      return { ...prevState, [category]: updatedCategory };
+    });
 
     try {
       switch (newState) {
         case ToggleState.ON:
-          // Add tag with vote = true
           await addTagToTexture(tagID, textureID, true);
           break;
         case ToggleState.OFF:
-          // Add tag with vote = false
           await addTagToTexture(tagID, textureID, false);
           break;
         case ToggleState.NEUTRAL:
-          // Remove tag
           await deleteTagFromTexture(tagID, textureID);
           break;
         default:
@@ -108,26 +127,26 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
     }
   };
 
-  // Group tags by category
-  const groupedTags = tags.reduce((acc: { [key: string]: Tag[] }, tag) => {
-    if (!acc[tag.category]) {
-      acc[tag.category] = [];
-    }
-    acc[tag.category].push(tag);
-    return acc;
-  }, {});
+  // Show loading indicator if tags are being fetched
+  if (isLoading) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <CircularProgress />
+        <Typography>Loading tags...</Typography>
+      </div>
+    );
+  }
 
   return (
     <div>
-      {Object.keys(groupedTags).map((category) => (
+      {Object.keys(tagsState).map((category) => (
         <Accordion
           key={category}
-          expanded={expandedCategory === category} // Control whether this accordion is expanded
-          onChange={
-            () =>
-              setExpandedCategory(
-                expandedCategory === category ? false : category
-              ) // Toggle the expanded category
+          expanded={expandedCategory === category}
+          onChange={() =>
+            setExpandedCategory(
+              expandedCategory === category ? false : category
+            )
           }
         >
           <AccordionSummary
@@ -138,14 +157,14 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
             <Typography>{category}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            {groupedTags[category].map((tag) => (
+            {tagsState[category].map((tag) => (
               <Toggle
                 key={tag.id}
-                tagID={tag.id}
-                textureID={textureID}
                 name={tag.name}
-                initialState={tagStates[tag.id]}
-                onChange={(newState) => handleToggleChange(tag.id, newState)}
+                state={tag.state}
+                onChange={(newState) =>
+                  handleToggleChange(category, tag.id, newState)
+                }
               />
             ))}
           </AccordionDetails>

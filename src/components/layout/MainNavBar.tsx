@@ -7,17 +7,17 @@ const MainNavBar: React.FC = () => {
   // useLocation to get the current pathname
   const location = useLocation();
 
-  // Define a mapping of pathnames to tab values with an index signature
-  const tabValueMap: { [key: string]: string } = {
-    "/login": "Account",
-    "/voting": "Community Voting",
-    "/analysis": "Texture Analysis",
-    "/filter": "Filter Voting",
-    "/gallery": "Gallery",
+  // Determine the current tab value based on pathname patterns
+  const getCurrentTabValue = (pathname: string) => {
+    if (pathname.startsWith("/analysis")) return "Texture Analysis";
+    if (pathname.startsWith("/voting")) return "Community Voting";
+    if (pathname.startsWith("/filter")) return "Filter Voting";
+    if (pathname.startsWith("/gallery")) return "Gallery";
+    return "Account"; // Default fallback
   };
 
-  // Set current tab based on the pathname, with a fallback to 'Account' if not found
-  const currentTabValue = tabValueMap[location.pathname] || "Account";
+  // Get the current tab value
+  const currentTabValue = getCurrentTabValue(location.pathname);
 
   return (
     <AppBar position="static">

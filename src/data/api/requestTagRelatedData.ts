@@ -1,7 +1,7 @@
 // requestTagrelatedData.js
 
 import { AppConfig } from "../AppConfig.js";
-import { Tag, TagVote } from "../models/sharedTypes";
+import { Tag, TagVote } from "../utils/sharedTypes.js";
 import axios from "axios";
 
 async function getAllTags(): Promise<Tag[]> {
@@ -132,7 +132,7 @@ function deleteTagFromTexture(tagID: number, textureID: number): void {
   };
 
   if (AppConfig.debug.level > 0) {
-    console.log(`Server request to ${url} with body:`, requestBody);
+    console.log(`Server request DELETE ${url} with body:`, requestBody);
   }
 
   axios
@@ -155,7 +155,7 @@ function getTagsForTexture(
   const url = `/api/TagToTexture/${userID}/${textureID}`;
 
   if (AppConfig.debug.level > 0) {
-    console.log(`Server request to ${url}`);
+    console.log(`Server request GET ${url}`);
   }
 
   return axios
