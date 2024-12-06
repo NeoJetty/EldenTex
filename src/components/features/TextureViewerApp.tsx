@@ -42,6 +42,7 @@ const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
         currentTab={currentTab} // Pass current tab
         onTabClick={setCurrentTab} // Update current tab
       />
+
       <TextureViewPort textureID={props.textureID} imgURL={imgURL} />
     </>
   );

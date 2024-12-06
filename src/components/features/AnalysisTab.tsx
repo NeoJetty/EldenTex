@@ -79,10 +79,7 @@ const AnalysisTab: React.FC = () => {
             textureName={textureName}
           />
           {isLoading && <div>Loading...</div>} {/* Display loading indicator */}
-          <div className="zoom-controls">
-            <button className="zoom-button zoom-in">+</button>
-            <button className="zoom-button zoom-out">-</button>
-          </div>
+          <div className="zoom-controls"></div>
           <div className="right-main-container">
             <XORdoubleInput
               value1={textureID}

@@ -1,101 +1,49 @@
 /* Yes/No Tagging Tab */
 #tab1-content {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
-    grid-template-areas: 
-        "tabs zoom-controls right-main-container"
-        "image zoom-controls right-main-container";
-    height: 850px; /* Adjust as needed */
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+  grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
+  grid-template-areas:
+    "tabs zoom-controls right-main-container"
+    "image zoom-controls right-main-container";
+  height: 850px; /* Adjust as needed */
 }
 
 /* Image Analysis Tab */
 #tab2-content {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
-    grid-template-areas: 
-        "tabs zoom-controls right-main-container"
-        "image zoom-controls right-main-container";
-    height: 850px; /* Adjust as needed */
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+  grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
+  grid-template-areas:
+    "tabs zoom-controls right-main-container"
+    "image zoom-controls right-main-container";
+  height: 850px; /* Adjust as needed */
 }
 
 /* Filter Tab */
 #tab3-content {
-    display: grid;
-    grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
-    grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
-    grid-template-areas: 
-        "tabs zoom-controls right-main-container"
-        "image zoom-controls right-main-container";
-    height: 850px; /* Adjust as needed */
-}
-
-/* Tabs Container */
-.tex-type-navbar-container {
-    grid-area: tabs;
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
-    display: flex;
-    align-items: center;
-    /*background-color: #f0f0f0; Background color for tabs */
-    border-bottom: 1px solid #555; /* Optional: Border for visual clarity */
-}
-
-/* Tabs */
-.tex-type-navbar {
-    display: flex;
-    height: 100%;
-}
-
-/* Tab Items */
-.tex-type-navitem {
-    width: 40px;
-    padding: 5px; /* Control padding on all sides */
-    text-align: center;
-    text-decoration: none;
-    color: #575757;
-    border: 1px solid #777; /* Set top, left, and right borders */
-    border-bottom: 0px solid #777; /* Override bottom border */
-    margin-right: 2px;
-    background-color: #202124; /* Background color for tabs */
-    transition: background-color 0.3s;
-    box-sizing: border-box;
-    
-    display: flex;
-    justify-content: center; /* Horizontally center */
-    align-items: center; /* Vertically center */
-    height: 100%;
-}
-
-.tex-type-navitem.highlighted {
-    background-color: #333; /* Example color, adjust as needed */
-    color:#e8eaed
-}
-
-.tex-type-navitem.active {
-    border: 3px solid #777; /* Set top, left, and right borders */
-    border-bottom: 0px solid #777; /* Override bottom border */
-}
-
-.tex-type-navitem.highlighted:hover {
-    background-color: #575757;
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr; /* Adjust column sizes as needed */
+  grid-template-rows: 35px 1fr; /* Tabs row height and content row height */
+  grid-template-areas:
+    "tabs zoom-controls right-main-container"
+    "image zoom-controls right-main-container";
+  height: 850px; /* Adjust as needed */
 }
 
 /* Image Container */
 .image-container {
-    grid-area: image;
-    overflow: auto; /* Ensure scroll bars appear if needed */
-    border: 1px solid #555; /* Optional: Border for visual clarity */
+  grid-area: image;
+  overflow: auto; /* Ensure scroll bars appear if needed */
+  border: 1px solid #555; /* Optional: Border for visual clarity */
 }
 
 /* Image */
 .big-texture-viewer {
-    max-width: 100%; /* Adjust to container width */
-    max-height: 100%; /* Adjust to container height */
-    height: auto;
-    width: auto;
-    transform-origin: center center;
-    object-fit: contain;
+  max-width: 100%; /* Adjust to container width */
+  max-height: 100%; /* Adjust to container height */
+  height: auto;
+  width: auto;
+  transform-origin: center center;
+  object-fit: contain;
 }
-
-

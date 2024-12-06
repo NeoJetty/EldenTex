@@ -1,6 +1,5 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import MainNavBar from "./components/layout/MainNavBar.tsx";
-import PopupContainer from "./components/layout/PopupContainer.tsx";
 import Routing from "./Routing.tsx";
 import { ThemeOptions } from "@mui/material/styles";
 import { useEffect } from "react";
@@ -48,7 +47,6 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MainNavBar />
-      <PopupContainer />
       <Routing />
     </ThemeProvider>
   );

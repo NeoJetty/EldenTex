@@ -11,11 +11,13 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
 }) => {
   return (
     <div className="image-container">
-      <img
-        className="big-texture-viewer"
-        src={imgURL}
-        alt="Elden Ring Texture"
-      />
+      {textureID > 0 && (
+        <img
+          className="big-texture-viewer"
+          src={imgURL}
+          alt="Elden Ring Texture"
+        />
+      )}
     </div>
   );
 };
