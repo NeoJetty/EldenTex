@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TextureTypes } from "../../data/utils/sharedTypes";
 import { Tabs, Tab } from "@mui/material";
 
@@ -30,6 +30,17 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
   currentTab,
   onTabClick,
 }) => {
+  useEffect(() => {
+    console.log("TEXTURE TYPES CHANGED");
+
+    const firstActiveKey = Object.keys(textureTypes).find(
+      (key) => textureTypes[key as keyof TextureTypes] === 1 // TODO: type problems: boolean expected, but 1/0 are in textureTypes (code works fine)
+    );
+    if (firstActiveKey) {
+      onTabClick(firstActiveKey); // Update the current tab
+    }
+  }, [textureTypes]);
+
   return (
     <Tabs
       value={currentTab || false} // If currentTab is null, set value to false to avoid invalid value warnings

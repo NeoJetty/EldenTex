@@ -139,37 +139,38 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
 
   return (
     <div>
-      {Object.keys(tagsState).map((category) => (
-        <Accordion
-          key={category}
-          expanded={expandedCategory === category}
-          onChange={() =>
-            setExpandedCategory(
-              expandedCategory === category ? false : category
-            )
-          }
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`${category}-content`}
-            id={`${category}-header`}
+      {textureID > 0 &&
+        Object.keys(tagsState).map((category) => (
+          <Accordion
+            key={category}
+            expanded={expandedCategory === category}
+            onChange={() =>
+              setExpandedCategory(
+                expandedCategory === category ? false : category
+              )
+            }
           >
-            <Typography>{category}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            {tagsState[category].map((tag) => (
-              <Toggle
-                key={tag.id}
-                name={tag.name}
-                state={tag.state}
-                onChange={(newState) =>
-                  handleToggleChange(category, tag.id, newState)
-                }
-              />
-            ))}
-          </AccordionDetails>
-        </Accordion>
-      ))}
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${category}-content`}
+              id={`${category}-header`}
+            >
+              <Typography>{category}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {tagsState[category].map((tag) => (
+                <Toggle
+                  key={tag.id}
+                  name={tag.name}
+                  state={tag.state}
+                  onChange={(newState) =>
+                    handleToggleChange(category, tag.id, newState)
+                  }
+                />
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        ))}
     </div>
   );
 };

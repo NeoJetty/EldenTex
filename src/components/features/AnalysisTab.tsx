@@ -33,9 +33,12 @@ const AnalysisTab: React.FC = () => {
             setTextureName(data.textureName);
             setTextureTypes(data.textureTypes);
           })
-          .catch((error) =>
-            console.error("Error fetching texture by name:", error)
-          )
+          .catch((error) => {
+            console.error("Error fetching texture by name:", error);
+            setTextureID(0);
+            setTextureName("");
+            setTextureTypes(emptyTextureTypes);
+          })
           .finally(() => setIsLoading(false)); // Stop loading
       } else {
         // If it's a number, treat it as an ID
@@ -45,9 +48,12 @@ const AnalysisTab: React.FC = () => {
             setTextureName(data.textureName);
             setTextureTypes(data.textureTypes);
           })
-          .catch((error) =>
-            console.error("Error fetching texture by ID:", error)
-          )
+          .catch((error) => {
+            console.error("Error fetching texture by ID:", error);
+            setTextureID(0);
+            setTextureName("");
+            setTextureTypes(emptyTextureTypes);
+          })
           .finally(() => setIsLoading(false)); // Stop loading
       }
     } else {
