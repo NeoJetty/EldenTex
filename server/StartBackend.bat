@@ -1,5 +1,5 @@
 @echo off
 start cmd /k "npx tsc -w"
-start cmd /k "nodemon"
+npx nodemon
 
 PAUSE;

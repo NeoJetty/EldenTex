@@ -1,9 +1,9 @@
 import express, { Application } from "express";
-/* import routeFilter from "./routing/routeFilter.js";
-import routeTextureTagging from "./routing/routeTextureTagging.js";
-import routeFilteredTextures from "./routing/routeFilteredTextures.js";
+import routeFilter from "./routing/routeFilter.js";
+/* import routeTextureTagging from "./routing/routeTextureTagging.js";
+import routeFilteredTextures from "./routing/routeFilteredTextures.js";*/
 import connectDB from "./middleware/connectDB.js";
- */
+
 const app: Application = express();
 const port: number = 3030;
 
@@ -81,8 +81,8 @@ async function registerRoutes(): Promise<void> {
 
 // Middleware to parse JSON requests
 app.use(express.json());
-/* app.use(connectDB);
- */
+app.use(connectDB);
+
 // Call the async function to register the routes
 registerRoutes()
   .then(() => {

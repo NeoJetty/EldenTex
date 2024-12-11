@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import TextureViewerApp from "./TextureViewerApp";
-import { TextureTypes, emptyTextureTypes } from "../../data/utils/sharedTypes";
+import {
+  TextureSubtypes,
+  emptyTextureTypes,
+} from "../../data/utils/sharedTypes";
 import {
   requestTextureData,
   requestTextureDataByName,
@@ -16,7 +19,7 @@ const AnalysisTab: React.FC = () => {
   const [textureID, setTextureID] = useState<number>(0);
   const [textureName, setTextureName] = useState<string>("");
   const [textureTypes, setTextureTypes] =
-    useState<TextureTypes>(emptyTextureTypes);
+    useState<TextureSubtypes>(emptyTextureTypes);
   const [isLoading, setIsLoading] = useState<boolean>(false); // New state for loading
 
   // try to fetch texture data from different base information

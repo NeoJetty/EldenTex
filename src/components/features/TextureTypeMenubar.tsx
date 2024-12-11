@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { TextureTypes } from "../../data/utils/sharedTypes";
+import { TextureSubtypes } from "../../data/utils/sharedTypes";
 import { Tabs, Tab } from "@mui/material";
 
 interface TextureTypeMenubarProps {
-  textureTypes: TextureTypes;
+  textureTypes: TextureSubtypes;
   currentTab: string | null; // Allow `null` for no current tab
   onTabClick: (key: string) => void; // Callback to set the active tab
 }
@@ -34,7 +34,7 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
     console.log("TEXTURE TYPES CHANGED");
 
     const firstActiveKey = Object.keys(textureTypes).find(
-      (key) => textureTypes[key as keyof TextureTypes] === 1 // TODO: type problems: boolean expected, but 1/0 are in textureTypes (code works fine)
+      (key) => textureTypes[key as keyof TextureSubtypes] === 1 // TODO: type problems: boolean expected, but 1/0 are in textureTypes (code works fine)
     );
     if (firstActiveKey) {
       onTabClick(firstActiveKey); // Update the current tab
@@ -54,7 +54,7 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
       }}
     >
       {Object.keys(texTypeMapping).map((key) => {
-        const isActive = textureTypes[key as keyof TextureTypes];
+        const isActive = textureTypes[key as keyof TextureSubtypes];
         const isCurrent = currentTab === key;
 
         return (

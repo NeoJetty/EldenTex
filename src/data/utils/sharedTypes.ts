@@ -1,4 +1,4 @@
-export interface TextureTypes {
+export interface TextureSubtypes {
   [key: string]: boolean;
   _a: boolean;
   _n: boolean;
@@ -16,7 +16,7 @@ export interface TextureTypes {
   _vat: boolean;
 }
 
-export const emptyTextureTypes: TextureTypes = {
+export const emptyTextureTypes: TextureSubtypes = {
   _a: false,
   _n: false,
   _r: false,

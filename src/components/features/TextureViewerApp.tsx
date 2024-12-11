@@ -1,13 +1,13 @@
 import React from "react";
 import TextureTypeMenubar from "./TextureTypeMenubar";
 import TextureViewPort from "./TextureViewPort";
-import { TextureTypes } from "../../data/utils/sharedTypes";
+import { TextureSubtypes } from "../../data/utils/sharedTypes";
 import { IMAGE_FOLDERS } from "../../data/utils/constants";
 
 interface TextureViewerAppProps {
   textureName: string;
   textureID: number;
-  textureTypes: TextureTypes;
+  textureTypes: TextureSubtypes;
 }
 
 const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
@@ -16,7 +16,7 @@ const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
 
   const buildJPGPath = (
     textureName: string,
-    textureTypes: TextureTypes,
+    textureTypes: TextureSubtypes,
     suffix: string
   ): string => {
     const basePath = IMAGE_FOLDERS.jpgs + textureName;
@@ -27,7 +27,7 @@ const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
     const suffix =
       currentTab ||
       Object.keys(props.textureTypes).find(
-        (key) => props.textureTypes[key as keyof TextureTypes]
+        (key) => props.textureTypes[key as keyof TextureSubtypes]
       ) ||
       "_n";
 

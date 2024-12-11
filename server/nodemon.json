@@ -2,5 +2,5 @@
   "watch": ["dist"],
   "ext": "js",
   "exec": "node dist/server.js",
-  "delay": "200"
+  "delay": "100"
 }
