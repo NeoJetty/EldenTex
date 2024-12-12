@@ -43,3 +43,9 @@ export interface TagVote {
   tag_id: number;
   vote: boolean;
 }
+
+export interface TextureData {
+  id: number;
+  name: string;
+  textureTypes: string[];
+}

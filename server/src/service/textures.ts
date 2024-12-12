@@ -3,7 +3,7 @@ import { Database as TDatabase } from "better-sqlite3";
 export const fetchTexturesDataByIds = async (
   db: TDatabase,
   textureIDs: number[]
-): Promise<{ data?: TextureData[]; error?: string }> => {
+): Promise<{ data?: { id: number; name: string }[]; error?: string }> => {
   try {
     const placeholders = textureIDs.map(() => "?").join(", ");
     const query = `
@@ -12,12 +12,14 @@ export const fetchTexturesDataByIds = async (
       WHERE id IN (${placeholders})
     `;
 
-    const textureRows: { id: number; name: string }[] = db
-      .prepare(query)
-      .all(...textureIDs);
-    return { data: textureRows.map((row) => ({ id: row.id, name: row.name })) };
+    const textureRows = db.prepare(query).all(...textureIDs) as {
+      id: number;
+      name: string;
+    }[];
+
+    return { data: textureRows };
   } catch (err) {
-    console.error("Error fetching texture data:", err.message);
+    console.error("Error fetching texture data:", err);
     return { error: "Database error" };
   }
 };
