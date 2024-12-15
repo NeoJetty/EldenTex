@@ -8,13 +8,14 @@ import { TextureData } from "../util/sharedTypes.js";
 export const getFilteredTextureBatchControl = async (
   req: Request,
   res: Response
-): Promise<Response> => {
+): Promise<void> => {
   try {
     const { user_id, tag_id } = req.params;
 
     // Validate input parameters
     if (isNaN(Number(user_id)) || isNaN(Number(tag_id))) {
-      return res.status(400).json({ error: "Invalid userID or tagID" });
+      res.status(400).json({ error: "Invalid userID or tagID" });
+      return;
     }
 
     const db = res.locals.db;
@@ -26,7 +27,8 @@ export const getFilteredTextureBatchControl = async (
       Number(tag_id)
     );
     if (!textureIDs.length) {
-      return res.status(204).json([]); // No data case
+      res.status(204).json([]);
+      return; // No data case
     }
 
     // Step 2 & 3: Fetch texture data and subtypes in parallel
@@ -36,9 +38,10 @@ export const getFilteredTextureBatchControl = async (
     ]);
 
     if (textureDataResult.error || textureSubtypesResult.error) {
-      return res.status(500).json({
+      res.status(500).json({
         error: textureDataResult.error || textureSubtypesResult.error,
       });
+      return;
     }
 
     const textureData = textureDataResult.data!;
@@ -52,9 +55,9 @@ export const getFilteredTextureBatchControl = async (
       };
     });
 
-    return res.status(200).json(combinedResult);
+    res.status(200).json(combinedResult);
   } catch (err) {
     console.error("Error fetching filtered texture batch:", err);
-    return res.status(500).json({ error: "Unexpected error occurred" });
+    res.status(500).json({ error: "Unexpected error occurred" });
   }
 };

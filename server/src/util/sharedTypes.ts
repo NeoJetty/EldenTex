@@ -39,6 +39,11 @@ export interface Tag {
   category: string;
 }
 
+/**
+ * Represents a user's vote on a tag.
+ * @property tag_id - The ID of the tag.
+ * @property vote - The user's vote, where true represents a positive vote and false represents a negative vote.
+ */
 export interface TagVote {
   tag_id: number;
   vote: boolean;

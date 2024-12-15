@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "3129f44b-9055-4002-8c42-0c6bbcb88bc6",
+		"name": "EldenTex",
+		"description": "Some end to end tests on the local sqlite node js server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38195002"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": []
+		},
+		{
+			"name": "TextureRequests",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Filter",
+			"item": [
+				{
+					"name": "/api/defaultFilters",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

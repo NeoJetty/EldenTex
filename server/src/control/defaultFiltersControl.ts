@@ -7,14 +7,9 @@ export const defaultFiltersControl = (req: Request, res: Response): void => {
     const db: TDatabase = res.locals.db;
     const savedSearches = fetchDefaultFilters(db);
 
-    res.json({ savedSearches });
+    res.send({ savedSearches });
   } catch (err) {
-    if (err instanceof Error) {
-      console.error("Database error:", err.message);
-      res.status(500).json({ error: "Database error occurred" });
-    } else {
-      console.error("Unexpected error:", err);
-      res.status(500).json({ error: "An unexpected error occurred" });
-    }
+    console.error("Database error:", (err as Error).message);
+    res.status(500).json({ error: "Database error occurred" });
   }
 };

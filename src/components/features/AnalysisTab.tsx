@@ -11,6 +11,7 @@ import {
 } from "../../data/requestTextureData";
 import XORdoubleInput from "../shared/XORdoubleInput";
 import TaggingApp from "./TaggingApp";
+import { convertToTextureSubtypes } from "../../data/utils/converter";
 
 const AnalysisTab: React.FC = () => {
   const params = useParams();
@@ -33,8 +34,8 @@ const AnalysisTab: React.FC = () => {
         requestTextureDataByName(params.texture)
           .then((data) => {
             setTextureID(data.id);
-            setTextureName(data.textureName);
-            setTextureTypes(data.textureTypes);
+            setTextureName(data.name);
+            setTextureTypes(convertToTextureSubtypes(data.textureTypes));
           })
           .catch((error) => {
             console.error("Error fetching texture by name:", error);
@@ -48,8 +49,8 @@ const AnalysisTab: React.FC = () => {
         requestTextureData(textureAsNumber)
           .then((data) => {
             setTextureID(data.id);
-            setTextureName(data.textureName);
-            setTextureTypes(data.textureTypes);
+            setTextureName(data.name);
+            setTextureTypes(convertToTextureSubtypes(data.textureTypes));
           })
           .catch((error) => {
             console.error("Error fetching texture by ID:", error);

@@ -14,7 +14,11 @@ export const fetchDefaultFilters = (db: TDatabase): SavedSearch[] => {
 
     const rows = db.prepare(sqlQuery).all() as SavedSearch[];
 
-    return rows;
+    // Parse `tag_filters` for each row to convert it from a JSON string to an object
+    return rows.map((row) => ({
+      search_name: row.search_name,
+      tag_filters: JSON.parse(row.tag_filters), // Parse the stringified JSON
+    }));
   } catch (err) {
     throw err;
   }

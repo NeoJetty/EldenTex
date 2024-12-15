@@ -1,9 +1,9 @@
 import { Application } from "express";
 import {
-  handleTagOnTextureVote,
-  handleDeleteTagFromTexture,
-  handleGetTagsForTexture,
-} from "../api/handlerTextureTagging/TagOnTexture";
+  postTagToTextureControl,
+  deleteTagToTextureControl,
+  getTagToTextureControl,
+} from "../control/textureTaggingControl.js";
 
 // Import validation middleware and schema
 import { validateResource } from "../middleware/validateResource.js";
@@ -12,21 +12,21 @@ import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
 // Associating textures with tags
 function routeTextureTagging(app: Application): void {
   app.post(
-    "/api/TagToTexture",
+    "/api/tagToTexture",
     validateResource(emptySchema),
-    handleTagOnTextureVote
+    postTagToTextureControl
   );
 
   app.delete(
-    "/api/TagToTexture",
+    "/api/tagToTexture",
     validateResource(emptySchema),
-    handleDeleteTagFromTexture
+    deleteTagToTextureControl
   );
 
   app.get(
-    "/api/TagToTexture/:user_id/:texture_id",
+    "/api/tagToTexture/:user_id/:texture_id",
     validateResource(emptySchema),
-    handleGetTagsForTexture
+    getTagToTextureControl
   );
 }
 

@@ -7,13 +7,10 @@ export const validateResource = (schema: ZodSchema) => {
       schema.parse(req.body); // Zod's parse method will throw if validation fails
       next(); // Validation passed, continue to the next middleware
     } catch (error) {
-      if (error instanceof ZodError) {
-        const errorMessages = error.errors.map((err) => err.message).join(", ");
-        return res
-          .status(400)
-          .json({ message: `Validation error: ${errorMessages}` });
-      }
-      next(error); // Pass unexpected errors to the error handler
+      const errorMessages = (error as ZodError).errors
+        .map((err) => err.message)
+        .join(", ");
+      res.status(400).json({ message: `Validation error: ${errorMessages}` });
     }
   };
 };

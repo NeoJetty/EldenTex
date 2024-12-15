@@ -8,6 +8,7 @@ interface TextureTypeMenubarProps {
   onTabClick: (key: string) => void; // Callback to set the active tab
 }
 
+// helper variable to 1. change the order of the tabs and 2. shorten the name of the keys
 const texTypeMapping = {
   _vat: "vat",
   _van: "van",
@@ -31,8 +32,6 @@ const TextureTypeMenubar: React.FC<TextureTypeMenubarProps> = ({
   onTabClick,
 }) => {
   useEffect(() => {
-    console.log("TEXTURE TYPES CHANGED");
-
     const firstActiveKey = Object.keys(textureTypes).find(
       (key) => textureTypes[key as keyof TextureSubtypes] === 1 // TODO: type problems: boolean expected, but 1/0 are in textureTypes (code works fine)
     );

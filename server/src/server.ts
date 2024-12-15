@@ -1,21 +1,26 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import routeFilter from "./routing/routeFilter.js";
-/* import routeTextureTagging from "./routing/routeTextureTagging.js";
-import routeFilteredTextures from "./routing/routeFilteredTextures.js";*/
+import routeTags from "./routing/routeTags.js";
+import routeTextureTagging from "./routing/routeTextureTagging.js";
+import routeFilteredTextures from "./routing/routeFilteredTextures.js";
 import connectDB from "./middleware/connectDB.js";
+import routeTextures from "./routing/routeTextures.js";
 
 const app: Application = express();
 const port: number = 3030;
 
 // Async function to register routes
 async function registerRoutes(): Promise<void> {
-  // ------------------------------------------------------
-  // Serve modules
-  // ------------------------------------------------------
-  /*   routeFilteredTextures(app);
+  app.get("/", (req: Request, res: Response) => {
+    res.send("Elden Ring Lore Database running");
+  });
+
+  routeTextures(app);
+  routeTags(app);
   routeFilter(app);
+  routeFilteredTextures(app);
   routeTextureTagging(app);
- */
+
   /*   // textureData/:texture_id (GET specific texture data by texture_id, or random if texture_id is -1)
   app.use("/api/textureData", (await import("./api/serveTextureData")).default);
 
@@ -24,9 +29,6 @@ async function registerRoutes(): Promise<void> {
     "/api/textureDataByName",
     (await import("./api/serveTextureDataByName")).default
   );
-
-  // allTags
-  app.use("/api/allTags", (await import("./api/serveAllTags")).default);
 
   // untaggedTexture/:user_id/:tag_id
   app.use(
@@ -86,9 +88,15 @@ app.use(connectDB);
 // Call the async function to register the routes
 registerRoutes()
   .then(() => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+    const timestamp = `${hours}:${minutes}:${seconds}`; // Local time in hh:mm:ss format
+
     // Start the server and listen on localhost only (not network accessible)
     app.listen(port, "127.0.0.1", () => {
-      console.log(`Server running at http://localhost:${port}`);
+      console.log(`[${timestamp}] Server running at http://localhost:${port}`);
     });
   })
   .catch((err: Error) => {
