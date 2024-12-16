@@ -34,16 +34,26 @@
 /* Image Container */
 .image-container {
   grid-area: image;
-  overflow: auto; /* Ensure scroll bars appear if needed */
+  overflow: hidden; /* Prevent content from spilling out */
   border: 1px solid #555; /* Optional: Border for visual clarity */
+  position: relative; /* Required for overlay absolute positioning */
+  cursor: grab; /* Indicates draggable panning */
+}
+
+/* Zoomable and Pannable Image Wrapper */
+.image-container > div {
+  position: absolute; /* Needed for panning and scaling */
+  top: 0;
+  left: 0;
+  transform-origin: top left; /* Ensures zoom works from the top-left corner */
+  will-change: transform; /* Optimizes scaling and translation performance */
 }
 
 /* Image */
 .big-texture-viewer {
-  max-width: 100%; /* Adjust to container width */
-  max-height: 100%; /* Adjust to container height */
-  height: auto;
-  width: auto;
-  transform-origin: center center;
-  object-fit: contain;
+  display: block; /* Prevent inline whitespace issues */
+  width: auto; /* Maintains natural width */
+  height: auto; /* Maintains natural height */
+  object-fit: unset; /* Ensures image is not resized unexpectedly */
+  object-position: top left; /* Aligns image to the top-left corner */
 }

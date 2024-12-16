@@ -12,12 +12,13 @@ import {
 import XORdoubleInput from "../shared/XORdoubleInput";
 import TaggingApp from "./TaggingApp";
 import { convertToTextureSubtypes } from "../../data/utils/converter";
+import AnalysisLayout from "../layout/AnalysisLayout";
 
 const AnalysisTab: React.FC = () => {
   const params = useParams();
   const navigate = useNavigate(); // Initialize navigate
 
-  const [textureID, setTextureID] = useState<number>(0);
+  const [textureID, setTextureID] = useState<number>(20);
   const [textureName, setTextureName] = useState<string>("");
   const [textureTypes, setTextureTypes] =
     useState<TextureSubtypes>(emptyTextureTypes);
