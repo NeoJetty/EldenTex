@@ -1,0 +1,22 @@
+.speed-dial {
+  position: absolute;
+}
+
+.speed-dial .MuiSpeedDial-fab {
+  background-color: var(--secondary-main); /* Use secondary color */
+  width: 42px; /* Slightly smaller main icon */
+  height: 42px;
+  margin-bottom: -10px;
+}
+
+.speed-dial .MuiSpeedDial-fab:hover {
+  background-color: var(--secondary-dark); /* Darker on hover */
+}
+
+.speed-dial .MuiSpeedDialAction-staticTooltipLabel {
+  font-size: 0.8rem; /* Adjust tooltip label font size */
+}
+
+.speed-dial-action {
+  margin-bottom: -4px;
+}

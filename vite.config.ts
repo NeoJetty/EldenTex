@@ -5,6 +5,11 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   root: "E:/EldenTex",
   plugins: [react()],
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
+  },
   server: {
     proxy: {
       "/api": "http://localhost:3030", // Your backend port here
