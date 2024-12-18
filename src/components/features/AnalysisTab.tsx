@@ -80,27 +80,24 @@ const AnalysisTab: React.FC = () => {
   }
 
   return (
-    <div id="tab2" className="content">
-      <div id="tab2-content">
-        <>
-          <TextureViewerApp
-            textureID={textureID}
-            textureTypes={textureTypes}
-            textureName={textureName}
-          />
-          {isLoading && <div>Loading...</div>} {/* Display loading indicator */}
-          <div className="zoom-controls"></div>
-          <div className="right-main-container">
-            <XORdoubleInput
-              value1={textureID}
-              value2={textureName}
-              onSearch={(nextTexture: string) => {
-                handleNextTextureInput(nextTexture);
-              }}
-            />
-            {!isLoading && <TaggingApp textureID={textureID} />}
-          </div>
-        </>
+    <div className="main-content">
+      <div className="leftPanel">
+        <TextureViewerApp
+          textureID={textureID}
+          textureTypes={textureTypes}
+          textureName={textureName}
+        />
+        {isLoading && <div>Loading...</div>} {/* Display loading indicator */}
+      </div>
+      <div className="rightPanel">
+        <XORdoubleInput
+          value1={textureID}
+          value2={textureName}
+          onSearch={(nextTexture: string) => {
+            handleNextTextureInput(nextTexture);
+          }}
+        />
+        {!isLoading && <TaggingApp textureID={textureID} />}
       </div>
     </div>
   );

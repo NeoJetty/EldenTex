@@ -1,0 +1,19 @@
+/* All tabs with a texture Viewer Object at the left side of the page */
+
+/* Zoomable and Pannable Image Wrapper */
+.image-container > div {
+  position: absolute; /* Needed for panning and scaling */
+  top: 0;
+  left: 0;
+  transform-origin: top left; /* Ensures zoom works from the top-left corner */
+  will-change: transform; /* Optimizes scaling and translation performance */
+}
+
+/* Image */
+.big-texture-viewer {
+  display: block; /* Prevent inline whitespace issues */
+  width: auto; /* Maintains natural width */
+  height: auto; /* Maintains natural height */
+  object-fit: unset; /* Ensures image is not resized unexpectedly */
+  object-position: top left; /* Aligns image to the top-left corner */
+}

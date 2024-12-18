@@ -48,39 +48,42 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
   }, [textureID, imgURL, dispatch]);
 
   return (
-    <div
-      ref={containerRef}
-      className="image-container"
-      style={{
-        position: "relative",
-        overflow: "hidden",
-        width: "100%",
-        height: "100%",
-      }}
-    >
+    <>
       <div
+        ref={containerRef}
+        className="image-container"
         style={{
-          position: "absolute",
-          top: panning.y,
-          left: panning.x,
-          transform: `scale(${zoomLevel})`,
-          transformOrigin: "top left",
+          position: "relative",
+          overflow: "hidden",
+          width: "100%",
+          height: "100%",
         }}
       >
-        <img
-          src={imgURL}
-          alt="Zoomable Texture"
-          style={{ display: "block", width: "auto", height: "auto" }}
-          draggable={false}
-        />
-      </div>
+        <div
+          style={{
+            position: "absolute",
+            top: panning.y,
+            left: panning.x,
+            transform: `scale(${zoomLevel})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <img
+            src={imgURL}
+            alt="Zoomable Texture"
+            style={{ display: "block", width: "auto", height: "auto" }}
+            draggable={false}
+          />
+        </div>
 
-      <ViewPortSpeedDial
-        actionsState={{
-          resetView: () => dispatch(resetView()),
-        }}
-      />
-    </div>
+        <ViewPortSpeedDial
+          actionsState={{
+            resetView: () => dispatch(resetView()),
+          }}
+        />
+        <div className="zoom-controls"></div>
+      </div>
+    </>
   );
 };
 

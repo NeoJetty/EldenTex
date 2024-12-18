@@ -32,3 +32,34 @@ body {
 html {
   -ms-overflow-style: scrollbar; /* For Internet Explorer and Edge */
 }
+
+/* Root container setup for full-page layout */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Navbar at the top, content below */
+}
+
+/* Navbar styling */
+.navbar {
+  flex-shrink: 0; /* Prevents it from collapsing or resizing */
+}
+
+/* Main content container */
+.main-content {
+  margin: 10px;
+  flex: 1; /* Take all available space below navbar */
+  display: flex; /* Split into left and right panels */
+  flex-direction: row;
+}
+
+/* Left and right panels */
+.left-panel,
+.right-panel {
+  flex: 1; /* Each panel takes 50% of the width */
+  border: 5px solid #ddd; /* Optional for clarity */
+  overflow: auto; /* Ensure content scrolls if too large */
+}

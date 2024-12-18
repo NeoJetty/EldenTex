@@ -46,7 +46,9 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <MainNavBar />
+      <div className="navbar">
+        <MainNavBar />
+      </div>
       <Routing />
     </ThemeProvider>
   );
