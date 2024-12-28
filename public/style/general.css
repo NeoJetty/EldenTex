@@ -60,6 +60,13 @@ body,
 .left-panel,
 .right-panel {
   flex: 1; /* Each panel takes 50% of the width */
-  border: 5px solid #ddd; /* Optional for clarity */
+  border: 1px solid #ddd; /* Optional for clarity */
   overflow: auto; /* Ensure content scrolls if too large */
+}
+
+.leftPanel {
+  display: flex; /* Ensures content inside aligns horizontally */
+  flex-direction: row; /* Align child components side by side */
+  height: 100%; /* Take full height */
+  gap: 1px; /* Optional: Add spacing between children */
 }

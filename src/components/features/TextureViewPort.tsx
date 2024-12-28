@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ViewPortSpeedDial from "./TextureViewer/ViewPortSpeedDial";
 import { init, resetView } from "../../redux/slices/panZoomSlice.js"; // Update the path as needed
 import { StoreTypes } from "../../redux/store.js";
+import SliceOverlaySpawner from "./TextureViewer/SliceOverlaySpawner.js";
 
 interface TextureViewPortProps {
-  textureID: string;
+  textureID: number;
   imgURL: string;
 }
 
@@ -75,13 +75,7 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
             draggable={false}
           />
         </div>
-
-        <ViewPortSpeedDial
-          actionsState={{
-            resetView: () => dispatch(resetView()),
-          }}
-        />
-        <div className="zoom-controls"></div>
+        <SliceOverlaySpawner />
       </div>
     </>
   );

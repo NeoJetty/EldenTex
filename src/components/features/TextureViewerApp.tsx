@@ -3,6 +3,7 @@ import TextureTypeMenubar from "./TextureTypeMenubar";
 import TextureViewPort from "./TextureViewPort";
 import { TextureSubtypes } from "../../data/utils/sharedTypes";
 import { IMAGE_FOLDERS } from "../../data/utils/constants";
+import ViewPortControls from "./TextureViewer/ViewPortControls";
 
 interface TextureViewerAppProps {
   textureName: string;
@@ -37,13 +38,17 @@ const TextureViewerApp: React.FC<TextureViewerAppProps> = (props) => {
 
   return (
     <>
-      <TextureTypeMenubar
-        textureTypes={props.textureTypes}
-        currentTab={currentTab} // Pass current tab
-        onTabClick={setCurrentTab} // Update current tab
-      />
-
-      <TextureViewPort textureID={props.textureID} imgURL={imgURL} />
+      <div className="texture-viewport">
+        <TextureTypeMenubar
+          textureTypes={props.textureTypes}
+          currentTab={currentTab} // Pass current tab
+          onTabClick={setCurrentTab} // Update current tab
+        />
+        <TextureViewPort textureID={props.textureID} imgURL={imgURL} />
+      </div>
+      <div className="viewport-action-bar">
+        <ViewPortControls />
+      </div>
     </>
   );
 };

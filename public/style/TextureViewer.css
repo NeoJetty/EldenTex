@@ -17,3 +17,17 @@
   object-fit: unset; /* Ensures image is not resized unexpectedly */
   object-position: top left; /* Aligns image to the top-left corner */
 }
+
+.texture-viewport {
+  flex: 6; /* Viewport takes more space */
+  border: 1px solid #ccc; /* Optional: Clarity borders */
+  overflow: hidden;
+}
+
+.viewport-action-bar {
+  width: 40px; /* Fixed width for the action bar */
+  display: flex;
+  flex-direction: column; /* Aligns buttons vertically */
+  gap: 10px; /* Space between buttons */
+  padding: 1px;
+}

@@ -43,3 +43,18 @@ export interface TagVote {
   tag_id: number;
   vote: boolean;
 }
+
+export interface SlicePacket {
+  id: number;
+  slice_id: number;
+  texture_id: number;
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
+  description: string;
+}
