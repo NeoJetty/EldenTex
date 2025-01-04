@@ -31,3 +31,28 @@
   gap: 10px; /* Space between buttons */
   padding: 1px;
 }
+
+.texture-viewport {
+  display: flex; /* Ensures elements are aligned side-by-side */
+  align-items: flex-start; /* Aligns elements at the top */
+}
+
+.image-container {
+  flex: 1; /* Takes up available space */
+  position: relative;
+  height: 875px;
+  width: 500px;
+  min-width: 500px;
+}
+
+.viewport-action-bar {
+  flex-shrink: 0; /* Prevents shrinking */
+  width: 60px; /* Adjust width as needed */
+  margin-left: 10px; /* Adds spacing between the image and the action bar */
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+  height: 100vh; /* Full height of the viewport */
+}

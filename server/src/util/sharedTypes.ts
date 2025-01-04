@@ -54,3 +54,26 @@ export interface TextureData {
   name: string;
   textureTypes: string[];
 }
+
+export interface SlicePacket {
+  // slice_texture_associations
+  id: number;
+  slice_id: number;
+  texture_id: number;
+  user_id: number;
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
+  localDescription: string;
+  confidence: number;
+
+  // slices
+  sliceName: string;
+  globalDescription: string;
+  sliceUser_id: number; // is it possible to link to another users slice? probably
+}

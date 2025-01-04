@@ -42,6 +42,15 @@ export default function DebugDropdown() {
         <MenuItem
           onClick={handleClose}
           component="a"
+          href="/api/slices/2"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Slice Data
+        </MenuItem>
+        <MenuItem
+          onClick={handleClose}
+          component="a"
           href="/api/textureDataByName/AET003_657"
           target="_blank"
           rel="noopener noreferrer"

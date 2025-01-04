@@ -34,20 +34,6 @@ CREATE TABLE texture_subtypes (
     _1m BOOLEAN DEFAULT 0,
     _van BOOLEAN DEFAULT 0,
     _vat BOOLEAN DEFAULT 0,
-    _a_l BOOLEAN DEFAULT 0,
-    _n_l BOOLEAN DEFAULT 0,
-    _r_l BOOLEAN DEFAULT 0,
-    _v_l BOOLEAN DEFAULT 0,
-    _d_l BOOLEAN DEFAULT 0,
-    _em_l BOOLEAN DEFAULT 0,
-    _3m_l BOOLEAN DEFAULT 0,
-    _Billboards_a_l BOOLEAN DEFAULT 0,
-    _Billboards_n_l BOOLEAN DEFAULT 0,
-    _g_l BOOLEAN DEFAULT 0,
-    _m_l BOOLEAN DEFAULT 0,
-    _1m_l BOOLEAN DEFAULT 0,
-    _van_l BOOLEAN DEFAULT 0,
-    _vat_l BOOLEAN DEFAULT 0,
     FOREIGN KEY(id) REFERENCES textures(id)
 )
 ''')

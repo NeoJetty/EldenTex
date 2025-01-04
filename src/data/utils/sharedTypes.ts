@@ -45,6 +45,7 @@ export interface TagVote {
 }
 
 export interface SlicePacket {
+  // slice_texture_associations
   id: number;
   slice_id: number;
   texture_id: number;
@@ -56,5 +57,23 @@ export interface SlicePacket {
     x: number;
     y: number;
   };
-  description: string;
+  localDescription: string;
+  confidence: number;
+  userId: number;
+
+  // slices
+  sliceName: string;
+  globalDescription: string;
+  sliceUserId: number; // is it possible to link to another users slice? probably
+}
+
+/**
+ * A point in 2D space with x and y coordinates.
+ * @typedef {Object} T_xyPoint
+ * @property {number} x - The x-coordinate (left-right)
+ * @property {number} y - The y-coordinate (top-bottom)
+ */
+export interface T_xyPoint {
+  x: number; // left-right
+  y: number; // top-bottom
 }

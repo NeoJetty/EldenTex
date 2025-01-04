@@ -1,21 +1,20 @@
+import React from "react";
 import { useTheme } from "@mui/material";
+import { SlicePacket } from "../../../data/utils/sharedTypes";
 
 interface SliceOverlayProps {
-  topLeftX: number;
-  topLeftY: number;
-  bottomRightX: number;
-  bottomRightY: number;
-  description: string;
+  sliceData: SlicePacket; // Pass the entire SlicePacket object as a prop
 }
 
-const SliceOverlay: React.FC<SliceOverlayProps> = ({
-  topLeftX,
-  topLeftY,
-  bottomRightX,
-  bottomRightY,
-  description,
-}) => {
+const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
   const theme = useTheme();
+
+  // Destructure coordinates and description from sliceData
+  const {
+    topLeft: { x: topLeftX, y: topLeftY },
+    bottomRight: { x: bottomRightX, y: bottomRightY },
+    globalDescription: description,
+  } = sliceData;
 
   // Calculate width and height from the coordinates
   const width = bottomRightX - topLeftX;
@@ -37,6 +36,7 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
         pointerEvents: "none",
         zIndex: 10,
       }}
+      title={description} // Tooltip with the description
     />
   );
 };

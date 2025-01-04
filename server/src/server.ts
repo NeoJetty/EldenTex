@@ -5,6 +5,7 @@ import routeTextureTagging from "./routing/routeTextureTagging.js";
 import routeFilteredTextures from "./routing/routeFilteredTextures.js";
 import connectDB from "./middleware/connectDB.js";
 import routeTextures from "./routing/routeTextures.js";
+import routeSlices from "./routing/routeSlices.js";
 
 const app: Application = express();
 const port: number = 3030;
@@ -20,6 +21,7 @@ async function registerRoutes(): Promise<void> {
   routeFilter(app);
   routeFilteredTextures(app);
   routeTextureTagging(app);
+  routeSlices(app);
 
   /*   // textureData/:texture_id (GET specific texture data by texture_id, or random if texture_id is -1)
   app.use("/api/textureData", (await import("./api/serveTextureData")).default);
