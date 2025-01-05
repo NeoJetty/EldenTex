@@ -59,12 +59,12 @@ export interface SlicePacket {
   };
   localDescription: string;
   confidence: number;
-  userId: number;
+  user_id: number;
 
   // slices
   sliceName: string;
   globalDescription: string;
-  sliceUserId: number; // is it possible to link to another users slice? probably
+  sliceUser_id: number; // is it possible to link to another users slice? probably
 }
 
 /**

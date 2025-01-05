@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { init, resetView } from "../../../redux/slices/panZoomSlice.js"; // Update the path as needed
 import { StoreTypes } from "../../../redux/store.js";
 import SliceOverlaySpawner from "./SliceOverlaySpawner.js";
-import ViewPortControls from "./ViewPortControls.js";
+import ViewPortControls from "./ViewPortActionBar/ViewPortControls.js";
 
 interface TextureViewPortProps {
   textureID: number;
@@ -83,10 +83,11 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
             />
           )}
         </div>
-        <SliceOverlaySpawner textureID={textureID} /> {/* Spawns Modals */}
+        {/* Spawns Modals - adding new slices is handled in the ViewPortControl->NewSliceActionButton*/}
+        <SliceOverlaySpawner textureID={textureID} />{" "}
       </div>
       <div className="viewport-action-bar">
-        <ViewPortControls />
+        <ViewPortControls texture_id={textureID} />
       </div>
     </>
   );
