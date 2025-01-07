@@ -20,9 +20,24 @@ import {
 
 // Define the shape of the response from the server
 interface LoginResponse {
-  username: string;
-  message: string;
+  email: string;
+  pass: string;
 }
+
+// Function to hash the password with salt using SHA-256
+export const hashPasswordWithSalt = async (password: string, salt: string) => {
+  const encoder = new TextEncoder();
+  const passwordData = encoder.encode(password);
+  const saltData = encoder.encode(salt);
+
+  const combinedData = new Uint8Array(passwordData.length + saltData.length);
+  combinedData.set(passwordData);
+  combinedData.set(saltData, passwordData.length);
+
+  const hashBuffer = await crypto.subtle.digest("SHA-256", combinedData);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+};
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -67,31 +82,42 @@ const Login: React.FC = () => {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    axios
-      .post<LoginResponse>("/api/login", { email, password })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(response);
+    try {
+      // Hash the password with the salt before sending it
+      const hashedPassword = await hashPasswordWithSalt(
+        password,
+        "BetterStartRunningYourRainbowTableGenerator"
+      );
 
-          dispatch(loginAction(response.data.username));
-          setMessage(`Login successful! Welcome, ${response.data.username}.`);
-          setEmail("");
-          setPassword("");
-        } else {
-          setMessage("Login failed. Please check your credentials.");
-          dispatch(logoutAction());
-        }
-      })
-      .catch((error) => {
-        setMessage(
-          `An error occurred. Please try again. Error: ${
-            error.response?.data?.message || error.message
-          }`
-        );
-      });
+      // Send the hashed password to the server
+      axios
+        .post<LoginResponse>("/api/login", { email, hashedPassword })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+
+            dispatch(loginAction("Placeholder Username"));
+            setMessage(`Login successful! Welcome, Placeholder Username.`);
+            setEmail("");
+            setPassword("");
+          } else {
+            setMessage("Login failed. Please check your credentials.");
+            dispatch(logoutAction());
+          }
+        })
+        .catch((error) => {
+          setMessage(
+            `An error occurred. Please try again. Error: ${
+              error.response?.data?.message || error.message
+            }`
+          );
+        });
+    } catch (error) {
+      setMessage(`Error during password hashing: ${(error as Error).message}`);
+    }
   };
 
   return (

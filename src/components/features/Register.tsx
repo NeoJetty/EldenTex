@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { hashPasswordWithSalt } from "./Login"; // Ensure this function is correctly imported
 
 interface RegisterResponse {
   username: string;
@@ -14,30 +16,32 @@ const Register: React.FC = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      // Hash the password with a salt before sending it to the backend
+      const hashedPassword = await hashPasswordWithSalt(
+        password,
+        "BetterStartRunningYourRainbowTableGenerator"
+      );
+      console.log({
+        email,
+        hashedPassword,
+      });
+      // Send the registration request using axios
+      const response = await axios.post<RegisterResponse>("/api/register", {
+        email,
+        hashedPassword,
       });
 
-      if (response.ok) {
-        console.log(response);
-
-        const data: RegisterResponse = await response.json();
+      if (response.status === 200) {
+        const data = response.data;
         console.log(data);
-
-        setServerMessage(data.message);
-
-        setMessage(`Login successful! Welcome, ${data.username}.`);
+        setServerMessage(`Registration successful! Welcome, ${data.username}.`);
       } else {
-        setMessage("Login failed. Please check your credentials.");
-        localStorage.setItem("isLoggedInUser", "");
-        setLoggedInUser("");
+        setServerMessage("Registration failed. Please try again.");
       }
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      // Handle any errors that occur during the request
+      setServerMessage("An error occurred. Please try again.");
+      console.error(error);
     }
   };
 
@@ -45,9 +49,9 @@ const Register: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <h2>Register new Account</h2>
       <label>
-        Username:
+        Username (email):
         <input
-          type="text"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -64,7 +68,9 @@ const Register: React.FC = () => {
         />
       </label>
       <br />
-      <button type="submit">register</button>
+      <button type="submit">Register</button>
+
+      {serverMessage && <p>{serverMessage}</p>}
     </form>
   );
 };

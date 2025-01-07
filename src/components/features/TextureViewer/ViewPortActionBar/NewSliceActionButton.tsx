@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import NewSliceFormModal from "../NewSliceFormModal.js";
+import NewSliceFormModal from "./NewSliceFormModal.js";
 import { connect } from "react-redux";
 import { addSlice } from "../../../../redux/slices/sliceSlice.js";
 import { Dispatch } from "redux";
@@ -11,6 +11,7 @@ import { Dispatch } from "redux";
 interface NewSliceActionButtonProps {
   texture_id: number; // Prop passed from parent
   addSlice: (slice: any) => void; // Redux action to add a slice
+  imgURL: string;
 }
 
 interface NewSliceActionButtonState {
@@ -113,6 +114,7 @@ class NewSliceActionButton extends Component<
             onClose={this.onCloseModal}
             initialData={initialModalData || {}}
             onSubmit={this.onSubmitModal}
+            imgURL={this.props.imgURL}
           />
         )}
         {drawMode && (

@@ -31,28 +31,14 @@ export const getSliceControl = (req: Request, res: Response): void => {
 export const addNewSliceControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
+    const validUserID: number = res.locals.validUserID;
     const slicePacket: SlicePacket = req.body;
-
-    // Destructure the SlicePacket for slice and association data
-    const {
-      sliceName,
-      globalDescription,
-      sliceUser_id, // For slices table
-      id, // Association id is generated later
-      slice_id,
-      texture_id,
-      topLeft,
-      bottomRight,
-      localDescription,
-      confidence,
-      user_id, // For slice_texture_associations table
-    } = slicePacket;
 
     // Add the new slice and get its ID
     const newSlice_id = addSlice(db, {
-      name: sliceName,
-      global_description: globalDescription,
-      user_id: sliceUser_id,
+      name: slicePacket.sliceName,
+      global_description: slicePacket.globalDescription,
+      user_id: validUserID,
     });
 
     if (!newSlice_id) {
@@ -63,14 +49,14 @@ export const addNewSliceControl = (req: Request, res: Response): void => {
     // Add the association using the new slice ID
     const associationNewId = addAssociation(db, {
       slice_id: newSlice_id,
-      texture_id,
-      top_left_x: topLeft.x,
-      top_left_y: topLeft.y,
-      bottom_right_x: bottomRight.x,
-      bottom_right_y: bottomRight.y,
-      local_description: localDescription,
-      confidence,
-      user_id,
+      texture_id: slicePacket.texture_id,
+      top_left_x: slicePacket.topLeft.x,
+      top_left_y: slicePacket.topLeft.y,
+      bottom_right_x: slicePacket.bottomRight.x,
+      bottom_right_y: slicePacket.bottomRight.y,
+      local_description: slicePacket.localDescription,
+      confidence: slicePacket.confidence,
+      user_id: validUserID,
     });
 
     if (associationNewId != null) {

@@ -10,7 +10,8 @@ export const getFilteredTextureBatchControl = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { user_id, tag_id } = req.params;
+    const user_id = res.locals.validUserID;
+    const { tag_id } = req.params;
 
     // Validate input parameters
     if (isNaN(Number(user_id)) || isNaN(Number(tag_id))) {

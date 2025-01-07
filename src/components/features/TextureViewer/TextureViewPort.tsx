@@ -87,7 +87,7 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
         <SliceOverlaySpawner textureID={textureID} />{" "}
       </div>
       <div className="viewport-action-bar">
-        <ViewPortControls texture_id={textureID} />
+        <ViewPortControls texture_id={textureID} imgURL={imgURL} />
       </div>
     </>
   );

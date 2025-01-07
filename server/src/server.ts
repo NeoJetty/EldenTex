@@ -1,4 +1,5 @@
 import express, { Application, Request, Response } from "express";
+import cookieParser from "cookie-parser";
 import routeFilter from "./routing/routeFilter.js";
 import routeTags from "./routing/routeTags.js";
 import routeTextureTagging from "./routing/routeTextureTagging.js";
@@ -6,6 +7,8 @@ import routeFilteredTextures from "./routing/routeFilteredTextures.js";
 import connectDB from "./middleware/connectDB.js";
 import routeTextures from "./routing/routeTextures.js";
 import routeSlices from "./routing/routeSlices.js";
+import routeUsers from "./routing/routeUsers.js";
+import validateUser from "./middleware/validateUser.js";
 
 const app: Application = express();
 const port: number = 3030;
@@ -22,10 +25,9 @@ async function registerRoutes(): Promise<void> {
   routeFilteredTextures(app);
   routeTextureTagging(app);
   routeSlices(app);
+  routeUsers(app);
 
-  /*   // textureData/:texture_id (GET specific texture data by texture_id, or random if texture_id is -1)
-  app.use("/api/textureData", (await import("./api/serveTextureData")).default);
-
+  /*
   // textureDataByName/:textureName
   app.use(
     "/api/textureDataByName",
@@ -86,6 +88,8 @@ async function registerRoutes(): Promise<void> {
 // Middleware to parse JSON requests
 app.use(express.json());
 app.use(connectDB);
+app.use(cookieParser());
+app.use(validateUser);
 
 // Call the async function to register the routes
 registerRoutes()

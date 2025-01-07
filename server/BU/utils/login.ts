@@ -9,7 +9,7 @@ const router = express.Router();
 // POST route for login
 router.post(
   "/",
-  async (req: DBRequest, res: Response): Promise<Response | void> => {
+  async (req: Request, res: Response): Promise<Response | void> => {
     const { email, password } = req.body;
 
     // Validate input
@@ -18,7 +18,7 @@ router.post(
     }
     console.log(`email: ${email}, password: ${password}`);
 
-    const db = req.db; // Access the SQLite database from the request
+    const db = res.locals.db; // Access the SQLite database from the response locals
     if (!db) {
       return res.status(500).send("Database connection is not available.");
     }

@@ -8,7 +8,12 @@ import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import PanToolIcon from "@mui/icons-material/PanTool";
 import NewSliceActionButton from "./NewSliceActionButton.js";
 
-const ViewPortControls = ({ texture_id }) => {
+interface ViewPortControlsProps {
+  texture_id: number;
+  imgURL: string;
+}
+
+const ViewPortControls = ({ texture_id, imgURL }: ViewPortControlsProps) => {
   const dispatch = useDispatch();
 
   return (
@@ -22,7 +27,7 @@ const ViewPortControls = ({ texture_id }) => {
       <Button onClick={() => dispatch(zoomOut())}>
         <ZoomOutIcon />
       </Button>
-      <NewSliceActionButton texture_id={texture_id} />
+      <NewSliceActionButton texture_id={texture_id} imgURL={imgURL} />
     </ButtonGroup>
   );
 };
