@@ -4,9 +4,17 @@ import { SlicePacket } from "../../../data/utils/sharedTypes";
 
 interface SliceOverlayProps {
   sliceData: SlicePacket; // Pass the entire SlicePacket object as a prop
+  zoom: number;
+  panX: number;
+  panY: number;
 }
 
-const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
+const SliceOverlay: React.FC<SliceOverlayProps> = ({
+  sliceData,
+  zoom,
+  panX,
+  panY,
+}) => {
   const theme = useTheme();
 
   // Destructure coordinates and description from sliceData

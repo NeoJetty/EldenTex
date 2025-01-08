@@ -30,7 +30,6 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
   imgURL,
 }) => {
   const [formData, setFormData] = useState<Partial<SlicePacket>>(initialData);
-  console.log("Initial Data:", formData);
 
   const handleChange =
     (field: keyof SlicePacket) =>
