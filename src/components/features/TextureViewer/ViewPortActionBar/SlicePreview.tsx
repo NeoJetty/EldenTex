@@ -2,10 +2,11 @@ import { Box } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import SliceOverlay from "../SliceOverlay";
 import { SlicePacket } from "../../../../data/utils/sharedTypes";
+import { calcPanningAndScale } from "../../../../data/utils/imageHelpers";
 
 interface SlicePreviewProps {
-  topLeft: { x: number; y: number } | undefined;
-  bottomRight: { x: number; y: number } | undefined;
+  topLeft: { x: number; y: number };
+  bottomRight: { x: number; y: number };
   imgURL: string;
 }
 
@@ -34,9 +35,6 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
     };
   }, [imgURL]);
 
-  const wait = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
   useEffect(() => {
     const handleResize = () => {
       console.log("resize", containerRef.current);
@@ -52,15 +50,11 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
 
     const observer = new ResizeObserver(handleResize);
 
-    // Immediately execute the rest synchronously
-    if (containerRef.current) {
-      handleResize(); // Initialize size
-    }
-
     // Delay the observer setup by 50ms
     const timeoutId = setTimeout(() => {
       if (containerRef.current) {
         observer.observe(containerRef.current);
+        handleResize(); // Initialize size
       }
     }, 50);
 
@@ -74,55 +68,8 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
     return <div>Loading image...</div>;
   }
 
-  const { width: imgWidth, height: imgHeight } = imageDimensions;
-
-  // Calculate slice dimensions in terms of image space
-  const sliceWidth = bottomRight.x - topLeft.x;
-  const sliceHeight = bottomRight.y - topLeft.y;
-
-  const padding = 1.3;
-
-  // we only need to zoom according to the longest side of the slice
-  const isSliceWide = sliceWidth > sliceHeight;
-
-  const sliceSize = isSliceWide ? sliceWidth : sliceHeight;
-  const sliceSizeWithPadding = Math.round(sliceSize * padding);
-  const imgSize = isSliceWide ? imgWidth : imgHeight;
-  const boxSize = isSliceWide ? containerSize.width : containerSize.height;
-
-  // Calculate the zoom level, that the brower autogenerates to fit the image into the div
-  // use transform: scale(1/naturalZoomLevel) to make one image pixel = one browser pixel - meaning unzoomed image
-  // use transform: scale(1) to fit the image into the div wholely
-  const naturalZoomLevel = boxSize / imgSize;
-  console.log("naturalZoomLevel", naturalZoomLevel);
-
-  // Calculate the zoom level, that the slice should be zoomed to have a nice fit = 15% margin on every side
-  const optimalSliceZoomLevel = boxSize / sliceSizeWithPadding;
-  console.log("optimalSliceZoomLevel", optimalSliceZoomLevel);
-
-  // now this is the scaling factor that describes how to reach optimalSliceZoomLevel when naturalZoomLevel is applied currently (by default)
-  const scaleFactor = optimalSliceZoomLevel / naturalZoomLevel;
-  console.log("scaleFactor", scaleFactor);
-
-  // transform: `translate(0px, 0px)' behaves strange in that the amount of translation is dependent on the zoom level
-  // we have to find the top left corner of the slice in terms of iamge pixels
-  // and then calculate the translation in terms of browser pixels
-
-  // Calculate the top left corner of the slice in img space
-  const targetTopLeft = {
-    x:
-      topLeft.x - Math.round(Math.round(sliceWidth * padding) - sliceWidth) / 2,
-    y:
-      topLeft.y -
-      Math.round(Math.round(sliceHeight * padding) - sliceHeight) / 2,
-  };
-
-  console.log("targetTopLeft", targetTopLeft);
-  // now we have to calculate the translation in terms of browser pixels
-  const translateX = targetTopLeft.x * optimalSliceZoomLevel;
-  const translateY = targetTopLeft.y * optimalSliceZoomLevel;
-  console.log("translateX", translateX);
-  console.log("translateY", translateY);
+  const { translateX, translateY, scaleFactor, optimalSliceZoomLevel } =
+    calcPanningAndScale(imageDimensions, bottomRight, topLeft, containerSize);
 
   const slicePacket: SlicePacket = {
     id: 0,
@@ -174,9 +121,13 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
 
       <SliceOverlay
         sliceData={slicePacket}
-        zoom={optimalSliceZoomLevel}
+        zoom={scaleFactor}
         panX={translateX}
         panY={translateY}
+        containerWidth={containerSize.width}
+        containerHeight={containerSize.height}
+        imageWidth={imageDimensions.width}
+        imageHeight={imageDimensions.height}
       />
     </>
   );

@@ -7,6 +7,10 @@ interface SliceOverlayProps {
   zoom: number;
   panX: number;
   panY: number;
+  containerWidth: number;
+  containerHeight: number;
+  imageWidth: number;
+  imageHeight: number;
 }
 
 const SliceOverlay: React.FC<SliceOverlayProps> = ({
@@ -14,6 +18,10 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
   zoom,
   panX,
   panY,
+  containerWidth,
+  containerHeight,
+  imageWidth,
+  imageHeight,
 }) => {
   const theme = useTheme();
 
@@ -24,22 +32,33 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
     globalDescription: description,
   } = sliceData;
 
-  // Calculate width and height from the coordinates
-  const width = bottomRightX - topLeftX;
-  const height = bottomRightY - topLeftY;
+  // Calculate scaled coordinates
+  const scaledTopLeftX = topLeftX * zoom + panX;
+  const scaledTopLeftY = topLeftY * zoom + panY;
+  const scaledWidth = (bottomRightX - topLeftX) * zoom;
+  const scaledHeight = (bottomRightY - topLeftY) * zoom;
+
+  // Ensure overlay stays within container bounds
+  const isVisible =
+    scaledTopLeftX + scaledWidth > 0 &&
+    scaledTopLeftX < containerWidth &&
+    scaledTopLeftY + scaledHeight > 0 &&
+    scaledTopLeftY < containerHeight;
+
+  if (!isVisible) return null; // Don't render if the slice is entirely outside the container
 
   return (
     <div
       style={{
         position: "absolute",
-        top: `${topLeftY}px`,
-        left: `${topLeftX}px`,
-        width: `${width}px`,
-        height: `${height}px`,
+        top: `${scaledTopLeftY}px`,
+        left: `${scaledTopLeftX}px`,
+        width: `${scaledWidth}px`,
+        height: `${scaledHeight}px`,
         border: `1px solid ${theme.palette.secondary.main}`,
         borderRadius: "5px",
         outline: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: "transparent",
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
         boxSizing: "border-box",
         pointerEvents: "none",
         zIndex: 10,
