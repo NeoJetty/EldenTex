@@ -16,9 +16,12 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
     globalDescription: description,
   } = sliceData;
 
+  console.log(sliceData);
+
   // Calculate width and height from the coordinates
   const width = bottomRightX - topLeftX;
   const height = bottomRightY - topLeftY;
+
   return (
     <div
       style={{
@@ -27,13 +30,14 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
         left: `${topLeftX}px`,
         width: `${width}px`,
         height: `${height}px`,
-        border: `1px solid ${theme.palette.secondary.main}`,
+        border: `2px solid ${theme.palette.primary.light}`, // Outer border for visibility
         borderRadius: "5px",
-        outline: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: "transparent",
+        backgroundColor: "transparent", // Full alpha (transparent)
         boxSizing: "border-box",
         pointerEvents: "none",
         zIndex: 10,
+        outline: `4px solid ${theme.palette.background.paper}`, // A contrasting outline to ensure visibility
+        boxShadow: `10px 10px 7px 0px ${theme.palette.background.paper}`, // Adding border shadow
       }}
       title={description} // Tooltip with the description
     />

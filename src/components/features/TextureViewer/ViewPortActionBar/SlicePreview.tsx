@@ -66,10 +66,10 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
     return <div>Loading image...</div>;
   }
 
-  const { sliceSpace } = calcPanningAndScale(
+  const sliceSpace = calcPanningAndScale(
     imageDimensions,
-    bottomRight,
     topLeft,
+    bottomRight,
     containerSize
   );
 
@@ -87,14 +87,19 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
     sliceUser_id: 0,
   };
 
+  console.log("width", sliceSpace.sliceWidth);
+  console.log("pan", sliceSpace.pan);
+
   return (
     <>
       <Box
         sx={{
+          outline: "1px solid red",
           flex: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginRight: "20px",
           overflow: "hidden",
           width: "100%",
           height: "100%",
@@ -114,14 +119,16 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
             style={{
               width: "100%", // Responsive width
               height: "auto", // Maintain aspect ratio
-              transform: `translate(-${sliceSpace.pan.x}px, -${sliceSpace.pan.y}px) scale(${sliceSpace.zoomForScale})`,
+              transform: `translate(-${sliceSpace.pan.x}%, -${sliceSpace.pan.y}%)  `,
+
+              scale: `${sliceSpace.zoomForScale}`,
+
               transformOrigin: "top left",
             }}
           />
+          <SliceOverlay sliceData={slicePacket} />
         </div>
       </Box>
-
-      <SliceOverlay sliceData={slicePacket} />
     </>
   );
 };

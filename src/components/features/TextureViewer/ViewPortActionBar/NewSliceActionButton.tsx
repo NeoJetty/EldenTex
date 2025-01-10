@@ -6,11 +6,12 @@ import NewSliceFormModal from "./NewSliceFormModal.js";
 import { connect } from "react-redux";
 import { addSlice } from "../../../../redux/slices/sliceSlice.js";
 import { Dispatch } from "redux";
+import { SlicePacket } from "../../../../data/utils/sharedTypes.js"; // Import SlicePacket
 
 // Define props and state interfaces
 interface NewSliceActionButtonProps {
   texture_id: number; // Prop passed from parent
-  addSlice: (slice: any) => void; // Redux action to add a slice
+  addSlice: (slice: SlicePacket) => void; // Redux action to add a slice
   imgURL: string;
 }
 
@@ -19,7 +20,7 @@ interface NewSliceActionButtonState {
   topLeft: { x: number; y: number } | null;
   bottomRight: { x: number; y: number } | null;
   isModalOpen: boolean;
-  initialModalData: any | null;
+  initialModalData: SlicePacket | null; // Change to SlicePacket type
 }
 
 class NewSliceActionButton extends Component<
@@ -72,15 +73,19 @@ class NewSliceActionButton extends Component<
 
     const bottomRight = { x: event.offsetX, y: event.offsetY };
 
-    const initialModalData = {
+    // Create initialModalData with proper SlicePacket type
+    const initialModalData: SlicePacket = {
       topLeft,
       bottomRight,
       id: -1,
       slice_id: -1,
-      user_id: -1,
-      confidence: 100,
-      sliceUser_id: -1,
       texture_id: this.props.texture_id, // Pass texture_id from props
+      localDescription: "",
+      confidence: 100,
+      user_id: -1,
+      sliceName: "",
+      globalDescription: "",
+      sliceUser_id: -1, // This can be updated later if necessary
     };
 
     this.setState({
@@ -98,7 +103,7 @@ class NewSliceActionButton extends Component<
     this.setState({ isModalOpen: false });
   };
 
-  onSubmitModal = (data: any) => {
+  onSubmitModal = (data: SlicePacket) => {
     this.props.addSlice(data); // Dispatch the new slice to Redux
     this.onCloseModal();
   };
@@ -112,7 +117,7 @@ class NewSliceActionButton extends Component<
           <NewSliceFormModal
             open={isModalOpen}
             onClose={this.onCloseModal}
-            initialData={initialModalData || {}}
+            initialData={initialModalData}
             onSubmit={this.onSubmitModal}
             imgURL={this.props.imgURL}
           />
@@ -146,7 +151,7 @@ class NewSliceActionButton extends Component<
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  addSlice: (slice: any) => dispatch(addSlice(slice)),
+  addSlice: (slice: SlicePacket) => dispatch(addSlice(slice)),
 });
 
 export default connect(null, mapDispatchToProps)(NewSliceActionButton);

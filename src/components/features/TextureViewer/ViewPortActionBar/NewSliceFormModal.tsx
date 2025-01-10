@@ -17,7 +17,7 @@ import SlicePreview from "./SlicePreview.js";
 interface NewSliceFormModalProps {
   open: boolean;
   onClose: () => void;
-  initialData: Partial<SlicePacket>;
+  initialData: SlicePacket;
   addSlice: (data: SlicePacket) => void;
   imgURL: string;
 }
@@ -29,7 +29,12 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
   addSlice,
   imgURL,
 }) => {
-  const [formData, setFormData] = useState<Partial<SlicePacket>>(initialData);
+  const [formData, setFormData] = useState<SlicePacket>(initialData);
+
+  const changeCoordinates =
+    (field: keyof SlicePacket) => (x: number, y: number) => {
+      setFormData({ ...formData, [field]: { x, y } });
+    };
 
   const handleChange =
     (field: keyof SlicePacket) =>
@@ -129,8 +134,14 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             <Grid size={4}>
               <TextField
                 label="Top Left X"
+                type="number"
                 value={formData.topLeft?.x || ""}
-                disabled
+                onChange={(event) =>
+                  changeCoordinates("topLeft")(
+                    parseFloat(event.target.value),
+                    formData.topLeft?.y || 0
+                  )
+                }
                 fullWidth
                 margin="normal"
               />
@@ -138,23 +149,34 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             <Grid size={4}>
               <TextField
                 label="Top Left Y"
+                type="number"
                 value={formData.topLeft?.y || ""}
-                disabled
+                onChange={(event) =>
+                  changeCoordinates("topLeft")(
+                    formData.topLeft?.x || 0,
+                    parseFloat(event.target.value)
+                  )
+                }
                 fullWidth
                 margin="normal"
               />
             </Grid>
             <Grid size={2}></Grid>
           </Grid>
-          {/* Coordinates */}
 
           <Grid container spacing={1} marginBottom={0}>
             <Grid size={2}></Grid>
             <Grid size={4}>
               <TextField
                 label="Bottom Right X"
+                type="number"
                 value={formData.bottomRight?.x || ""}
-                disabled
+                onChange={(event) =>
+                  changeCoordinates("bottomRight")(
+                    parseFloat(event.target.value),
+                    formData.bottomRight?.y || 0
+                  )
+                }
                 fullWidth
                 margin="normal"
               />
@@ -162,8 +184,14 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             <Grid size={4}>
               <TextField
                 label="Bottom Right Y"
+                type="number"
                 value={formData.bottomRight?.y || ""}
-                disabled
+                onChange={(event) =>
+                  changeCoordinates("bottomRight")(
+                    formData.bottomRight?.x || 0,
+                    parseFloat(event.target.value)
+                  )
+                }
                 fullWidth
                 margin="normal"
               />
