@@ -37,10 +37,8 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
 
   useEffect(() => {
     const handleResize = () => {
-      console.log("resize", containerRef.current);
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        console.log("Container size", rect.width, rect.height);
         setContainerSize({
           width: rect.width,
           height: rect.height,
@@ -68,15 +66,19 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
     return <div>Loading image...</div>;
   }
 
-  const { translateX, translateY, scaleFactor, optimalSliceZoomLevel } =
-    calcPanningAndScale(imageDimensions, bottomRight, topLeft, containerSize);
+  const { sliceSpace } = calcPanningAndScale(
+    imageDimensions,
+    bottomRight,
+    topLeft,
+    containerSize
+  );
 
   const slicePacket: SlicePacket = {
     id: 0,
     slice_id: 0,
     texture_id: 0,
-    topLeft,
-    bottomRight,
+    topLeft: sliceSpace.topLeft,
+    bottomRight: sliceSpace.bottomRight,
     localDescription: "Default description",
     confidence: 0,
     user_id: 0,
@@ -112,23 +114,14 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
             style={{
               width: "100%", // Responsive width
               height: "auto", // Maintain aspect ratio
-              transform: `translate(-${translateX}px, -${translateY}px) scale(${scaleFactor})`,
+              transform: `translate(-${sliceSpace.pan.x}px, -${sliceSpace.pan.y}px) scale(${sliceSpace.zoomForScale})`,
               transformOrigin: "top left",
             }}
           />
         </div>
       </Box>
 
-      <SliceOverlay
-        sliceData={slicePacket}
-        zoom={scaleFactor}
-        panX={translateX}
-        panY={translateY}
-        containerWidth={containerSize.width}
-        containerHeight={containerSize.height}
-        imageWidth={imageDimensions.width}
-        imageHeight={imageDimensions.height}
-      />
+      <SliceOverlay sliceData={slicePacket} />
     </>
   );
 };

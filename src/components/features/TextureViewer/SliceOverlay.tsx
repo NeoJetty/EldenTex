@@ -4,25 +4,9 @@ import { SlicePacket } from "../../../data/utils/sharedTypes";
 
 interface SliceOverlayProps {
   sliceData: SlicePacket; // Pass the entire SlicePacket object as a prop
-  zoom: number;
-  panX: number;
-  panY: number;
-  containerWidth: number;
-  containerHeight: number;
-  imageWidth: number;
-  imageHeight: number;
 }
 
-const SliceOverlay: React.FC<SliceOverlayProps> = ({
-  sliceData,
-  zoom,
-  panX,
-  panY,
-  containerWidth,
-  containerHeight,
-  imageWidth,
-  imageHeight,
-}) => {
+const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
   const theme = useTheme();
 
   // Destructure coordinates and description from sliceData
@@ -32,33 +16,21 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
     globalDescription: description,
   } = sliceData;
 
-  // Calculate scaled coordinates
-  const scaledTopLeftX = topLeftX * zoom + panX;
-  const scaledTopLeftY = topLeftY * zoom + panY;
-  const scaledWidth = (bottomRightX - topLeftX) * zoom;
-  const scaledHeight = (bottomRightY - topLeftY) * zoom;
-
-  // Ensure overlay stays within container bounds
-  const isVisible =
-    scaledTopLeftX + scaledWidth > 0 &&
-    scaledTopLeftX < containerWidth &&
-    scaledTopLeftY + scaledHeight > 0 &&
-    scaledTopLeftY < containerHeight;
-
-  if (!isVisible) return null; // Don't render if the slice is entirely outside the container
-
+  // Calculate width and height from the coordinates
+  const width = bottomRightX - topLeftX;
+  const height = bottomRightY - topLeftY;
   return (
     <div
       style={{
         position: "absolute",
-        top: `${scaledTopLeftY}px`,
-        left: `${scaledTopLeftX}px`,
-        width: `${scaledWidth}px`,
-        height: `${scaledHeight}px`,
+        top: `${topLeftY}px`,
+        left: `${topLeftX}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         border: `1px solid ${theme.palette.secondary.main}`,
         borderRadius: "5px",
         outline: `1px solid ${theme.palette.primary.main}`,
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: "transparent",
         boxSizing: "border-box",
         pointerEvents: "none",
         zIndex: 10,
