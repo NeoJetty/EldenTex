@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { AppConfig } from "../../data/AppConfig";
+import { fetchTexturesByTag } from "../../data/api/requestFilteredTextures";
 
 interface GalleryViewProps {
   tagID: number;
@@ -19,29 +20,18 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
   const [textures, setTextures] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // Fetch textures based on userID and tagID
-  const fetchTextures = async (tagID: number) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/filteredTexturesBatch/${tagID}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log("gallery:", data);
-      setTextures(data); // Directly set the response data
-    } catch (error) {
-      console.error("Error fetching textures:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch data on component mount
   useEffect(() => {
     const fetchData = async () => {
-      const userID = AppConfig.user.ID; // Get userID from AppConfig
-      await fetchTextures(tagID); // Fetch textures with the passed tagID and userID
+      setLoading(true);
+      try {
+        const data = await fetchTexturesByTag(tagID); // Use the utility function
+        console.log("gallery:", data);
+        setTextures(data); // Set textures with the fetched data
+      } catch (error) {
+        console.error("Error fetching textures:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
@@ -66,15 +56,15 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
             <CardMedia
               component="img"
               height="140"
-              image={AppConfig.buildLowQualityJPGPath(
-                texture.textureName,
+              image={AppConfig.buildJPGPath2(
+                texture.name,
                 texture.textureTypes
               )}
-              alt={texture.textureName}
+              alt={texture.name}
             />
             <CardContent>
               {/* Render texture name */}
-              <Typography variant="h6">{texture.textureName}</Typography>
+              {texture.name}
             </CardContent>
           </Card>
         </Link>

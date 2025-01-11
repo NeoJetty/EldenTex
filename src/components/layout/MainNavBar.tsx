@@ -11,7 +11,7 @@ const MainNavBar: React.FC = () => {
   const getCurrentTabValue = (pathname: string) => {
     if (pathname.startsWith("/analysis")) return "Texture Analysis";
     if (pathname.startsWith("/slice")) return "Slice";
-    if (pathname.startsWith("/link")) return "Link";
+    if (pathname.startsWith("/sliceLink")) return "SliceLink";
     if (pathname.startsWith("/voting")) return "Community Voting";
     if (pathname.startsWith("/filter")) return "Filter Voting";
     if (pathname.startsWith("/gallery")) return "Gallery";
@@ -46,7 +46,12 @@ const MainNavBar: React.FC = () => {
             component={NavLink}
             to="slice"
           />
-          <Tab label="Slice Link" value="Link" component={NavLink} to="link" />
+          <Tab
+            label="Slice Link"
+            value="SliceLink"
+            component={NavLink}
+            to="sliceLink"
+          />
           <Tab
             label="Filter Voting"
             value="Filter Voting"
