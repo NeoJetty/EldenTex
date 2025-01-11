@@ -30,7 +30,7 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
         left: `${topLeftX}px`,
         width: `${width}px`,
         height: `${height}px`,
-        border: `2px solid ${theme.palette.primary.light}`, // Outer border for visibility
+        border: `1px solid ${theme.palette.primary.light}`, // Outer border for visibility
         borderRadius: "5px",
         backgroundColor: "transparent", // Full alpha (transparent)
         boxSizing: "border-box",

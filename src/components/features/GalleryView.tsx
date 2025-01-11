@@ -8,11 +8,11 @@ import {
   CardContent,
   CardMedia,
 } from "@mui/material";
-import { Link } from "react-router-dom"; // Import Link
+import { Link } from "react-router-dom";
 import { AppConfig } from "../../data/AppConfig";
 
 interface GalleryViewProps {
-  tagID: number; // Accept tagID as a prop
+  tagID: number;
 }
 
 const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
@@ -20,16 +20,15 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch textures based on userID and tagID
-  const fetchTextures = async (userId: number, tagID: number) => {
+  const fetchTextures = async (tagID: number) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `/api/filteredTexturesBatch/${userId}/${tagID}`
-      );
+      const response = await fetch(`/api/filteredTexturesBatch/${tagID}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
+      console.log("gallery:", data);
       setTextures(data); // Directly set the response data
     } catch (error) {
       console.error("Error fetching textures:", error);
@@ -42,7 +41,7 @@ const GalleryView: React.FC<GalleryViewProps> = ({ tagID }) => {
   useEffect(() => {
     const fetchData = async () => {
       const userID = AppConfig.user.ID; // Get userID from AppConfig
-      await fetchTextures(userID, tagID); // Fetch textures with the passed tagID and userID
+      await fetchTextures(tagID); // Fetch textures with the passed tagID and userID
     };
 
     fetchData();

@@ -38,7 +38,7 @@ export async function loginControl(req: Request, res: Response): Promise<void> {
     }
 
     // Generate a JWT with the user's ID
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
+    const token = jwt.sign({ userID: user.id }, JWT_SECRET, {
       expiresIn: "24h",
     });
 

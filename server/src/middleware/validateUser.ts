@@ -17,10 +17,8 @@ function validateUser(req: Request, res: Response, next: NextFunction): void {
       res.locals.validUserID = null;
       return next();
     }
-
     // Verify the token synchronously using the secret key
     const decoded = jwt.verify(token, JWT_SECRET) as DecodedToken;
-
     // If the token is valid, extract the userId from the decoded token
     res.locals.validUserID = decoded?.userID || null;
 

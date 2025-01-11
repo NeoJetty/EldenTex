@@ -8,30 +8,13 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import GalleryView from "./GalleryView";
+import { useSelector } from "react-redux";
+import { StoreTypes } from "../../redux/store";
 
 const GalleryTab: React.FC = () => {
-  const [tags, setTags] = useState<any[]>([]); // Store fetched tags
   const [selectedTagID, setSelectedTagID] = useState<number>(3); // Default tagID
 
-  // Fetch all tags from the server
-  const fetchTags = async () => {
-    try {
-      const response = await fetch("/api/allTags");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setTags(data.tags); // Set the tags data to state
-    } catch (error) {
-      console.error("Error fetching tags:", error);
-    }
-  };
-
-  // Fetch tags on component mount
-  useEffect(() => {
-    fetchTags();
-  }, []);
-
+  const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);
   // Handle the change of selected tag in dropdown
   const handleTagChange = (event: SelectChangeEvent<number>) => {
     setSelectedTagID(event.target.value as number);

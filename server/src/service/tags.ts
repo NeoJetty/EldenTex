@@ -18,3 +18,22 @@ export const fetchAllTags = (db: TDatabase): Tag[] => {
     throw err;
   }
 };
+
+export const fetchTagsByTexture = (
+  db: TDatabase,
+  userID: number,
+  textureID: number
+): Tag[] => {
+  try {
+    const sqlQuery = `
+      SELECT t.id AS tag_id, t.name AS tag_name, t.category, ta.vote
+      FROM tags t
+      INNER JOIN tag_texture_associations ta ON t.id = ta.tag_id
+      WHERE ta.user_id = ? AND ta.texture_id = ?;
+    `;
+
+    return db.prepare(sqlQuery).all(userID, textureID) as Tag[];
+  } catch (err) {
+    throw err;
+  }
+};

@@ -10,11 +10,11 @@ export const getFilteredTextureBatchControl = async (
   res: Response
 ): Promise<void> => {
   try {
-    const user_id = res.locals.validUserID;
+    const userID = res.locals.validUserID;
     const { tag_id } = req.params;
 
     // Validate input parameters
-    if (isNaN(Number(user_id)) || isNaN(Number(tag_id))) {
+    if (isNaN(Number(userID)) || isNaN(Number(tag_id))) {
       res.status(400).json({ error: "Invalid userID or tagID" });
       return;
     }
@@ -24,7 +24,7 @@ export const getFilteredTextureBatchControl = async (
     // Step 1: Get texture IDs using the filter
     const textureIDs = getTextureIDsFromFilter(
       db,
-      Number(user_id),
+      Number(userID),
       Number(tag_id)
     );
     if (!textureIDs.length) {

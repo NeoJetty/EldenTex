@@ -1,13 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { connect } from "react-redux";
-import {
-  Modal,
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Paper,
-} from "@mui/material";
+import { Modal, Box, TextField, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { SlicePacket } from "../../../../data/utils/sharedTypes.js";
 import { addSlice } from "../../../../redux/slices/sliceSlice.js";
@@ -43,12 +36,12 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
     };
 
   const handleSubmit = () => {
-    if (formData.id && formData.slice_id && formData.user_id) {
+    if (formData.ID && formData.sliceID && formData.linkUserID) {
       createSlice(formData as SlicePacket); // Server request
       addSlice(formData as SlicePacket); // Dispatch to Store
       onClose();
     } else {
-      alert("Some required fields are missing!"); // Basic validation
+      alert("Some required fields are missing!"); // TODO: real validation
     }
   };
 
@@ -61,6 +54,9 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
           top: "10%",
           left: "10%",
           right: "10%",
+          justifyContent: "center",
+          alignItems: "center",
+
           margin: "auto",
           padding: "20px",
           backgroundColor: "black",
@@ -83,7 +79,17 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             <Grid size={2}>
               <TextField
                 label="Link ID"
-                value={formData.id || ""}
+                value={formData.ID || ""}
+                disabled
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid size={2}>
+              <TextField
+                label="Link uID"
+                type="number"
+                value={formData.linkUserID || ""}
                 disabled
                 fullWidth
                 margin="normal"
@@ -92,27 +98,18 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             <Grid size={2}>
               <TextField
                 label="Texture ID"
-                value={formData.texture_id || ""}
+                value={formData.textureID || ""}
                 disabled
                 fullWidth
                 margin="normal"
               />
             </Grid>
-            <Grid size={2}>
-              <TextField
-                label="User ID"
-                type="number"
-                value={formData.user_id || ""}
-                disabled
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
+
             <Grid size={2}>
               <TextField
                 label="Slice ID"
                 type="number"
-                value={formData.slice_id || ""}
+                value={formData.sliceID || ""}
                 disabled
                 fullWidth
                 margin="normal"
@@ -122,7 +119,7 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
               <TextField
                 label="Slice uID"
                 type="number"
-                value={formData.sliceUser_id || ""}
+                value={formData.sliceUserID || ""}
                 disabled
                 fullWidth
                 margin="normal"
@@ -130,6 +127,25 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             </Grid>
           </Grid>
           {/* Coordinates */}
+          <Grid container spacing={1} marginBottom={0}>
+            <Grid size={2}></Grid>
+            <Grid size={4}>
+              <TextField
+                label="Top Left Y"
+                type="number"
+                value={formData.topLeft?.y || ""}
+                onChange={(event) =>
+                  changeCoordinates("topLeft")(
+                    formData.topLeft?.x || 0,
+                    parseFloat(event.target.value)
+                  )
+                }
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid size={2}></Grid>
+          </Grid>
           <Grid container spacing={1} marginBottom={0}>
             <Grid size={4}>
               <TextField
@@ -148,26 +164,6 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
             </Grid>
             <Grid size={4}>
               <TextField
-                label="Top Left Y"
-                type="number"
-                value={formData.topLeft?.y || ""}
-                onChange={(event) =>
-                  changeCoordinates("topLeft")(
-                    formData.topLeft?.x || 0,
-                    parseFloat(event.target.value)
-                  )
-                }
-                fullWidth
-                margin="normal"
-              />
-            </Grid>
-            <Grid size={2}></Grid>
-          </Grid>
-
-          <Grid container spacing={1} marginBottom={0}>
-            <Grid size={2}></Grid>
-            <Grid size={4}>
-              <TextField
                 label="Bottom Right X"
                 type="number"
                 value={formData.bottomRight?.x || ""}
@@ -181,6 +177,11 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
                 margin="normal"
               />
             </Grid>
+            <Grid size={2}></Grid>
+          </Grid>
+          <Grid container spacing={1} marginBottom={0}>
+            <Grid size={2}></Grid>
+
             <Grid size={4}>
               <TextField
                 label="Bottom Right Y"

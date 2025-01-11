@@ -1,11 +1,13 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { pan, zoomIn, zoomOut } from "../../../../redux/slices/panZoomSlice.js";
-import ButtonGroup from "@mui/material/ButtonGroup";
+// MUI
 import Button from "@mui/material/Button";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 import PanToolIcon from "@mui/icons-material/PanTool";
+import ButtonGroup from "@mui/material/ButtonGroup";
+// libs
+import { useDispatch } from "react-redux";
+// project
+import { pan, zoomIn, zoomOut } from "../../../../redux/slices/panZoomSlice.js";
 import NewSliceActionButton from "./NewSliceActionButton.js";
 
 interface ViewPortControlsProps {

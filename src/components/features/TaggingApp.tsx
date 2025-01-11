@@ -16,6 +16,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Tag } from "../../data/utils/sharedTypes";
 import Toggle, { ToggleState } from "../shared/Toogle"; // Import the Toggle component
 import { StoreTypes } from "../../redux/store";
+import { log } from "node:console";
 
 interface TagsForToggles {
   id: number;
@@ -32,8 +33,6 @@ interface TaggingAppProps {
 }
 
 const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
-  const dispatch = useDispatch();
-
   // Accessing the tags from the Redux store
   const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);
   const [tagsState, setTagsState] = useState<TagsState>({});
@@ -47,6 +46,8 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
     const fetchTagsAndInitializeStates = async () => {
       setIsLoading(true); // Start loading
       try {
+        console.log("request");
+
         // Assuming tags are already available in Redux state
         if (!tags || tags.length === 0) {
           setIsLoading(false); // Stop loading if no tags available
@@ -54,7 +55,7 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
         }
 
         // (userID, textureID)
-        const votes = await getTagsForTexture(1, textureID);
+        const votes = await getTagsForTexture(textureID);
         const newTagsState = buildTagsState(tags, votes);
         setTagsState(newTagsState);
 
@@ -71,7 +72,7 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
     };
 
     fetchTagsAndInitializeStates();
-  }, [textureID, tags, dispatch]); // Added tags and dispatch to dependencies
+  }, [textureID]); // Added tags and dispatch to dependencies
 
   const buildTagsState = (
     tags: Tag[],

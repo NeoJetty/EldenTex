@@ -46,9 +46,9 @@ export interface TagVote {
 
 export interface SlicePacket {
   // slice_texture_associations
-  id: number;
-  slice_id: number;
-  texture_id: number;
+  ID: number;
+  sliceID: number;
+  textureID: number;
   topLeft: {
     x: number;
     y: number;
@@ -59,12 +59,13 @@ export interface SlicePacket {
   };
   localDescription: string;
   confidence: number;
-  user_id: number;
+  linkUserID: number;
 
   // slices
   sliceName: string;
   globalDescription: string;
-  sliceUser_id: number; // is it possible to link to another users slice? probably
+  sliceUserID: number; // is it possible to link to another users slice? probably
+  textureSubtypeBase: string;
 }
 
 /**

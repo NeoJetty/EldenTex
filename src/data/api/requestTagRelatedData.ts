@@ -148,11 +148,8 @@ function deleteTagFromTexture(tagID: number, textureID: number): void {
     });
 }
 
-function getTagsForTexture(
-  userID: number,
-  textureID: number
-): Promise<TagVote[]> {
-  const url = `/api/TagToTexture/${userID}/${textureID}`;
+function getTagsForTexture(textureID: number): Promise<TagVote[]> {
+  const url = `/api/tags/byTexture/${textureID}`;
 
   if (AppConfig.debug.level > 0) {
     console.log(`Server request GET ${url}`);
@@ -161,11 +158,6 @@ function getTagsForTexture(
   return axios
     .get(url) // Perform a GET request to fetch the tags
     .then((response) => {
-      console.log(
-        `Fetched tags for Texture ${textureID} and User ${userID}. Response:`,
-        response.data
-      );
-
       // Assuming response.data.textureTags is the array of tags and votes
       const textureTags: TagVote[] = response.data.textureTags || [];
 

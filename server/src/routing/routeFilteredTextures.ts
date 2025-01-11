@@ -11,7 +11,7 @@ import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
 function routeFilteredTextures(app: Application): void {
   // Route for serving filtered textures batch
   app.get(
-    "/api/filteredTexturesBatch/:user_id/:tag_id",
+    "/api/filteredTexturesBatch/:tag_id",
     validateResource(emptySchema),
     getFilteredTextureBatchControl
   );

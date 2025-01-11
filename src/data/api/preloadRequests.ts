@@ -13,7 +13,7 @@ export function prefetchAllTags(): Promise<Tag[]> {
       if (AppConfig.debug.level > 0) {
         console.log(`Server response for /api/allTags:`, response.data);
       }
-      return response.data.tags as Tag[];
+      return response.data.allTags as Tag[];
     })
     .catch((error) => {
       console.error("Error fetching tags:", error);

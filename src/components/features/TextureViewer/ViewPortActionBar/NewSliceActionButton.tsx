@@ -1,11 +1,14 @@
-import React, { Component } from "react";
+// MUI
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
-import NewSliceFormModal from "./NewSliceFormModal.js";
+// libs
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import { addSlice } from "../../../../redux/slices/sliceSlice.js";
 import { Dispatch } from "redux";
+// project
+import NewSliceFormModal from "./NewSliceFormModal.js";
+import { addSlice } from "../../../../redux/slices/sliceSlice.js";
 import { SlicePacket } from "../../../../data/utils/sharedTypes.js"; // Import SlicePacket
 
 // Define props and state interfaces
@@ -77,15 +80,16 @@ class NewSliceActionButton extends Component<
     const initialModalData: SlicePacket = {
       topLeft,
       bottomRight,
-      id: -1,
-      slice_id: -1,
-      texture_id: this.props.texture_id, // Pass texture_id from props
+      ID: -1,
+      sliceID: -1,
+      textureID: this.props.texture_id, // Pass texture_id from props
       localDescription: "",
       confidence: 100,
-      user_id: -1,
+      linkUserID: -1,
       sliceName: "",
       globalDescription: "",
-      sliceUser_id: -1, // This can be updated later if necessary
+      sliceUserID: -1, // This can be updated later if necessary
+      textureSubtypeBase: "_n",
     };
 
     this.setState({

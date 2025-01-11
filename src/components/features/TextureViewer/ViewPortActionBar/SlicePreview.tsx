@@ -74,27 +74,24 @@ const SlicePreview = ({ topLeft, bottomRight, imgURL }: SlicePreviewProps) => {
   );
 
   const slicePacket: SlicePacket = {
-    id: 0,
-    slice_id: 0,
-    texture_id: 0,
+    ID: 0,
+    sliceID: 0,
+    textureID: 0,
     topLeft: sliceSpace.topLeft,
     bottomRight: sliceSpace.bottomRight,
     localDescription: "Default description",
     confidence: 0,
-    user_id: 0,
+    linkUserID: 0,
     sliceName: "Default Slice",
     globalDescription: "Default global description",
-    sliceUser_id: 0,
+    sliceUserID: 0,
+    textureSubtypeBase: "_n",
   };
-
-  console.log("width", sliceSpace.sliceWidth);
-  console.log("pan", sliceSpace.pan);
 
   return (
     <>
       <Box
         sx={{
-          outline: "1px solid red",
           flex: 1,
           display: "flex",
           justifyContent: "center",

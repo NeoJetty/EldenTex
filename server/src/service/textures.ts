@@ -17,8 +17,6 @@ export const fetchTexturesDataByIds = async (
       name: string;
     }[];
 
-    console.log(textureRows);
-
     return { data: textureRows };
   } catch (err) {
     console.error("Error fetching texture data:", err);

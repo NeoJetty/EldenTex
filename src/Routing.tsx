@@ -7,6 +7,8 @@ import GalleryTab from "./components/features/GalleryTab.tsx";
 import AnalysisTab from "./components/features/AnalysisTab.tsx";
 import Login from "./components/features/Login.tsx";
 import Register from "./components/features/Register.tsx";
+import LinkTab from "./components/pages/LinkTab.tsx";
+import SliceTab from "./components/pages/SliceTab.tsx";
 
 const Routing: React.FC = () => {
   return (
@@ -16,6 +18,8 @@ const Routing: React.FC = () => {
       <Route path="voting" element={<VotingTab />} />
       <Route path="analysis/:texture/" element={<AnalysisTab />} />
       <Route path="analysis" element={<AnalysisTab />} />
+      <Route path="link" element={<LinkTab />} />
+      <Route path="slice" element={<SliceTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
 

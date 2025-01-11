@@ -1,7 +1,9 @@
+// libs
 import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { init, resetView } from "../../../redux/slices/panZoomSlice.js"; // Update the path as needed
 import { StoreTypes } from "../../../redux/store.js";
+// project
+import { init, resetView } from "../../../redux/slices/panZoomSlice.js"; // Update the path as needed
 import SliceOverlaySpawner from "./SliceOverlaySpawner.js";
 import ViewPortControls from "./ViewPortActionBar/ViewPortControls.js";
 
