@@ -155,9 +155,6 @@ function calcSliceSpace(
     panX =
       imageSpace.topLeft.x - (paddedSliceHeight - imageSpace.sliceWidth) / 2;
   }
-  // find the point where we have to pan to
-
-  console.log("imageSpace", imageSpace);
 
   // Construct SliceSpace
   const sliceSpace: SliceSpace = {

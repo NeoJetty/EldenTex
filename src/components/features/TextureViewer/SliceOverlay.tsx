@@ -16,8 +16,6 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({ sliceData }) => {
     globalDescription: description,
   } = sliceData;
 
-  console.log(sliceData);
-
   // Calculate width and height from the coordinates
   const width = bottomRightX - topLeftX;
   const height = bottomRightY - topLeftY;

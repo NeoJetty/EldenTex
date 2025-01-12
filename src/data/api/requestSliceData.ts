@@ -41,14 +41,11 @@ export function createSlice(sliceData: SlicePacket): Promise<SlicePacket> {
     console.log(`POST request to: ${endpoint} with data:`, sliceData);
   }
 
-  sliceData.user_id = 1;
-  sliceData.sliceUser_id = 1;
-
   return axios
     .post(endpoint, sliceData)
     .then((response) => {
       if (AppConfig.debug.level > 0) {
-        console.log("Server response:", response.data);
+        console.log(`Server response ${endpoint}:`, response.data);
       }
 
       // Ensure response data matches the expected format

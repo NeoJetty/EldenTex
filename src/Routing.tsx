@@ -18,7 +18,7 @@ const Routing: React.FC = () => {
       <Route path="voting" element={<VotingTab />} />
       <Route path="analysis/:texture/" element={<AnalysisTab />} />
       <Route path="analysis" element={<AnalysisTab />} />
-      <Route path="sliceLink" element={<LinkTab />} />
+      <Route path="link" element={<LinkTab />} />
       <Route path="slice" element={<SliceTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />

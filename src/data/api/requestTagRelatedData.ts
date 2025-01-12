@@ -162,9 +162,11 @@ function getTagsForTexture(textureID: number): Promise<TagVote[]> {
       const textureTags: TagVote[] = response.data.textureTags || [];
 
       if (textureTags.length === 0) {
-        console.log(`No tags found for Texture ${textureID}`);
+        console.log(
+          `Server response GET ${url} No tags found for Texture ${textureID}`
+        );
       } else {
-        console.log(`Tags for Texture ${textureID}:`, textureTags);
+        console.log(`Server response GET ${url}:`, textureTags);
       }
 
       // Return the fetched tags (as TagVote[])

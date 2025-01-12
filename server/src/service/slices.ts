@@ -1,29 +1,30 @@
 import { Database as TDatabase } from "better-sqlite3";
 import { SlicePacket } from "../util/sharedTypes.js";
 
-export const addAssociation = (
+export const addSliceLink = (
   db: TDatabase,
-  associationData: {
-    slice_id: number;
-    texture_id: number;
-    top_left_x: number;
-    top_left_y: number;
-    bottom_right_x: number;
-    bottom_right_y: number;
-    local_description: string;
+  linkData: {
+    sliceID: number;
+    textureID: number;
+    topLeftX: number;
+    topLeftY: number;
+    bottomRightX: number;
+    bottomRightY: number;
+    localDescription: string;
     confidence: number;
-    user_id: number;
+    userID: number;
+    textureSubtypeBase: string;
   }
 ): number | null => {
   try {
     const sqlQuery = `
-      INSERT INTO slice_texture_associations 
-      (texture_id, slice_id, top_left_x, top_left_y, bottom_right_x, bottom_right_y, local_description, confidence, user_id) 
-      VALUES (@texture_id, @slice_id, @top_left_x, @top_left_y, @bottom_right_x, @bottom_right_y, @local_description, @confidence, @user_id);
+      INSERT INTO slice_texture_links 
+      (texture_id, slice_id, top_left_x, top_left_y, bottom_right_x, bottom_right_y, local_description, confidence, user_id, subtype_base) 
+      VALUES (@textureID, @sliceID, @topLeftX, @topLeftY, @bottomRightX, @bottomRightY, @localDescription, @confidence, @userID, @textureSubtypeBase);
     `;
 
-    const result = db.prepare(sqlQuery).run(associationData);
-    return result.lastInsertRowid as number; // Return the slice_id for further use
+    const result = db.prepare(sqlQuery).run(linkData);
+    return result.lastInsertRowid as number; // Return the sliceID for further use
   } catch (err) {
     console.error("Database error:", err);
     return null; // Return null on failure
@@ -32,12 +33,12 @@ export const addAssociation = (
 
 export const addSlice = (
   db: TDatabase,
-  sliceData: { name: string; global_description?: string; user_id?: number }
+  sliceData: { name: string; globalDescription: string; userID: number }
 ): number | null => {
   try {
     const sqlQuery = `
       INSERT INTO slices (name, global_description, user_id) 
-      VALUES (@name, @global_description, @user_id);
+      VALUES (@name, @globalDescription, @userID);
     `;
     const result = db.prepare(sqlQuery).run(sliceData);
 
@@ -49,10 +50,10 @@ export const addSlice = (
   }
 };
 
-interface T_SliceRow {
+interface SliceRow {
   id: number;
-  slice_id: number;
-  texture_id: number;
+  sliceId: number;
+  textureId: number;
   topLeftX: number;
   topLeftY: number;
   bottomRightX: number;
@@ -62,42 +63,45 @@ interface T_SliceRow {
   associationUserId: number;
   sliceName: string;
   globalDescription: string;
-  sliceUser_id: number;
-  user_id: number;
+  sliceUserId: number;
+  userId: number;
+  textureSubtypeBase: string;
 }
 
 export const getSlicesByTextureId = (
   db: TDatabase,
-  texture_ids: number[]
+  textureIds: number[]
 ): SlicePacket[] => {
   try {
     const sqlQuery = `
       SELECT
-        sta.id AS id,
-        sta.slice_id AS slice_id,
-        sta.texture_id AS texture_id,
-        sta.user_id AS user_id,
-        sta.top_left_x AS topLeftX,
-        sta.top_left_y AS topLeftY,
-        sta.bottom_right_x AS bottomRightX,
-        sta.bottom_right_y AS bottomRightY,
-        sta.local_description AS localDescription,
-        sta.confidence AS confidence,
-        s.name AS sliceName,
-        s.global_description AS globalDescription,
-        s.user_id AS sliceUser_id
-      FROM slice_texture_associations AS sta
-      JOIN slices AS s ON sta.slice_id = s.id
-      WHERE sta.texture_id IN (${texture_ids.map(() => "?").join(",")});
+        LINK.id AS id,
+        LINK.slice_id AS sliceId,
+        LINK.texture_id AS textureId,
+        LINK.user_id AS userId,
+        LINK.top_left_x AS topLeftX,
+        LINK.top_left_y AS topLeftY,
+        LINK.bottom_right_x AS bottomRightX,
+        LINK.bottom_right_y AS bottomRightY,
+        LINK.local_description AS localDescription,
+        LINK.confidence AS confidence,
+        LINK.subtype_base AS textureSubtypeBase,
+        SLICE.name AS sliceName,
+        SLICE.global_description AS globalDescription,
+        SLICE.user_id AS sliceUserId
+      FROM slice_texture_links AS LINK
+      JOIN slices AS SLICE ON LINK.slice_id = SLICE.id
+      WHERE LINK.texture_id IN (${textureIds.map(() => "?").join(",")});
     `;
 
-    const rows = db.prepare(sqlQuery).all(texture_ids) as T_SliceRow[];
+    const rows = db.prepare(sqlQuery).all(textureIds) as SliceRow[];
 
     return rows.map((row) => ({
-      id: row.id,
-      slice_id: row.slice_id,
-      texture_id: row.texture_id,
-      user_id: row.user_id,
+      ID: row.id,
+      sliceID: row.sliceId,
+      sliceUserID: row.sliceUserId,
+      textureID: row.textureId,
+      linkUserID: row.userId,
       topLeft: {
         x: row.topLeftX,
         y: row.topLeftY,
@@ -110,7 +114,7 @@ export const getSlicesByTextureId = (
       confidence: row.confidence,
       sliceName: row.sliceName,
       globalDescription: row.globalDescription,
-      sliceUser_id: row.sliceUser_id, // Renamed for consistency with the interface
+      textureSubtypeBase: row.textureSubtypeBase,
     }));
   } catch (err) {
     console.error("Database error:", err);
