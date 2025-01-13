@@ -45,8 +45,6 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
     }
   };
 
-  console.log("formData", formData);
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box

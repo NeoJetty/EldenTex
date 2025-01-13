@@ -60,3 +60,25 @@ export function createSlice(sliceData: SlicePacket): Promise<SlicePacket> {
       throw new Error("Failed to create slice");
     });
 }
+
+export function autocompleteSliceNames(partialName: string): Promise<string[]> {
+  const endpoint = `/api/slices/autocompleteNames/${partialName}`;
+
+  if (AppConfig.debug.level > 0) {
+    console.log(`GET request to: ${endpoint} with data:`, partialName);
+  }
+
+  return axios
+    .get(endpoint)
+    .then((response) => {
+      if (AppConfig.debug.level > 0) {
+        console.log(`Server response ${endpoint}:`, response.data);
+      }
+
+      return response.data.sliceNames as string[];
+    })
+    .catch((error) => {
+      console.error("Error fetching autocomplete names:", error);
+      throw new Error("Failed to fetch autocomplete names");
+    });
+}

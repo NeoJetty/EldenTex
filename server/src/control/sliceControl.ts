@@ -6,6 +6,7 @@ import {
   addSlice,
   addSliceLink,
   getSlicesByTextureId,
+  getAutocompleteNames,
 } from "../service/slices.js";
 
 export const getSliceControl = (req: Request, res: Response): void => {
@@ -107,5 +108,23 @@ export const addSliceAssociationControl = (
   } catch (err) {
     console.error("Error:", (err as Error).message);
     res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const getAutocompleteNamesControl = (
+  req: Request,
+  res: Response
+): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const userID: number = res.locals.validUserID;
+    const { partial_name } = req.params;
+
+    const sliceNames = getAutocompleteNames(db, partial_name, userID);
+
+    res.json({ sliceNames });
+  } catch (err) {
+    console.error("Database error:", (err as Error).message);
+    res.status(500).json({ error: "Database error occurred" });
   }
 };

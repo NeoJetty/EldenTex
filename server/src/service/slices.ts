@@ -121,3 +121,26 @@ export const getSlicesByTextureId = (
     throw err;
   }
 };
+
+export type AutocompleteNameResult = { name: string }[];
+
+export const getAutocompleteNames = (
+  db: TDatabase,
+  partialName: string,
+  userID: number
+): string[] => {
+  try {
+    const sqlQuery = `
+      SELECT name FROM slices WHERE name LIKE '%${partialName}%' AND user_id = @userID;
+    `;
+    const result = db
+      .prepare(sqlQuery)
+      .all({ userID }) as AutocompleteNameResult;
+
+    // Return the list of matching slice names
+    return result.map((row) => row.name);
+  } catch (err) {
+    console.error("Database error:", err);
+    return [];
+  }
+};

@@ -4,6 +4,7 @@ import {
   addNewSliceControl,
   addSliceAssociationControl,
   getSliceControl,
+  getAutocompleteNamesControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema
@@ -29,6 +30,12 @@ function routeSlices(app: Application): void {
     "/api/slices/:texture_ids",
     validateResource(emptySchema),
     getSliceControl
+  );
+
+  app.get(
+    "/api/slices/autocompleteNames/:partial_name",
+    validateResource(emptySchema),
+    getAutocompleteNamesControl
   );
 }
 

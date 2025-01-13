@@ -15,7 +15,9 @@ const SliceOverlaySpawner: React.FC<SliceOverlaySpawnerProps> = ({
   useEffect(() => {
     console.log("Texture ID changed:", textureID);
     requestSliceData([textureID])
-      .then((data) => setSlices(data)) // Save fetched data to local state
+      .then((data) => {
+        setSlices(data);
+      }) // Save fetched data to local state
       .catch((error) => console.error("Error fetching slice data:", error));
   }, [textureID]);
 
@@ -23,8 +25,9 @@ const SliceOverlaySpawner: React.FC<SliceOverlaySpawnerProps> = ({
     <>
       {slices.map((slice) => (
         <SliceOverlay
-          key={slice.id} // Use id directly from SlicePacket
+          key={slice.ID} // Use id directly from SlicePacket
           sliceData={slice}
+          scaleFactor={4}
         />
       ))}
     </>

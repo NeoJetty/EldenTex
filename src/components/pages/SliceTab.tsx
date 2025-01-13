@@ -1,9 +1,7 @@
+import SliceSearch from "../features/SliceSearch";
+
 const SliceTab: React.FC = () => {
-  return (
-    <div>
-      <h1>Slice Page</h1>
-    </div>
-  );
+  return <SliceSearch />;
 };
 
 export default SliceTab;

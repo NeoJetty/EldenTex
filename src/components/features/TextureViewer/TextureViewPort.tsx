@@ -84,9 +84,9 @@ const TextureViewPort: React.FC<TextureViewPortProps> = ({
               draggable={false}
             />
           )}
+          {/* adding new slices is handled in the ViewPortControl->NewSliceActionButton*/}
+          <SliceOverlaySpawner textureID={textureID} />{" "}
         </div>
-        {/* Spawns Modals - adding new slices is handled in the ViewPortControl->NewSliceActionButton*/}
-        <SliceOverlaySpawner textureID={textureID} />{" "}
       </div>
       <div className="viewport-action-bar">
         <ViewPortControls texture_id={textureID} imgURL={imgURL} />
