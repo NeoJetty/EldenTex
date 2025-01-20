@@ -18,17 +18,15 @@ import { useSelector } from "react-redux";
 import { StoreTypes } from "../../redux/store";
 import { autocompleteSliceNames } from "../../data/api/requestSliceData";
 
-const mockServerSearch = async (query: string): Promise<void> => {
-  // Simulates a server request to perform a search
-  console.log(`Search executed with query: ${query}`);
-};
+interface SliceSearchProps {
+  fetchSlices: (sliceName: string, confidenceThreshold: number) => void;
+}
 
-const SliceSearch: React.FC = () => {
+const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
   const [selectedTagID, setSelectedTagID] = useState<number>(3); // Default tagID
   const [searchInput, setSearchInput] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);
 
   // Handle the change of selected tag in dropdown
@@ -66,12 +64,13 @@ const SliceSearch: React.FC = () => {
   const handleSuggestionClick = (suggestion: string) => {
     setSearchInput(suggestion);
     setSuggestions([]); // Hide the suggestions after clicking
-    mockServerSearch(suggestion); // Trigger search for the clicked suggestion
+    // Fetch slices when a suggestion is clicked
+    fetchSlices(suggestion, 0.5); // Example confidenceThreshold = 0.5
   };
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mockServerSearch(searchInput); // Trigger search on form submission
+    fetchSlices(searchInput, 0.5); // Fetch slices on form submit
   };
 
   return (

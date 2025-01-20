@@ -78,3 +78,29 @@ export interface SlicePacket {
   sliceUserID: number; // is it possible to link to another users slice? probably
   textureSubtypeBase: string;
 }
+
+export interface DbSliceLink {
+  // slice_texture_associations
+  ID: number;
+  sliceID: number;
+  textureID: number;
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
+  localDescription: string;
+  confidence: number;
+  linkUserID: number;
+  textureSubtypeBase: string;
+}
+
+export interface DbSlice {
+  id: number;
+  name: string;
+  globalDescription: string;
+  userID: number;
+}

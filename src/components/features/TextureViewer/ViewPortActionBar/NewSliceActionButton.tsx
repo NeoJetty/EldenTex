@@ -7,7 +7,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 // project
-import NewSliceFormModal from "./NewSliceFormModal.js";
+import NewSliceFormModal from "../../../shared/NewSliceFormModal.js";
 import { addSlice } from "../../../../redux/slices/sliceSlice.js";
 import { SlicePacket } from "../../../../data/utils/sharedTypes.js"; // Import SlicePacket
 

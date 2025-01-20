@@ -5,21 +5,27 @@ import {
   addSliceAssociationControl,
   getSliceControl,
   getAutocompleteNamesControl,
+  getSliceByNameControl,
+  getLinksQueryControl,
+  getLinkByIDControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema
-import { validateResource } from "../middleware/validateResource.js";
+import {
+  validateQuery,
+  validateResource,
+} from "../middleware/validateResource.js";
 import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
+import { linksQuerySchema } from "../middleware/validationSchemas/links/links.schema.js";
 
 function routeSlices(app: Application): void {
-  // Route for adding a new slice with association
+  // Route for adding a new slice with link (2 operations)
   app.post(
     "/api/slices/slice",
     validateResource(emptySchema),
     addNewSliceControl
   );
 
-  // Route for adding an association to an existing slice
   app.post(
     "/api/slices/link",
     validateResource(emptySchema),
@@ -37,6 +43,21 @@ function routeSlices(app: Application): void {
     validateResource(emptySchema),
     getAutocompleteNamesControl
   );
+
+  app.get(
+    "/api/links/:link_id",
+    validateResource(emptySchema),
+    getLinkByIDControl
+  );
+
+  app.get(
+    "/api/slices/:slice_name/:confidence_threshold",
+    validateResource(emptySchema),
+    getSliceByNameControl
+  );
+
+  // { id, name, confidence } query params
+  app.get("/api/links", validateQuery(linksQuerySchema), getLinksQueryControl);
 }
 
 export default routeSlices;

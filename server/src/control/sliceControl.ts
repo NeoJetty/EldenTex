@@ -7,6 +7,8 @@ import {
   addSliceLink,
   getSlicesByTextureId,
   getAutocompleteNames,
+  getSliceByName,
+  getLinkByID,
 } from "../service/slices.js";
 
 export const getSliceControl = (req: Request, res: Response): void => {
@@ -121,10 +123,77 @@ export const getAutocompleteNamesControl = (
     const { partial_name } = req.params;
 
     const sliceNames = getAutocompleteNames(db, partial_name, userID);
-
     res.json({ sliceNames });
   } catch (err) {
     console.error("Database error:", (err as Error).message);
     res.status(500).json({ error: "Database error occurred" });
+  }
+};
+
+// grabs an array of SlicePacket from the DB
+export const getSliceByNameControl = (req: Request, res: Response): void => {
+  try {
+    console.log("getSliceByNameControl");
+    const db: TDatabase = res.locals.db;
+    const userID: number = res.locals.validUserID;
+    const { slice_name, confidence_threshold } = req.params;
+
+    // Pass parameters to the service function
+    const slices = getSliceByName(
+      db,
+      slice_name,
+      parseFloat(confidence_threshold),
+      userID
+    );
+
+    res.json({ slices });
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const getLinkByIDControl = (req: Request, res: Response): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const { link_id } = req.params;
+    const linkID: number = Number(link_id);
+    const userID: number = res.locals.validUserID;
+
+    const slicePacket = getLinkByID(db, linkID, 101, userID);
+
+    if (slicePacket) {
+      res.json({ slicePacket });
+    } else {
+      res.status(404).json({ error: "Link not found" });
+    }
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const getLinksQueryControl = (req: Request, res: Response): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const userID: number = res.locals.validUserID;
+    const { id, name, confidence } = req.query;
+
+    const parsedConfidence = parseFloat(confidence as string);
+
+    let links = [] as SlicePacket[];
+
+    if (id) {
+      // Fetch by ID and confidence
+      const parsedId = parseInt(id as string, 10);
+      links = getLinkByID(db, parsedId, parsedConfidence, userID);
+    } else if (name) {
+      // Fetch by name and confidence
+      links = getSliceByName(db, name as string, parsedConfidence, userID);
+    }
+    res.json({ links });
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
   }
 };
