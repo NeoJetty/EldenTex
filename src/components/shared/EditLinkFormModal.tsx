@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SlicePacket } from "../../data/utils/sharedTypes.js";
-import { updateLink } from "../../data/api/requestSliceData.js"; // Assume this sends PUT request
+import { updateLink } from "../../api/requestSliceData.js"; // Assume this sends PUT request
 import SliceFormModalBase from "./SliceFormModalBase";
 
 interface EditLinkFormModalProps {

@@ -3,7 +3,7 @@ import MainNavBar from "./components/layout/MainNavBar.tsx";
 import Routing from "./Routing.tsx";
 import { ThemeOptions } from "@mui/material/styles";
 import { useEffect } from "react";
-import { preloadAppData } from "./data/api/preload.ts";
+import { preloadAppData } from "./api/preload.ts";
 
 // Define theme options
 export const themeOptions: ThemeOptions = {

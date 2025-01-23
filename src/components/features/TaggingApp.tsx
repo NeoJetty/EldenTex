@@ -4,7 +4,7 @@ import {
   addTagToTexture,
   deleteTagFromTexture,
   getTagsForTexture,
-} from "../../data/api/requestTagRelatedData";
+} from "../../api/requestTagRelatedData";
 import {
   Accordion,
   AccordionSummary,
@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Tag } from "../../data/utils/sharedTypes";
+import { Tag } from "../../utils/sharedTypes";
 import Toggle, { ToggleState } from "../shared/Toogle"; // Import the Toggle component
 import { StoreTypes } from "../../redux/store";
 import { log } from "node:console";

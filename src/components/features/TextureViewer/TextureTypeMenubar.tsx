@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { TextureSubtypes } from "../../../data/utils/sharedTypes";
+import { TextureSubtypes } from "../../../utils/sharedTypes";
 import { Tabs, Tab } from "@mui/material";
 
 interface TextureTypeMenubarProps {

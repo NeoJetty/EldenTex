@@ -9,9 +9,9 @@ import {
   Button,
 } from "@mui/material";
 import SlicePreview from "../shared/SlicePreview";
-import { SlicePacket } from "../../data/utils/sharedTypes";
-import { buildJPGPathFixSubtype } from "../../data/utils/urlPath";
-import { requestTextureData } from "../../data/requestTextureData";
+import { SlicePacket } from "../../utils/sharedTypes";
+import { buildJPGPathFixSubtype } from "../../utils/urlPath";
+import { requestTextureData } from "../../api/requestTextureData";
 import SliceLinkEnumeration from "../features/SliceLinkEnumeration";
 import NewSliceFormModal from "../shared/NewSliceFormModal";
 

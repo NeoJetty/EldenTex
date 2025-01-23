@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardMedia, Typography, Grid } from "@mui/material";
 import { Link } from "react-router-dom"; // Import Link from react-router-dom
-import { SlicePacket } from "../../data/utils/sharedTypes";
+import { SlicePacket } from "../../utils/sharedTypes";
 
 interface SliceGalleryViewProps {
   slices: SlicePacket[];
@@ -18,7 +18,7 @@ const SliceGalleryView: React.FC<SliceGalleryViewProps> = ({ slices }) => {
                 component="img"
                 alt={slice.sliceName}
                 height="140"
-                image={`https://example.com/images/${slice.textureID}`} // Placeholder for texture-based image URL
+                image={`/${slice.textureID}`} // TODO: Replace with actual image
                 title={slice.sliceName}
               />
               <CardContent>

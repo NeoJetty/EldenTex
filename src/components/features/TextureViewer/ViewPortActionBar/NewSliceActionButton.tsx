@@ -9,7 +9,7 @@ import { Dispatch } from "redux";
 // project
 import NewSliceFormModal from "../../../shared/NewSliceFormModal.js";
 import { addSlice } from "../../../../redux/slices/sliceSlice.js";
-import { SlicePacket } from "../../../../data/utils/sharedTypes.js"; // Import SlicePacket
+import { SlicePacket } from "../../../../utils/sharedTypes.js";
 
 // Define props and state interfaces
 interface NewSliceActionButtonProps {

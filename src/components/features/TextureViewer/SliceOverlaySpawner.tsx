@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { requestSliceData } from "../../../data/api/requestSliceData.js";
+import { requestSliceData } from "../../../api/requestSliceData.js";
 import SliceOverlay from "../../shared/SliceOverlay.js";
-import { SlicePacket } from "../../../data/utils/sharedTypes.js";
+import { SlicePacket } from "../../../utils/sharedTypes.js";
 
 interface SliceOverlaySpawnerProps {
   textureID: number;

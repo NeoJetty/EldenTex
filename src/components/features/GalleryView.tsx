@@ -9,8 +9,8 @@ import {
   CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { AppConfig } from "../../data/AppConfig";
-import { fetchTexturesByTag } from "../../data/api/requestFilteredTextures";
+import { AppConfig } from "../../AppConfig";
+import { fetchTexturesByTag } from "../../api/requestFilteredTextures";
 
 interface GalleryViewProps {
   tagID: number;

@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import SliceOverlay from "./SliceOverlay";
-import { SlicePacket } from "../../data/utils/sharedTypes";
-import { calcPanningAndScale } from "../../data/utils/imageHelpers";
+import { SlicePacket } from "../../utils/sharedTypes";
+import { calcPanningAndScale } from "../../utils/imageHelpers";
 
 interface SlicePreviewProps {
   topLeft: { x: number; y: number };

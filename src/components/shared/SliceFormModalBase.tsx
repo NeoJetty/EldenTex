@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { Modal, Box, TextField, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { SlicePacket } from "../../data/utils/sharedTypes.js";
+import { SlicePacket } from "../../utils/sharedTypes.js";
 import SlicePreview from "./SlicePreview.js";
 
 interface SliceFormModalBaseProps {

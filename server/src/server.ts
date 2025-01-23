@@ -9,6 +9,7 @@ import routeTextures from "./routing/routeTextures.js";
 import routeSlices from "./routing/routeSlices.js";
 import routeUsers from "./routing/routeUsers.js";
 import validateUser from "./middleware/validateUser.js";
+import routeMaps from "./routing/routeMaps.js";
 
 const app: Application = express();
 const port: number = 3030;
@@ -26,6 +27,7 @@ async function registerRoutes(): Promise<void> {
   routeTextureTagging(app);
   routeSlices(app);
   routeUsers(app);
+  routeMaps(app);
 
   /*
   // textureDataByName/:textureName

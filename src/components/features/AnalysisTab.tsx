@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import TextureViewerApp from "./TextureViewerApp";
-import {
-  TextureSubtypes,
-  emptyTextureTypes,
-} from "../../data/utils/sharedTypes";
-import {
-  requestTextureData,
-  requestTextureDataByName,
-} from "../../data/requestTextureData";
+import { TextureSubtypes, emptyTextureSubtypes } from "../../utils/sharedTypes";
+
+import * as API from "../../api/textures.api";
 import XORdoubleInput from "../shared/XORdoubleInput";
 import TaggingApp from "./TaggingApp";
-import { convertToTextureSubtypes } from "../../data/utils/converter";
+import { convertToTextureSubtypes } from "../../utils/converter";
 
 const AnalysisTab: React.FC = () => {
   const params = useParams();
@@ -20,46 +15,28 @@ const AnalysisTab: React.FC = () => {
   const [textureID, setTextureID] = useState<number>(4158);
   const [textureName, setTextureName] = useState<string>("");
   const [textureTypes, setTextureTypes] =
-    useState<TextureSubtypes>(emptyTextureTypes);
+    useState<TextureSubtypes>(emptyTextureSubtypes);
   const [isLoading, setIsLoading] = useState<boolean>(false); // New state for loading
 
   // try to fetch texture data from different base information
   useEffect(() => {
     if (params.texture) {
       setIsLoading(true); // Start loading
-      const textureAsNumber = Number(params.texture);
 
-      if (isNaN(textureAsNumber)) {
-        // If it's not a number, treat it as a name
-        requestTextureDataByName(params.texture)
-          .then((data) => {
-            setTextureID(data.id);
-            setTextureName(data.name);
-            setTextureTypes(convertToTextureSubtypes(data.textureTypes));
-          })
-          .catch((error) => {
-            console.error("Error fetching texture by name:", error);
-            setTextureID(0);
-            setTextureName("");
-            setTextureTypes(emptyTextureTypes);
-          })
-          .finally(() => setIsLoading(false)); // Stop loading
-      } else {
-        // If it's a number, treat it as an ID
-        requestTextureData(textureAsNumber)
-          .then((data) => {
-            setTextureID(data.id);
-            setTextureName(data.name);
-            setTextureTypes(convertToTextureSubtypes(data.textureTypes));
-          })
-          .catch((error) => {
-            console.error("Error fetching texture by ID:", error);
-            setTextureID(0);
-            setTextureName("");
-            setTextureTypes(emptyTextureTypes);
-          })
-          .finally(() => setIsLoading(false)); // Stop loading
-      }
+      // Works with texture ID or texture name (overloaded function)
+      API.getTexture(params.texture)
+        .then((data) => {
+          setTextureID(data[0].id);
+          setTextureName(data[0].name);
+          setTextureTypes(convertToTextureSubtypes(data[0].textureTypes));
+        })
+        .catch((error) => {
+          console.error("Error fetching texture by name:", error);
+          setTextureID(0);
+          setTextureName("");
+          setTextureTypes(emptyTextureSubtypes);
+        })
+        .finally(() => setIsLoading(false)); // Stop loading
     } else {
       console.log("No params provided");
       setIsLoading(false); // Ensure loading state is off
@@ -68,15 +45,7 @@ const AnalysisTab: React.FC = () => {
 
   // Handles navigation to new texture by ID or name
   function handleNextTextureInput(nextTexture: string): void {
-    const nextTextureID = Number(nextTexture);
-
-    if (!isNaN(nextTextureID)) {
-      // If the input is a number, navigate by ID
-      navigate(`/analysis/${nextTextureID}`);
-    } else {
-      // If the input is a string, navigate by name
-      navigate(`/analysis/${nextTexture}`);
-    }
+    navigate(`/analysis/${nextTexture}`);
   }
 
   return (

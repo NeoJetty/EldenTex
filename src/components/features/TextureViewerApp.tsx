@@ -1,8 +1,8 @@
 import React from "react";
 import TextureTypeMenubar from "./TextureViewer/TextureTypeMenubar";
 import TextureViewPort from "./TextureViewer/TextureViewPort";
-import { TextureSubtypes } from "../../data/utils/sharedTypes";
-import { IMAGE_FOLDERS } from "../../data/utils/constants";
+import { TextureSubtypes } from "../../utils/sharedTypes";
+import { IMAGE_FOLDERS } from "../../utils/constants";
 
 interface TextureViewerAppProps {
   textureName: string;

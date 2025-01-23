@@ -3,7 +3,7 @@ import SliceGalleryView from "../features/SliceGalleryView";
 import SliceSearch from "../features/SliceSearch";
 import { Slider, Box, Typography } from "@mui/material";
 import { SlicePacket } from "../../data/utils/sharedTypes";
-import { getSlicesByName } from "../../data/api/requestSliceData";
+import { getSlicesByName } from "../../api/requestSliceData";
 
 const SliceTab: React.FC = () => {
   const [slices, setSlices] = useState<SlicePacket[]>([]); // State for SlicePacket array

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { StoreTypes } from "../../redux/store";
-import { autocompleteSliceNames } from "../../data/api/requestSliceData";
+import { autocompleteSliceNames } from "../../api/requestSliceData";
 
 interface SliceSearchProps {
   fetchSlices: (sliceName: string, confidenceThreshold: number) => void;
