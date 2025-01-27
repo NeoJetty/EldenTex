@@ -1,10 +1,10 @@
 // preload.ts
 import store from "../redux/store";
 import { setAllTags } from "../redux/slices/tagManagmentSlice";
-import { prefetchAllTags } from "./preloadRequests";
+import * as API from "./tags.api";
 
 export const preloadAppData = (): Promise<void> => {
-  return prefetchAllTags()
+  return API.getAllTags()
     .then((tags) => {
       store.dispatch(setAllTags(tags));
     })

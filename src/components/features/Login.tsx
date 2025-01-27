@@ -20,8 +20,8 @@ import {
 
 // Define the shape of the response from the server
 interface LoginResponse {
-  email: string;
-  pass: string;
+  message: string;
+  username: string;
 }
 
 // Function to hash the password with salt using SHA-256
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
 
   function setExampleUser(id: string): void {
     setExampleUserSelected(id);
-    if (id != ``) {
+    if (id !== ``) {
       const user = example_users.find((user) => user.id === Number(id));
       if (user) {
         setEmail(user.email);
@@ -97,10 +97,8 @@ const Login: React.FC = () => {
         .post<LoginResponse>("/api/login", { email, hashedPassword })
         .then((response) => {
           if (response.status === 200) {
-            console.log(response);
-
-            dispatch(loginAction("Placeholder Username"));
-            setMessage(`Login successful! Welcome, Placeholder Username.`);
+            dispatch(loginAction(response.data.username));
+            setMessage(`Login successful! Welcome, ${response.data.username}.`);
             setEmail("");
             setPassword("");
           } else {

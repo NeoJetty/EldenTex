@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 const FilterTab: React.FC = () => {
+  console.log("-- FILTER TAB RENDERING --");
+
   return (
     <div id="tab3" className="content">
       <div id="tab3-content">

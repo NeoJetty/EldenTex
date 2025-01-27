@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import VotingTab from "./components/features/VotingTab.tsx";
-import FilterTab from "./components/features/FilterTab.tsx";
-import GalleryTab from "./components/features/GalleryTab.tsx";
+import FilterTab from "./components/pages/FilterTab.tsx";
+import GalleryTab from "./components/pages/GalleryTab.tsx";
 
-import AnalysisTab from "./components/features/AnalysisTab.tsx";
+import AnalysisTab from "./components/pages/AnalysisTab.tsx";
 import Login from "./components/features/Login.tsx";
 import Register from "./components/features/Register.tsx";
 import LinkTab from "./components/pages/LinkTab.tsx";

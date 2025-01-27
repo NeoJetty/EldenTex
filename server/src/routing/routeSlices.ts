@@ -8,10 +8,13 @@ import {
   getSliceByNameControl,
   getLinksQueryControl,
   getLinkByIDControl,
+  editSliceLinkControl,
+  markSliceLinkAsDeletedControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema
 import {
+  validateBody,
   validateQuery,
   validateResource,
 } from "../middleware/validateResource.js";
@@ -58,6 +61,12 @@ function routeSlices(app: Application): void {
 
   // { id, name, confidence } query params
   app.get("/api/links", validateQuery(linksQuerySchema), getLinksQueryControl);
+  app.put("/api/links", validateBody(emptySchema), editSliceLinkControl);
+  app.delete(
+    "/api/links/:link_id",
+    validateResource(emptySchema), // Add appropriate validation here
+    markSliceLinkAsDeletedControl
+  );
 }
 
 export default routeSlices;

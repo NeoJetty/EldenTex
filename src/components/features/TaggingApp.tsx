@@ -1,10 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  addTagToTexture,
-  deleteTagFromTexture,
-  getTagsForTexture,
-} from "../../api/requestTagRelatedData";
+// MUI
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
   AccordionSummary,
@@ -12,11 +7,19 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+// libs
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+// project
+import {
+  addTagToTexture,
+  deleteTagFromTexture,
+} from "../../api/requestTagRelatedData";
+
+import * as API from "../../api/tags.api";
 import { Tag } from "../../utils/sharedTypes";
-import Toggle, { ToggleState } from "../shared/Toogle"; // Import the Toggle component
+import Toggle, { ToggleState } from "../shared/Toogle";
 import { StoreTypes } from "../../redux/store";
-import { log } from "node:console";
 
 interface TagsForToggles {
   id: number;
@@ -46,8 +49,6 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
     const fetchTagsAndInitializeStates = async () => {
       setIsLoading(true); // Start loading
       try {
-        console.log("request");
-
         // Assuming tags are already available in Redux state
         if (!tags || tags.length === 0) {
           setIsLoading(false); // Stop loading if no tags available
@@ -55,7 +56,8 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
         }
 
         // (userID, textureID)
-        const votes = await getTagsForTexture(textureID);
+        const votes = await API.getTextureTags(textureID);
+
         const newTagsState = buildTagsState(tags, votes);
         setTagsState(newTagsState);
 
@@ -112,13 +114,13 @@ const TaggingApp: React.FC<TaggingAppProps> = ({ textureID }) => {
     try {
       switch (newState) {
         case ToggleState.ON:
-          await addTagToTexture(tagID, textureID, true);
+          await API.upsertTagToTexture(tagID, textureID, true);
           break;
         case ToggleState.OFF:
-          await addTagToTexture(tagID, textureID, false);
+          await API.upsertTagToTexture(tagID, textureID, false);
           break;
         case ToggleState.NEUTRAL:
-          await deleteTagFromTexture(tagID, textureID);
+          await API.deleteTagFromTexture(tagID, textureID);
           break;
         default:
           console.error("Unhandled toggle state:", newState);

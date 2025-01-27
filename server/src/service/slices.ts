@@ -266,3 +266,52 @@ export const getLinkByID = (
     throw err; // Rethrow error to handle it in the calling control function
   }
 };
+
+export const editSliceLink = (
+  db: TDatabase,
+  linkData: SliceTextureLinkRow
+): boolean => {
+  try {
+    const sqlQuery = `
+      UPDATE slice_texture_links
+      SET 
+        texture_id = @texture_id,
+        top_left_x = @top_left_x,
+        top_left_y = @top_left_y,
+        bottom_right_x = @bottom_right_x,
+        bottom_right_y = @bottom_right_y,
+        local_description = @local_description,
+        confidence = @confidence,
+        subtype_base = @subtype_base
+      WHERE id = @id AND user_id = @user_id AND slice_id = @slice_id;
+    `;
+
+    const result = db.prepare(sqlQuery).run({
+      ...linkData,
+    });
+    return result.changes > 0; // Return true if a row was updated
+  } catch (err) {
+    console.error("Database error:", err);
+    return false; // Return false on failure
+  }
+};
+
+export const markSliceLinkAsDeleted = (
+  db: TDatabase,
+  linkID: number,
+  userID: number
+): boolean => {
+  try {
+    const sqlQuery = `
+      UPDATE slice_texture_links
+      SET deleted_at = CURRENT_TIMESTAMP
+      WHERE id = @linkID AND user_id = @userID;
+    `;
+
+    const result = db.prepare(sqlQuery).run({ linkID, userID });
+    return result.changes > 0; // Return true if a row was updated
+  } catch (err) {
+    console.error("Database error:", err);
+    return false; // Return false on failure
+  }
+};

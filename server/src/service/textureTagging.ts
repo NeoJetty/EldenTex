@@ -1,7 +1,7 @@
 import { Database as TDatabase } from "better-sqlite3";
 
 // TODO not RESTful enough. Some logic should go to the controller
-export const postTagToTexture = async (
+export const postTaggingTextures = async (
   db: TDatabase,
   userId: number,
   tagId: number,
@@ -82,7 +82,7 @@ export const getTagToTexture = async (
   }
 };
 
-export const deleteTagToTexture = async (
+export const deleteTagggingTextures = async (
   db: TDatabase,
   userId: number,
   tagId: number,

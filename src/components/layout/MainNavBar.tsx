@@ -1,11 +1,14 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 import { AppBar, Tabs, Tab, Box } from "@mui/material";
 import DebugDropdown from "./DebugDropdown";
+import { StoreTypes } from "../../redux/store";
 
 const MainNavBar: React.FC = () => {
   // useLocation to get the current pathname
   const location = useLocation();
+  const userName = useSelector((state: StoreTypes) => state.auth.username);
 
   // Determine the current tab value based on pathname patterns
   const getCurrentTabValue = (pathname: string) => {
@@ -26,7 +29,12 @@ const MainNavBar: React.FC = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         {/* Tabs with dynamically set value based on the pathname */}
         <Tabs value={currentTabValue} aria-label="main navigation tabs">
-          <Tab label="Account" value="Account" component={NavLink} to="login" />
+          <Tab
+            label={userName != null ? " - " + userName + " - " : "Login"}
+            value="Account"
+            component={NavLink}
+            to="login"
+          />
           <Tab
             label="Community Voting"
             value="Community Voting"
@@ -38,7 +46,7 @@ const MainNavBar: React.FC = () => {
             label="Texture"
             value="Texture Analysis"
             component={NavLink}
-            to="analysis"
+            to="analysis/4158"
           />
           <Tab label="Slice" value="Slice" component={NavLink} to="slice" />
           <Tab label="Link" value="Link" component={NavLink} to="link" />

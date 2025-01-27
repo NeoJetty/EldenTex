@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
-import TextureViewerApp from "./TextureViewerApp";
+import TextureViewerApp from "../features/TextureViewerApp";
 import { TextureSubtypes, emptyTextureSubtypes } from "../../utils/sharedTypes";
 
 import * as API from "../../api/textures.api";
 import XORdoubleInput from "../shared/XORdoubleInput";
-import TaggingApp from "./TaggingApp";
+import TaggingApp from "../features/TaggingApp";
 import { convertToTextureSubtypes } from "../../utils/converter";
 
 const AnalysisTab: React.FC = () => {
+  console.log("-- ANALYSIS TAB RENDERING --");
+
   const params = useParams();
   const navigate = useNavigate(); // Initialize navigate
 
-  const [textureID, setTextureID] = useState<number>(4158);
+  const [textureID, setTextureID] = useState<number>(0);
   const [textureName, setTextureName] = useState<string>("");
   const [textureTypes, setTextureTypes] =
     useState<TextureSubtypes>(emptyTextureSubtypes);
@@ -66,7 +68,7 @@ const AnalysisTab: React.FC = () => {
             handleNextTextureInput(nextTexture);
           }}
         />
-        {!isLoading && <TaggingApp textureID={textureID} />}
+        {textureID > 0 && <TaggingApp textureID={textureID} />}
       </div>
     </div>
   );

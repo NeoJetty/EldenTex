@@ -11,11 +11,15 @@ import {
 import SlicePreview from "../shared/SlicePreview";
 import { SlicePacket } from "../../utils/sharedTypes";
 import { buildJPGPathFixSubtype } from "../../utils/urlPath";
-import { requestTextureData } from "../../api/requestTextureData";
+import * as APITex from "../../api/textures.api";
+import * as APISlice from "../../api/slices.api";
 import SliceLinkEnumeration from "../features/SliceLinkEnumeration";
 import NewSliceFormModal from "../shared/NewSliceFormModal";
+import EditLinkFormModal from "../shared/EditLinkFormModal";
 
 const LinkTab: React.FC = () => {
+  console.log("-- LINK TAB RENDERING --");
+
   const { link_id } = useParams<{ link_id: string }>();
   const [slicePacket, setSlicePacket] = useState<SlicePacket | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,19 +33,16 @@ const LinkTab: React.FC = () => {
   useEffect(() => {
     const fetchSlicePacket = async () => {
       try {
-        const response = await fetch(`/api/links?id=${link_id}&confidence=0`);
-        if (!response.ok) {
-          throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-        const data = await response.json();
-        const slicePacket = data.links[0];
-        setSlicePacket(data.links[0]);
-        // Fetch textureName using textureID
-        const textureData = await requestTextureData(data.links[0].textureID);
+        const response = await APISlice.getLinkData(Number(link_id), 0);
+        const slicePacket = response.links[0] as SlicePacket;
 
-        setTextureName(textureData.name); // Set textureName
+        setSlicePacket(slicePacket);
+        // Fetch textureName using textureID
+        const textureData = await APITex.getTexture(slicePacket.textureID);
+
+        setTextureName(textureData[0].name); // Set textureName
         // Generate image URL based on textureName
-        const jpgURL = buildJPGPathFixSubtype(textureData.name, "_n");
+        const jpgURL = buildJPGPathFixSubtype(textureData[0].name, "_n");
         setImgURL(jpgURL);
       } catch (err) {
         setError((err as Error).message);
@@ -179,7 +180,7 @@ const LinkTab: React.FC = () => {
 
       {/* New Slice Form Modal */}
       {isModalOpen && (
-        <NewSliceFormModal
+        <EditLinkFormModal
           open={isModalOpen}
           onClose={handleCloseModal}
           initialData={{
@@ -187,6 +188,7 @@ const LinkTab: React.FC = () => {
             topLeft: slicePacket.topLeft,
             bottomRight: slicePacket.bottomRight,
           }}
+          setParentSlicePacket={setSlicePacket}
           imgURL={imgURL}
         />
       )}

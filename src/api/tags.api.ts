@@ -3,12 +3,11 @@ import axiosApi from "./API"; // Import the custom API instance
 
 export async function getAllTags(): Promise<Tag[]> {
   const response = await axiosApi.get("/allTags");
-
-  if (!response.data || !Array.isArray(response.data.tags)) {
+  if (!response.data || !Array.isArray(response.data.allTags)) {
     throw new Error("Invalid response format");
   }
 
-  return response.data.tags as Tag[];
+  return response.data.allTags as Tag[];
 }
 
 export async function fetchSavedFilterSearches() {
@@ -45,7 +44,7 @@ export async function submitFilterSearch(filterData: {
   return response.data;
 }
 
-export function addTagToTexture(
+export function upsertTagToTexture(
   tagID: number,
   textureID: number,
   vote: boolean

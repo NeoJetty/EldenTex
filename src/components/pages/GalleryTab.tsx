@@ -7,11 +7,13 @@ import {
   InputLabel,
   SelectChangeEvent,
 } from "@mui/material";
-import GalleryView from "./GalleryView";
+import GalleryView from "../features/GalleryView";
 import { useSelector } from "react-redux";
 import { StoreTypes } from "../../redux/store";
 
 const GalleryTab: React.FC = () => {
+  console.log("-- GALLERY TAB RENDERING --");
+
   const [selectedTagID, setSelectedTagID] = useState<number>(3); // Default tagID
 
   const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);

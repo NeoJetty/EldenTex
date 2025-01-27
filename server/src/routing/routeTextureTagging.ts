@@ -12,13 +12,13 @@ import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
 // Associating textures with tags
 function routeTextureTagging(app: Application): void {
   app.post(
-    "/api/tagToTexture",
+    "/api/taggingTextures",
     validateResource(emptySchema),
     postTagToTextureControl
   );
 
   app.delete(
-    "/api/tagToTexture",
+    "/api/taggingTextures",
     validateResource(emptySchema),
     deleteTagToTextureControl
   );

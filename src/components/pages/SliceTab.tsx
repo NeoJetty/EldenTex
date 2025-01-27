@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import SliceGalleryView from "../features/SliceGalleryView";
 import SliceSearch from "../features/SliceSearch";
 import { Slider, Box, Typography } from "@mui/material";
-import { SlicePacket } from "../../data/utils/sharedTypes";
+import { SlicePacket } from "../../utils/sharedTypes";
 import { getSlicesByName } from "../../api/requestSliceData";
 
 const SliceTab: React.FC = () => {
+  console.log("-- SLICE TAB RENDERING --");
+
   const [slices, setSlices] = useState<SlicePacket[]>([]); // State for SlicePacket array
   const [confidenceThreshold, setConfidenceThreshold] = useState<number>(0.5); // Default confidence threshold
 

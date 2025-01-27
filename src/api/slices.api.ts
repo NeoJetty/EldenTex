@@ -55,3 +55,22 @@ export function updateLink(sliceData: SlicePacket): Promise<SlicePacket> {
     return response.data as SlicePacket;
   });
 }
+
+export function getLinkData(
+  linkId: number,
+  confidence: number = 0
+): Promise<any> {
+  const endpoint = `/links?id=${linkId}&confidence=${confidence}`;
+
+  return axiosApi
+    .get(endpoint)
+    .then((response) => {
+      if (!response.data || typeof response.data !== "object") {
+        throw new Error("Invalid response format");
+      }
+      return response.data; // You can adjust the return type if necessary
+    })
+    .catch((error) => {
+      throw new Error(`Error fetching data: ${error.message}`);
+    });
+}

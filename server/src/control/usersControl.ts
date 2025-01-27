@@ -60,6 +60,19 @@ export async function loginControl(req: Request, res: Response): Promise<void> {
   }
 }
 
+export async function loggedInCheckControl(
+  req: Request,
+  res: Response
+): Promise<void> {
+  if (res.locals.validUserID != null) {
+    console.log(res.locals.validUserID);
+    // Check if it's defined and not null
+    res.status(200).json({ message: "User is logged in." });
+  } else {
+    res.status(401).json({ message: "User is not logged in." });
+  }
+}
+
 // The actual handler function for registration
 export async function registerControl(
   req: Request,

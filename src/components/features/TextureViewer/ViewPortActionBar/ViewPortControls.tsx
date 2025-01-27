@@ -10,7 +10,6 @@ import PanToolIcon from "@mui/icons-material/PanTool";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import NewSliceActionButton from "./NewSliceActionButton";
-import HoverButtonWithPopover from "./HoverButtonWithPopover.js";
 import RelatedMapsDisplay from "../../RelatedMapsDisplay.js";
 
 interface ViewPortControlsProps {

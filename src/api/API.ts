@@ -3,14 +3,19 @@ import axios from "axios";
 const DEBUG_LEVEL = 1;
 
 const axiosApi = axios.create({
-  baseURL: "/api", // Your API base URL
+  baseURL: "/api",
   withCredentials: true, // Include cookies
 });
 
 // Add request interceptor
 axiosApi.interceptors.request.use((config) => {
   if (DEBUG_LEVEL > 0) {
-    console.log(`Starting request to: ${config.baseURL}${config.url}`);
+    console.log(
+      "%cReq:",
+      "color: yellow",
+      config.url,
+      config.data == undefined ? "" : config.data
+    );
   }
   return config;
 });
@@ -19,7 +24,7 @@ axiosApi.interceptors.request.use((config) => {
 axiosApi.interceptors.response.use(
   (response) => {
     if (DEBUG_LEVEL > 0) {
-      console.log(`Response from: ${response.config.url}`, response.data);
+      console.log("%cRes:", "color: green", response.config.url, response.data);
     }
     return response;
   },

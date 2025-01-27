@@ -1,8 +1,8 @@
 import Database, { Database as TDatabase } from "better-sqlite3";
 import {
-  postTagToTexture,
+  postTaggingTextures,
   getTagToTexture,
-  deleteTagToTexture,
+  deleteTagggingTextures,
 } from "../service/textureTagging.js";
 
 describe("Tag-Texture Controller Functions", () => {
@@ -33,19 +33,19 @@ describe("Tag-Texture Controller Functions", () => {
 
   describe("postTagToTexture", () => {
     it("should insert a new vote when no previous vote exists", async () => {
-      const result = await postTagToTexture(db, 1, 3, 2, true);
+      const result = await postTaggingTextures(db, 1, 3, 2, true);
       expect(result.success).toBe(true);
       expect(result.message).toBe("Vote successfully recorded");
     });
 
     it("should update the vote if it is different from the previous vote", async () => {
-      const result = await postTagToTexture(db, 1, 1, 1, false);
+      const result = await postTaggingTextures(db, 1, 1, 1, false);
       expect(result.success).toBe(true);
       expect(result.message).toBe("Vote successfully updated");
     });
 
     it("should not update if the vote is the same as the previous one", async () => {
-      const result = await postTagToTexture(db, 1, 2, 1, false);
+      const result = await postTaggingTextures(db, 1, 2, 1, false);
       expect(result.success).toBe(false);
       expect(result.message).toBe(
         "User has already voted identically on this tag and texture"
@@ -54,7 +54,7 @@ describe("Tag-Texture Controller Functions", () => {
 
     it("should handle database errors gracefully", async () => {
       db.exec("DROP TABLE tag_texture_associations;");
-      const result = await postTagToTexture(db, 1, 1, 1, true);
+      const result = await postTaggingTextures(db, 1, 1, 1, true);
       expect(result.success).toBe(false);
       expect(result.error).toBe("Database error occurred");
     });
@@ -78,13 +78,13 @@ describe("Tag-Texture Controller Functions", () => {
 
   describe("deleteTagToTexture", () => {
     it("should delete the specified tag for the given user, tag, and texture", async () => {
-      const result = await deleteTagToTexture(db, 1, 1, 1);
+      const result = await deleteTagggingTextures(db, 1, 1, 1);
       expect(result.success).toBe(true);
       expect(result.message).toBe("Tag successfully deleted");
     });
 
     it("should return an error message if no tag is found to delete", async () => {
-      const result = await deleteTagToTexture(db, 1, 3, 2);
+      const result = await deleteTagggingTextures(db, 1, 3, 2);
       expect(result.success).toBe(false);
       expect(result.message).toBe(
         "No tag found to delete for the given user, tag, and texture"
@@ -93,7 +93,7 @@ describe("Tag-Texture Controller Functions", () => {
 
     it("should handle database errors gracefully", async () => {
       db.exec("DROP TABLE tag_texture_associations;");
-      const result = await deleteTagToTexture(db, 1, 1, 1);
+      const result = await deleteTagggingTextures(db, 1, 1, 1);
       expect(result.success).toBe(false);
       expect(result.error).toBe("Database error occurred");
     });

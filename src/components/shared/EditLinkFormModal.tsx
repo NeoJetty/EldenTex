@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { SlicePacket } from "../../data/utils/sharedTypes.js";
-import { updateLink } from "../../api/requestSliceData.js"; // Assume this sends PUT request
+import { SlicePacket } from "../../utils/sharedTypes.js";
+import * as API from "../../api/slices.api.js";
 import SliceFormModalBase from "./SliceFormModalBase";
 
 interface EditLinkFormModalProps {
@@ -8,6 +8,7 @@ interface EditLinkFormModalProps {
   onClose: () => void;
   initialData: SlicePacket;
   imgURL: string;
+  setParentSlicePacket: (slicePcket: SlicePacket) => void;
 }
 
 const EditLinkFormModal: React.FC<EditLinkFormModalProps> = ({
@@ -15,16 +16,14 @@ const EditLinkFormModal: React.FC<EditLinkFormModalProps> = ({
   onClose,
   initialData,
   imgURL,
+  setParentSlicePacket,
 }) => {
   const [formData, setFormData] = useState<SlicePacket>(initialData);
 
   const handleSubmit = () => {
-    if (formData.ID && formData.sliceID && formData.linkUserID) {
-      updateLink(formData); // PUT request to server
-      onClose();
-    } else {
-      alert("Some required fields are missing!");
-    }
+    API.updateLink(formData); // PUT request to server
+    setParentSlicePacket(formData);
+    onClose();
   };
 
   return (

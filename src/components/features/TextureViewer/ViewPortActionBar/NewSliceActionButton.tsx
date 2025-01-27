@@ -122,7 +122,6 @@ class NewSliceActionButton extends Component<
             open={isModalOpen}
             onClose={this.onCloseModal}
             initialData={initialModalData}
-            onSubmit={this.onSubmitModal}
             imgURL={this.props.imgURL}
           />
         )}

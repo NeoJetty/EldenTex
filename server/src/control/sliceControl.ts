@@ -9,6 +9,9 @@ import {
   getAutocompleteNames,
   getSliceByName,
   getLinkByID,
+  editSliceLink,
+  SliceTextureLinkRow,
+  markSliceLinkAsDeleted,
 } from "../service/slices.js";
 
 export const getSliceControl = (req: Request, res: Response): void => {
@@ -192,6 +195,65 @@ export const getLinksQueryControl = (req: Request, res: Response): void => {
       links = getSliceByName(db, name as string, parsedConfidence, userID);
     }
     res.json({ links });
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const editSliceLinkControl = (req: Request, res: Response): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const validUserID: number = res.locals.validUserID;
+    const slicePacket: SlicePacket = req.body;
+
+    const sliceLinkRow: SliceTextureLinkRow = {
+      id: slicePacket.ID,
+      slice_id: slicePacket.sliceID,
+      texture_id: slicePacket.textureID,
+      top_left_x: slicePacket.topLeft.x,
+      top_left_y: slicePacket.topLeft.y,
+      bottom_right_x: slicePacket.bottomRight.x,
+      bottom_right_y: slicePacket.bottomRight.y,
+      local_description: slicePacket.localDescription || null,
+      confidence: slicePacket.confidence,
+      user_id: validUserID,
+      subtype_base: slicePacket.textureSubtypeBase || null,
+    };
+
+    const updateResult = editSliceLink(db, sliceLinkRow);
+
+    if (updateResult) {
+      res.status(200).json({ message: "Link updated successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to update link" });
+    }
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const markSliceLinkAsDeletedControl = (
+  req: Request,
+  res: Response
+): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const validUserID: number = res.locals.validUserID;
+    const { link_id } = req.params; // Extract link ID from params
+
+    const linkID: number = Number(link_id);
+
+    const result = markSliceLinkAsDeleted(db, linkID, validUserID);
+
+    if (result) {
+      res
+        .status(200)
+        .json({ message: "Slice link marked as deleted successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to mark slice link as deleted" });
+    }
   } catch (err) {
     console.error("Error:", (err as Error).message);
     res.status(500).json({ error: "An error occurred" });

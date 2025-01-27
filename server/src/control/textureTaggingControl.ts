@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import {
-  postTagToTexture,
+  postTaggingTextures,
   getTagToTexture,
-  deleteTagToTexture,
+  deleteTagggingTextures,
 } from "../service/textureTagging.js"; // Ensure to import service functions
 
 export const postTagToTextureControl = async (
@@ -11,11 +11,12 @@ export const postTagToTextureControl = async (
 ): Promise<void> => {
   try {
     const db = res.locals.db;
-    const { user_id, tag_id, texture_id, vote } = req.body;
+    const validUserID = res.locals.validUserID;
+    const { tag_id, texture_id, vote } = req.body;
 
-    const result = await postTagToTexture(
+    const result = await postTaggingTextures(
       db,
-      user_id,
+      validUserID,
       tag_id,
       texture_id,
       vote
@@ -63,13 +64,14 @@ export const deleteTagToTextureControl = async (
 ): Promise<void> => {
   try {
     const db = res.locals.db;
-    const { user_id, tag_id, texture_id } = req.body;
+    const validUserID = res.locals.validUserID;
+    const { tag_id, texture_id } = req.body;
 
-    const result = await deleteTagToTexture(
+    const result = await deleteTagggingTextures(
       db,
-      Number(user_id),
-      Number(tag_id),
-      Number(texture_id)
+      validUserID,
+      tag_id,
+      texture_id
     );
 
     if (result.success) {

@@ -13,7 +13,7 @@ function routeTags(app: Application): void {
   // Route for serving default filters
   app.get("/api/allTags", validateResource(emptySchema), getAllTagsControl);
   app.get(
-    "/api/tags/byTexture/:texture_id",
+    "/api/taggingTextures/:texture_id",
     validateResource(emptySchema),
     getTagsByTextureControl
   );

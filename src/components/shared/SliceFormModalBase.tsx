@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Modal, Box, TextField, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { SlicePacket } from "../../utils/sharedTypes.js";
@@ -21,6 +21,7 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
   onSubmit,
   imgURL,
 }) => {
+  const [slicePickerVisible, setSlicePickerVisible] = useState<boolean>(false);
   const changeCoordinates =
     (field: keyof SlicePacket) => (x: number, y: number) => {
       setFormData({ ...formData, [field]: { x, y } });
@@ -31,6 +32,10 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData({ ...formData, [field]: event.target.value });
     };
+
+  const pickExistingSlice = () => {
+    setSlicePickerVisible(true);
+  };
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -91,15 +96,27 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
               />
             </Grid>
             <Grid size={2}>
-              <TextField
-                label="Slice ID"
-                type="number"
-                value={formData.sliceID || ""}
-                disabled
-                fullWidth
-                margin="normal"
-              />
+              <Box
+                onClick={() =>
+                  (window.location.href = `/slice/${formData.sliceID}`)
+                }
+                sx={{
+                  cursor: "pointer",
+                  display: "inline-block",
+                  width: "100%",
+                }}
+              >
+                <TextField
+                  label="Slice ID"
+                  type="number"
+                  value={formData.sliceID || ""}
+                  disabled
+                  fullWidth
+                  margin="normal"
+                />
+              </Box>
             </Grid>
+
             <Grid size={2}>
               <TextField
                 label="Slice uID"
@@ -111,7 +128,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
               />
             </Grid>
           </Grid>
-
           {/* Coordinates */}
           <Grid container spacing={1} marginBottom={0}>
             <Grid size={2}></Grid>
@@ -183,15 +199,28 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
               />
             </Grid>
           </Grid>
-
           {/* Descriptions */}
-          <TextField
-            label="Slice Name"
-            value={formData.sliceName || ""}
-            onChange={handleChange("sliceName")}
-            fullWidth
-            margin="normal"
-          />
+          <Grid container spacing={1} marginBottom={0}>
+            <Grid size={4}>
+              <TextField
+                label="Slice Name"
+                value={formData.sliceName || ""}
+                onChange={handleChange("sliceName")}
+                fullWidth
+                margin="normal"
+              />
+            </Grid>
+            <Grid size={4}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={pickExistingSlice}
+                fullWidth
+              >
+                Link to Slice
+              </Button>
+            </Grid>
+          </Grid>
           <TextField
             label="Local Description"
             value={formData.localDescription || ""}
@@ -210,7 +239,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
             fullWidth
             margin="normal"
           />
-
           {/* Confidence */}
           <TextField
             label="Confidence"
@@ -221,7 +249,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
             disabled
             margin="normal"
           />
-
           <Button
             onClick={onSubmit}
             variant="contained"
