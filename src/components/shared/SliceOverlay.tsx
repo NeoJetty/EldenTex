@@ -1,10 +1,10 @@
 import React from "react";
 import { useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom"; // React Router hook for navigation
-import { SlicePacket } from "../../data/utils/sharedTypes";
+import { useNavigate } from "react-router-dom";
+import { SlicePacket } from "../../utils/sharedTypes";
 
 interface SliceOverlayProps {
-  sliceData: SlicePacket; // Pass the entire SlicePacket object as a prop
+  sliceData: SlicePacket;
   scaleFactor: number;
 }
 

@@ -20,6 +20,19 @@ export function getTexture(value: number | string): Promise<any> {
   return axiosApi.get(endpoint).then((response) => response.data);
 }
 
+export interface ITextureData {
+  id: number;
+  name: string;
+  textureTypes: string[];
+}
+
+export function getMultipleTextures(
+  textureIDs: number[]
+): Promise<ITextureData[]> {
+  const endpoint = `/textureData/${textureIDs.join(",")}`;
+  return axiosApi.get(endpoint).then((response) => response.data);
+}
+
 /**
  * Fetches filtered texture data based on selected tags.
  * @param filterData - An object containing the selected tags and their votes.

@@ -6,12 +6,13 @@ import {
   addSlice,
   addSliceLink,
   getSlicesByTextureId,
-  getAutocompleteNames,
-  getSliceByName,
+  getSliceNamesByPartiaName,
+  getSlicePacketsBySliceName,
   getLinkByID,
   editSliceLink,
   SliceTextureLinkRow,
   markSliceLinkAsDeleted,
+  markSliceAsDeleted,
 } from "../service/slices.js";
 
 export const getSliceControl = (req: Request, res: Response): void => {
@@ -125,7 +126,7 @@ export const getAutocompleteNamesControl = (
     const userID: number = res.locals.validUserID;
     const { partial_name } = req.params;
 
-    const sliceNames = getAutocompleteNames(db, partial_name, userID);
+    const sliceNames = getSliceNamesByPartiaName(db, partial_name, userID);
     res.json({ sliceNames });
   } catch (err) {
     console.error("Database error:", (err as Error).message);
@@ -134,15 +135,17 @@ export const getAutocompleteNamesControl = (
 };
 
 // grabs an array of SlicePacket from the DB
-export const getSliceByNameControl = (req: Request, res: Response): void => {
+export const getSliceNamesByPartialNameControl = (
+  req: Request,
+  res: Response
+): void => {
   try {
-    console.log("getSliceByNameControl");
     const db: TDatabase = res.locals.db;
     const userID: number = res.locals.validUserID;
     const { slice_name, confidence_threshold } = req.params;
 
     // Pass parameters to the service function
-    const slices = getSliceByName(
+    const slices = getSlicePacketsBySliceName(
       db,
       slice_name,
       parseFloat(confidence_threshold),
@@ -192,7 +195,12 @@ export const getLinksQueryControl = (req: Request, res: Response): void => {
       links = getLinkByID(db, parsedId, parsedConfidence, userID);
     } else if (name) {
       // Fetch by name and confidence
-      links = getSliceByName(db, name as string, parsedConfidence, userID);
+      links = getSlicePacketsBySliceName(
+        db,
+        name as string,
+        parsedConfidence,
+        userID
+      );
     }
     res.json({ links });
   } catch (err) {
@@ -254,6 +262,64 @@ export const markSliceLinkAsDeletedControl = (
     } else {
       res.status(400).json({ error: "Failed to mark slice link as deleted" });
     }
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const markSliceAsDeletedControl = (
+  req: Request,
+  res: Response
+): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const validUserID: number = res.locals.validUserID;
+    const { slice_id } = req.params; // Extract link ID from params
+
+    const result = markSliceAsDeleted(db, Number(slice_id), validUserID);
+
+    if (result) {
+      res.status(200).json({ message: "Slice marked as deleted successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to mark slice link as deleted" });
+    }
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const getSlicePacketsByPartialNameControl = (
+  req: Request,
+  res: Response
+): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const userID: number = res.locals.validUserID;
+    const { partial_name } = req.params;
+
+    // Step 1: Get all slice names matching the partial name
+    const sliceNames = getSliceNamesByPartiaName(db, partial_name, userID);
+
+    // Step 2: Fetch SlicePackets for each slice name
+    const allSlicePackets: SlicePacket[] = [];
+    sliceNames.forEach((sliceName) => {
+      try {
+        const slicePackets = getSlicePacketsBySliceName(
+          db,
+          sliceName,
+          101,
+          userID
+        );
+        allSlicePackets.push(...slicePackets);
+      } catch (err) {
+        console.error(`Error fetching packets for slice '${sliceName}':`, err);
+      }
+    });
+
+    // Step 3: Respond with the combined results
+    res.json({ slicePackets: allSlicePackets });
   } catch (err) {
     console.error("Error:", (err as Error).message);
     res.status(500).json({ error: "An error occurred" });

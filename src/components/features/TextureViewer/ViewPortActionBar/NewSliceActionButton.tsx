@@ -84,7 +84,7 @@ class NewSliceActionButton extends Component<
       sliceID: -1,
       textureID: this.props.texture_id, // Pass texture_id from props
       localDescription: "",
-      confidence: 100,
+      confidence: 101,
       linkUserID: -1,
       sliceName: "",
       globalDescription: "",

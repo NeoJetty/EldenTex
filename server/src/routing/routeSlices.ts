@@ -5,11 +5,13 @@ import {
   addSliceAssociationControl,
   getSliceControl,
   getAutocompleteNamesControl,
-  getSliceByNameControl,
+  getSliceNamesByPartialNameControl,
   getLinksQueryControl,
   getLinkByIDControl,
   editSliceLinkControl,
   markSliceLinkAsDeletedControl,
+  markSliceAsDeletedControl,
+  getSlicePacketsByPartialNameControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema
@@ -30,7 +32,7 @@ function routeSlices(app: Application): void {
   );
 
   app.post(
-    "/api/slices/link",
+    "/api/links",
     validateResource(emptySchema),
     addSliceAssociationControl
   );
@@ -56,7 +58,13 @@ function routeSlices(app: Application): void {
   app.get(
     "/api/slices/:slice_name/:confidence_threshold",
     validateResource(emptySchema),
-    getSliceByNameControl
+    getSliceNamesByPartialNameControl
+  );
+
+  app.get(
+    "/api/slicePacketsByAutocomplete/:partial_name",
+    validateResource(emptySchema),
+    getSlicePacketsByPartialNameControl
   );
 
   // { id, name, confidence } query params
@@ -66,6 +74,11 @@ function routeSlices(app: Application): void {
     "/api/links/:link_id",
     validateResource(emptySchema), // Add appropriate validation here
     markSliceLinkAsDeletedControl
+  );
+  app.delete(
+    "/api/slices/:slice_id",
+    validateResource(emptySchema), // Add appropriate validation here
+    markSliceAsDeletedControl
   );
 }
 

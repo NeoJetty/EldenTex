@@ -113,19 +113,16 @@ const SlicePreview = ({
           ref={containerRef}
           style={{
             position: "relative", // Needed for transformations if any
-            overflow: "hidden", // Keeps content clipped
           }}
         >
           <img
             src={imgURL}
             alt="Slice Image"
             style={{
-              width: "100%", // Responsive width
-              height: "auto", // Maintain aspect ratio
+              width: "100%",
+              height: "auto",
               transform: `translate(-${sliceSpace.pan.x}%, -${sliceSpace.pan.y}%)  `,
-
               scale: `${sliceSpace.zoomForScale}`,
-
               transformOrigin: "top left",
             }}
           />

@@ -68,6 +68,60 @@ export interface SlicePacket {
   textureSubtypeBase: string;
 }
 
+export interface Slice {
+  id: number;
+  sliceId: number;
+  textureId: number;
+  topLeft: {
+    x: number;
+    y: number;
+  };
+  bottomRight: {
+    x: number;
+    y: number;
+  };
+  localDescription: string;
+  confidence: number;
+  linkUserId: number;
+  textureSubtypeBase: string;
+}
+
+export const emptySlice: Slice = {
+  id: -1,
+  sliceId: -1,
+  textureId: -1,
+  topLeft: { x: 0, y: 0 },
+  bottomRight: { x: 0, y: 0 },
+  localDescription: "",
+  confidence: -1,
+  linkUserId: -1,
+  textureSubtypeBase: "",
+};
+
+export interface Symbol {
+  id: number;
+  sliceName: string;
+  globalDescription: string;
+  sliceUserId: number; // is it possible to link to another users slice? or always copy the slice to your own userID?
+}
+
+export const emptySymbol: Symbol = {
+  id: -1,
+  sliceName: "",
+  globalDescription: "",
+  sliceUserId: -1,
+};
+
+export interface SlicePacket2 {
+  slice: Slice;
+  symbol: Symbol;
+}
+
+export const emptySlicePacket: SlicePacket2 = {
+  slice: emptySlice,
+  symbol: emptySymbol,
+};
+
 /**
  * A point in 2D space with x and y coordinates.
  * @typedef {Object} T_xyPoint

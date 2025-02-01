@@ -1,0 +1,501 @@
+Information for c:/EldenMod/Data/AEG\AEG210_306.flver:
+
+Available Attributes and Methods:
+EXT: .flver
+PATTERN: re.compile('.*\\.flver(\\.dcx)?$')
+Reader: callable
+Writer: callable
+_abc_impl: <_abc._abc_data object at 0x000001F358869D80>
+_dcx_type: DCXType.Null
+_get_dcx_type: callable
+_path: c:\EldenMod\Data\AEG\AEG210_306.flver
+base_repr: callable
+big_endian: False
+bones: IDList([FLVERBone(
+  name = 'AEG210_306'
+  translate = Vector3((0.0, 0.0, 0.0))
+  rotate = Vector3((0.0, 0.0, 0.0))
+  bounding_box_min = Vector3((4.7684e-05, -21.948, -4.5794))
+  bounding_box_max = Vector3((19.951, 6.7024, -1.9454))
+)])
+bounding_box_max: Vector3((19.951, 6.7024, -1.9454))
+bounding_box_min: Vector3((4.7684e-05, -21.948, -4.5794))
+check_if_all_zero_bone_weights: callable
+cls_name: FLVER
+copy: callable
+create_bak: callable
+dcx_type: DCXType.Null
+debone_map_piece: callable
+draw: callable
+dummies: []
+find_all_tpfs: callable
+from_bak: callable
+from_binder: callable
+from_binder_entry: callable
+from_binder_entry_batch: callable
+from_binder_path: callable
+from_bytes: callable
+from_bytes_batch: callable
+from_dict: callable
+from_json: callable
+from_path: callable
+from_path_batch: callable
+from_reader: callable
+get_all_texture_paths: callable
+get_bone_armature_space_transforms: callable
+get_dcx_type: callable
+get_default_extension: callable
+get_field_names: callable
+get_file_path: callable
+get_game: callable
+get_root_bones: callable
+get_tpfbhd_directory_path: callable
+multiple_from_binder_path: callable
+path: c:\EldenMod\Data\AEG\AEG210_306.flver
+path_minimal_stem: AEG210_306
+path_name: AEG210_306.flver
+path_stem: AEG210_306
+refresh_bone_bounding_boxes: callable
+refresh_bounding_boxes: callable
+replace_tpf_name: callable
+scale_all_translations: callable
+set_bone_armature_space_transforms: callable
+set_bone_children_siblings: callable
+set_dcx_type: callable
+sort_submesh_bone_indices: callable
+submeshes: [Submesh(
+  material = Material(
+      name = 'm10_00_006',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_006.matxml',
+      flags = 0b00000000000000000000000110010110,  # 406
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_8_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_7_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_2_NormalMap_0", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <4 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.3568, 0.75, 0.0))
+  bounding_box_max = Vector3((0.0, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.3569, -3.25, -2.9721))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    )
+  ]
+), Submesh(
+  material = Material(
+      name = 'm10_00_054',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_054.matxml',
+      flags = 0b00000000000000000000000111110110,  # 502
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 1,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_8_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_5_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_7_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_2_NormalMap_0", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <610 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.5686, 2.1218, 0.40007))
+  bounding_box_max = Vector3((-0.039867, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.5687, -4.6058, -3.1985))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <456 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <444 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <232 triangles>
+    )
+  ]
+), Submesh(
+  material = Material(
+      name = 'm10_00_680',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_680.matxml',
+      flags = 0b00000000000000000000011001010000,  # 1616
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 2,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_8_GSBlendMap_AlbedoMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_4_GSBlendMap_AlbedoMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_0_GSBlendMap_AlbedoMap_3", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_10_GSBlendMap_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_2_GSBlendMap_NormalMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_1_GSBlendMap_NormalMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_6_GSBlendMap_NormalMap_3", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_9_GSBlendMap_Mask3Map_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_3_GSBlendMap_Mask1Map_4", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <20889 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.9753, 10.763, 0.91182))
+  bounding_box_max = Vector3((-0.050705, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.9754, -4.0724, -3.2086))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <23244 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <13732 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <4422 triangles>
+    )
+  ]
+), Submesh(
+  material = Material(
+      name = 'm10_00_681',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_681.matxml',
+      flags = 0b00000000000000000000010100001000,  # 1288
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 3,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_8_GSBlendMap_AlbedoMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_4_GSBlendMap_AlbedoMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_10_GSBlendMap_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_2_GSBlendMap_NormalMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_1_GSBlendMap_NormalMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_9_GSBlendMap_Mask1Map_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_3_GSBlendMap_Mask1Map_4", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 2
+  bone_indices = None
+  vertices = <148 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.3812, 11.415, 0.82015))
+  bounding_box_max = Vector3((-0.051648, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.3813, -10.588, -3.3062))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    )
+  ]
+)]
+to_bytes: callable
+to_bytes_batch: callable
+to_dict: callable
+to_obj: callable
+to_string: callable
+to_writer: callable
+unicode: True
+unk_x4a: False
+unk_x4c: 0
+unk_x5c: 0
+unk_x5d: 2
+unk_x68: 4
+version: 131098
+write: callable
+write_json: callable
+write_obj: callable
+
+Submeshes:
+- Submesh(
+  material = Material(
+      name = 'm10_00_006',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_006.matxml',
+      flags = 0b00000000000000000000000110010110,  # 406
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_8_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_7_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N__snp_Texture2D_2_NormalMap_0", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <4 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.3568, 0.75, 0.0))
+  bounding_box_max = Vector3((0.0, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.3569, -3.25, -2.9721))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <2 triangles>
+    )
+  ]
+)
+- Submesh(
+  material = Material(
+      name = 'm10_00_054',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_054.matxml',
+      flags = 0b00000000000000000000000111110110,  # 502
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 1,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_8_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_5_AlbedoMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_7_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_AN__snp_Texture2D_2_NormalMap_0", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <610 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.5686, 2.1218, 0.40007))
+  bounding_box_max = Vector3((-0.039867, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.5687, -4.6058, -3.1985))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <456 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <444 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <232 triangles>
+    )
+  ]
+)
+- Submesh(
+  material = Material(
+      name = 'm10_00_680',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_680.matxml',
+      flags = 0b00000000000000000000011001010000,  # 1616
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 2,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_8_GSBlendMap_AlbedoMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_4_GSBlendMap_AlbedoMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_0_GSBlendMap_AlbedoMap_3", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_10_GSBlendMap_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_2_GSBlendMap_NormalMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_1_GSBlendMap_NormalMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_6_GSBlendMap_NormalMap_3", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_9_GSBlendMap_Mask3Map_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb3_ColorAdjust_3Mask_ch18__snp_Texture2D_3_GSBlendMap_Mask1Map_4", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 1
+  bone_indices = None
+  vertices = <20889 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.9753, 10.763, 0.91182))
+  bounding_box_max = Vector3((-0.050705, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.9754, -4.0724, -3.2086))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <23244 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <13732 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <4422 triangles>
+    )
+  ]
+)
+- Submesh(
+  material = Material(
+      name = 'm10_00_681',
+      mat_def_path = 'N:\\GR\\data\\Material\\mtd\\Map_m10_00\\matxml\\m10_00_681.matxml',
+      flags = 0b00000000000000000000010100001000,  # 1288
+      gx_items = [
+        GXItem(category=b'GX00', index=102, size=52, data=b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'),
+        GXItem(category=b'\xff\xff\xff\x7f', index=100, size=12, data=b'')
+      ],
+      unk_x18 = 3,
+      textures = [
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_8_GSBlendMap_AlbedoMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_4_GSBlendMap_AlbedoMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_10_GSBlendMap_NormalMap_0", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_2_GSBlendMap_NormalMap_1", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_1_GSBlendMap_NormalMap_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_9_GSBlendMap_Mask1Map_2", unk_x10=0, unk_x11=False),
+        Texture("", "M_AMSN_V_Ov_N_Mb2_ColorAdjust_1Mask_ch18__snp_Texture2D_3_GSBlendMap_Mask1Map_4", unk_x10=0, unk_x11=False),
+      ],
+    )
+  default_bone_index = 2
+  bone_indices = None
+  vertices = <148 vertices>
+  is_bind_pose = False
+  bounding_box_min = Vector3((9.3812, 11.415, 0.82015))
+  bounding_box_max = Vector3((-0.051648, 0.0, 0.0))
+  bounding_box_unknown = Vector3((9.3813, -10.588, -3.3062))
+  face_sets = [
+    FaceSet(
+      flags = 0
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    ),
+    FaceSet(
+      flags = 1
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    ),
+    FaceSet(
+      flags = 2
+      triangle_strip = False
+      use_backface_culling = True
+      unk_x06 = 1
+      vertex_indices = <104 triangles>
+    )
+  ]
+)
+
+Textures:
+No textures found or 'textures' attribute is missing.
+
+Bones:
+IDList([FLVERBone(
+  name = 'AEG210_306'
+  translate = Vector3((0.0, 0.0, 0.0))
+  rotate = Vector3((0.0, 0.0, 0.0))
+  bounding_box_min = Vector3((4.7684e-05, -21.948, -4.5794))
+  bounding_box_max = Vector3((19.951, 6.7024, -1.9454))
+  bounding_box_min = Vector3((4.7684e-05, -21.948, -4.5794))
+  bounding_box_min = Vector3((4.7684e-05, -21.948, -4.5794))
+  bounding_box_min = Vector3((4.7684e-05, -21.948, -4.5794))
+  bounding_box_max = Vector3((19.951, 6.7024, -1.9454))
+)])
+
+Dummies:
+[]
+
+Bounding Box Min:
+Vector3((4.7684e-05, -21.948, -4.5794))
+
+Bounding Box Max:
+Vector3((19.951, 6.7024, -1.9454))

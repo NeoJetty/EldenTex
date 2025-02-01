@@ -77,26 +77,27 @@ export const getSlicesByTextureId = (
 ): SlicePacket[] => {
   try {
     const sqlQuery = `
-      SELECT
-        LINK.id AS id,
-        LINK.slice_id AS slice_id,
-        LINK.texture_id AS texture_id,
-        LINK.user_id AS user_id,
-        LINK.top_left_x AS top_left_x,
-        LINK.top_left_y AS top_left_y,
-        LINK.bottom_right_x AS bottom_right_x,
-        LINK.bottom_right_y AS bottom_right_y,
-        LINK.local_description AS local_description,
-        LINK.confidence AS confidence,
-        LINK.subtype_base AS subtype_base,
-        SLICE.id AS slice_id,
-        SLICE.name AS name,
-        SLICE.global_description AS global_description,
-        SLICE.user_id AS user_id
-      FROM slice_texture_links AS LINK
-      JOIN slices AS SLICE ON LINK.slice_id = SLICE.id
-      WHERE LINK.texture_id IN (${textureIds.map(() => "?").join(",")});
-    `;
+  SELECT
+    LINK.id AS id,
+    LINK.slice_id AS slice_id,
+    LINK.texture_id AS texture_id,
+    LINK.user_id AS user_id,
+    LINK.top_left_x AS top_left_x,
+    LINK.top_left_y AS top_left_y,
+    LINK.bottom_right_x AS bottom_right_x,
+    LINK.bottom_right_y AS bottom_right_y,
+    LINK.local_description AS local_description,
+    LINK.confidence AS confidence,
+    LINK.subtype_base AS subtype_base,
+    SLICE.id AS slice_id,
+    SLICE.name AS name,
+    SLICE.global_description AS global_description,
+    SLICE.user_id AS user_id
+  FROM slice_texture_links AS LINK
+  JOIN slices AS SLICE ON LINK.slice_id = SLICE.id
+  WHERE LINK.texture_id IN (${textureIds.map(() => "?").join(",")})
+    AND LINK.deleted_at IS NULL;
+`;
 
     // Fetch rows with proper type assertion
     const rows = db.prepare(sqlQuery).all(textureIds) as (SliceTextureLinkRow &
@@ -134,14 +135,14 @@ export const getSlicesByTextureId = (
 
 export type AutocompleteNameResult = { name: string }[];
 
-export const getAutocompleteNames = (
+export const getSliceNamesByPartiaName = (
   db: TDatabase,
   partialName: string,
   userID: number
 ): string[] => {
   try {
     const sqlQuery = `
-      SELECT name FROM slices WHERE name LIKE '%${partialName}%' AND user_id = @userID;
+      SELECT name FROM slices WHERE name LIKE '%${partialName}%' AND user_id = @userID AND deleted_at IS NULL;
     `;
     const result = db
       .prepare(sqlQuery)
@@ -155,7 +156,7 @@ export const getAutocompleteNames = (
   }
 };
 
-export const getSliceByName = (
+export const getSlicePacketsBySliceName = (
   db: TDatabase,
   sliceName: string,
   confidenceThreshold: number,
@@ -166,9 +167,10 @@ export const getSliceByName = (
     SELECT *
     FROM slices
     WHERE name = ?
-      AND user_id = ?
+      AND user_id = ? AND deleted_at IS NULL
   `;
 
+  console.log(userID, sliceName);
   const slice = db.prepare(sliceQuery).get(sliceName, userID) as
     | SliceRow
     | undefined;
@@ -221,7 +223,7 @@ export const getLinkByID = (
     const linkQuery = `
       SELECT *
       FROM slice_texture_links
-      WHERE id = ? AND confidence >= ? AND user_id = ?
+      WHERE id = ? AND confidence >= ? AND user_id = ? AND deleted_at IS NULL
     `;
     const links = db
       .prepare(linkQuery)
@@ -310,6 +312,44 @@ export const markSliceLinkAsDeleted = (
 
     const result = db.prepare(sqlQuery).run({ linkID, userID });
     return result.changes > 0; // Return true if a row was updated
+  } catch (err) {
+    console.error("Database error:", err);
+    return false; // Return false on failure
+  }
+};
+
+export const markSliceAsDeleted = (
+  db: TDatabase,
+  sliceId: number,
+  userID: number
+): boolean => {
+  try {
+    db.transaction(() => {
+      // Mark the slice as deleted
+      const deleteSliceQuery = `
+        UPDATE slices
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = @sliceId AND user_id = @userID;
+      `;
+
+      const sliceResult = db.prepare(deleteSliceQuery).run({ sliceId, userID });
+
+      // If no slice was marked as deleted, skip link deletion
+      if (sliceResult.changes === 0) {
+        throw new Error("Slice not found or not owned by the user.");
+      }
+
+      // Mark all related links as deleted
+      const deleteLinksQuery = `
+        UPDATE slice_texture_links
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE slice_id = @sliceId AND user_id = @userID;
+      `;
+
+      db.prepare(deleteLinksQuery).run({ sliceId, userID });
+    })();
+
+    return true; // Transaction completed successfully
   } catch (err) {
     console.error("Database error:", err);
     return false; // Return false on failure

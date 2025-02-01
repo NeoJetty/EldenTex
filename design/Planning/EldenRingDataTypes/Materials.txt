@@ -1,0 +1,42 @@
+materials connect models(AEG) and Textures(AET)
+
+They are saved as Matbin files and look like this internally:
+
+(...left out header)
+
+<Params>
+    <Param>
+      <Name>g_GX_bOverrideCAParam</Name>
+      <Value xsi:type="xsd:boolean">true</Value>
+      <Key>2886469596</Key>
+      <Type>Bool</Type>
+    </Param>
+    <Param>...
+    </Param> 
+</Params>
+
+<Samplers>
+    <Sampler>
+      <Type>M_AMSN_V_Ov_N__snp_Texture2D_8_AlbedoMap_0</Type>
+      <Path>N:\GR\data\Asset\Environment\texture\AET210\AET210_002_a.tif</Path>
+      <Key>2265321249</Key>
+      <Unk14>
+        <X>0</X>
+        <Y>0</Y>
+      </Unk14>
+    </Sampler>
+    <Sampler>
+      <Type>M_AMSN_V_Ov_N__snp_Texture2D_2_NormalMap_0</Type>
+      <Path>N:\GR\data\Asset\Environment\texture\AET210\AET210_896_n.tif</Path>
+      <Key>2299924285</Key>
+      <Unk14>
+        <X>4</X>
+        <Y>4</Y>
+      </Unk14>
+    </Sampler>
+  </Samplers>
+
+they tell the program where to fetch the texture (path of the AET) and some params that probably affect the whole group that seem to be drawing rules applying to all the textures used in this material
+
+From a lore-seeking perspective they only could matter if the params drawing rules could be fully understood, but nothing here for now
+just an annoying step in-between the AEG AET connection

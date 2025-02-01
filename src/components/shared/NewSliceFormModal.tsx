@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { SlicePacket } from "../../utils/sharedTypes.js";
 import { addSlice } from "../../redux/slices/sliceSlice.js";
 import { createSlice } from "../../api/requestSliceData.js";
+import * as API from "../../api/slices.api.js";
 import SliceFormModalBase from "./SliceFormModalBase";
 
 interface NewSliceFormModalProps {
@@ -22,13 +23,15 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    if (formData.ID && formData.sliceID && formData.linkUserID) {
-      createSlice(formData); // Server request
+    if (formData.sliceID == -1) {
+      // new slice and link
+      API.createSlice(formData); // Server request
       dispatch(addSlice(formData)); // Dispatch to Redux Toolkit store
-      onClose();
     } else {
-      alert("Some required fields are missing!");
+      // only new link
+      API.createLink(formData).then((response) => dispatch(addSlice(response))); // Server request
     }
+    onClose();
   };
 
   return (

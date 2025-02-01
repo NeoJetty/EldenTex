@@ -26,10 +26,16 @@ const EditLinkFormModal: React.FC<EditLinkFormModalProps> = ({
     onClose();
   };
 
+  const onDelete = () => {
+    API.deleteLink(formData.ID); // DELETE request to server
+    onClose();
+  };
+
   return (
     <SliceFormModalBase
       open={open}
       onClose={onClose}
+      onDelete={onDelete}
       formData={formData}
       setFormData={setFormData}
       onSubmit={handleSubmit}

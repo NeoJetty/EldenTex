@@ -9,6 +9,7 @@ import Login from "./components/features/Login.tsx";
 import Register from "./components/features/Register.tsx";
 import LinkTab from "./components/pages/LinkTab.tsx";
 import SliceTab from "./components/pages/SliceTab.tsx";
+import ForceRemount from "./components/pages/ForceRefresh.tsx";
 
 const Routing: React.FC = () => {
   return (
@@ -23,7 +24,7 @@ const Routing: React.FC = () => {
       <Route path="slice" element={<SliceTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
-
+      <Route path="force_refresh/:path/*" element={<ForceRemount />} />
       <Route path="*" element={<h1>404</h1>} />
     </Routes>
   );
