@@ -1,6 +1,7 @@
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import MainNavBar from "./components/layout/MainNavBar.tsx";
 import Routing from "./Routing.tsx";
+import Logger from "./components/features/Logger.tsx";
 import { ThemeOptions } from "@mui/material/styles";
 import { useEffect } from "react";
 import { preloadAppData } from "./api/preload.ts";
@@ -50,6 +51,7 @@ function App() {
         <MainNavBar />
       </div>
       <Routing />
+      <Logger />
     </ThemeProvider>
   );
 }

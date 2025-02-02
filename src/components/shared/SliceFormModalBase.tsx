@@ -34,7 +34,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
   onDelete,
   imgURL,
 }) => {
-  const [slicePickerVisible, setSlicePickerVisible] = useState<boolean>(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
 
   const changeCoordinates =
@@ -51,10 +50,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData({ ...formData, [field]: event.target.value });
     };
-
-  const pickExistingSlice = () => {
-    setSlicePickerVisible(true);
-  };
 
   const handleDeleteClick = () => {
     setConfirmDeleteOpen(true);

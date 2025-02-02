@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { SlicePacket } from "../../utils/sharedTypes.js";
 import { addSlice } from "../../redux/slices/sliceSlice.js";
-import { createSlice } from "../../api/requestSliceData.js";
 import * as API from "../../api/slices.api.js";
 import SliceFormModalBase from "./SliceFormModalBase";
 

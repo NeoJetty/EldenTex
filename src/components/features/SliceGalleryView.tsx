@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Grid,
-  Tooltip,
-} from "@mui/material";
+import { Card, CardContent, Typography, Grid, Tooltip } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
 import { useNavigate } from "react-router-dom";
 import * as API from "../../api/textures.api";

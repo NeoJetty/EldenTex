@@ -117,7 +117,7 @@ class NewSliceActionButton extends Component<
 
     return (
       <>
-        {isModalOpen && (
+        {isModalOpen && initialModalData != null && (
           <NewSliceFormModal
             open={isModalOpen}
             onClose={this.onCloseModal}

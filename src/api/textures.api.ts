@@ -1,3 +1,4 @@
+import { logToUser } from "../utils/logging";
 import axiosApi from "./API";
 
 /**
@@ -11,13 +12,16 @@ export function getUntaggedTexture(tagID: number): Promise<any> {
   return axiosApi.get(endpoint).then((response) => response.data);
 }
 
-export function getTexture(value: number | string): Promise<any> {
-  const isNumber = !isNaN(Number(value));
+export function getTexture(textureIdentifier: number | string): Promise<any> {
+  const isNumber = !isNaN(Number(textureIdentifier));
   const endpoint = isNumber
-    ? `/textureData/${value}`
-    : `/textureDataByName/${value}`;
+    ? `/textureData/${textureIdentifier}`
+    : `/textureDataByName/${textureIdentifier}`;
 
-  return axiosApi.get(endpoint).then((response) => response.data);
+  return axiosApi.get(endpoint).then((response) => {
+    logToUser("Fetched Texture: " + textureIdentifier);
+    return response.data;
+  });
 }
 
 export interface ITextureData {

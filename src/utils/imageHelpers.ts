@@ -61,7 +61,7 @@ export function calcPanningAndScale(
     zoomForScale: -1,
   };
 
-  const { divSpace, scale } = calcDivSpace(imageSpace, containerSize);
+  const { scale } = calcDivSpace(imageSpace, containerSize);
 
   imageSpace.zoomForScale = scale;
 
@@ -75,7 +75,7 @@ export function calcDivSpace(
   containerSize: { width: number; height: number }
 ) {
   // Calculate aspect ratios
-  const { scale, isWidthScaling } = findOptimalScaling(
+  const { scale } = findOptimalScaling(
     { width: imageSpace.width, height: imageSpace.height },
     containerSize
   );

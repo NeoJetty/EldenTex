@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import SliceGalleryView from "../features/SliceGalleryView";
-import SliceSearch from "../features/SliceSearch";
-import {
-  Slider,
-  Box,
-  Typography,
-  Button,
-  TextField,
-  Modal,
-} from "@mui/material";
+import { Box, Button, TextField, Modal } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
 import * as API from "../../api/slices.api";
 

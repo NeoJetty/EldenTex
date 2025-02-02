@@ -3,6 +3,7 @@ import tagManagementReducer from "./slices/tagManagmentSlice";
 import authReducer from "./slices/authSlice";
 import panZoomReducer from "./slices/panZoomSlice";
 import sliceReducer from "./slices/sliceSlice";
+import loggingReducer from "./slices/loggingSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     auth: authReducer,
     tagManagement: tagManagementReducer,
     panZoom: panZoomReducer,
+    logging: loggingReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
 });
