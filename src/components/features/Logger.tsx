@@ -31,7 +31,10 @@ const Logger: React.FC = () => {
       anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       onClose={() => setOpen(false)}
     >
-      <Alert severity="success" sx={{ textAlign: "center", minWidth: 100 }}>
+      <Alert
+        severity="success"
+        sx={{ textAlign: "center", minWidth: 100, fontSize: "1.05rem" }}
+      >
         {latestMessage}
       </Alert>
     </Snackbar>

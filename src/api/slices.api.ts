@@ -67,10 +67,7 @@ export function updateLink(sliceData: SlicePacket): Promise<SlicePacket> {
   const endpoint = `/links`;
 
   return axiosApi.put(endpoint, sliceData).then((response) => {
-    if (!response.data || typeof response.data !== "object") {
-      throw new Error("Invalid response format");
-    }
-
+    logToUser("Updated slice " + sliceData.sliceName);
     return response.data as SlicePacket;
   });
 }
@@ -84,10 +81,7 @@ export function getLinkData(
   return axiosApi
     .get(endpoint)
     .then((response) => {
-      if (!response.data || typeof response.data !== "object") {
-        throw new Error("Invalid response format");
-      }
-      return response.data; // You can adjust the return type if necessary
+      return response.data;
     })
     .catch((error) => {
       throw new Error(`Error fetching data: ${error.message}`);
@@ -98,6 +92,7 @@ export function deleteLink(linkId: number): Promise<void> {
   const endpoint = `/links/${linkId}`;
 
   return axiosApi.delete(endpoint).then((response) => {
+    logToUser("Deleted slice: " + linkId);
     return response.data.message;
   });
 }
