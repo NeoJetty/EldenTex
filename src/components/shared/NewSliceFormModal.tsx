@@ -22,13 +22,15 @@ const NewSliceFormModal: React.FC<NewSliceFormModalProps> = ({
   const dispatch = useDispatch();
 
   const handleSubmit = () => {
-    if (formData.sliceID == -1) {
+    if (formData.symbol.id == -1) {
       // new slice and link
-      API.createSlice(formData); // Server request
+      API.createSymbolAndSlice(formData); // Server request
       dispatch(addSlice(formData)); // Dispatch to Redux Toolkit store
     } else {
       // only new link
-      API.createLink(formData).then((response) => dispatch(addSlice(response))); // Server request
+      API.createSlice(formData).then((response) =>
+        dispatch(addSlice(response))
+      ); // Server request
     }
     onClose();
   };

@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { SlicePacket } from "../../utils/sharedTypes";
 
 interface SliceOverlayProps {
-  sliceData: SlicePacket;
+  slicePacket: SlicePacket;
   scaleFactor: number;
 }
 
 const SliceOverlay: React.FC<SliceOverlayProps> = ({
-  sliceData,
+  slicePacket: sliceData,
   scaleFactor = 1,
 }) => {
   const theme = useTheme();
@@ -17,11 +17,12 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
 
   // Destructure coordinates and description from sliceData
   const {
-    ID,
+    id,
     topLeft: { x: topLeftX, y: topLeftY },
     bottomRight: { x: bottomRightX, y: bottomRightY },
-    globalDescription: description,
-  } = sliceData;
+  } = sliceData.slice;
+
+  const symbolDescription = sliceData.symbol.description;
 
   // Calculate width and height from the coordinates
   const width = bottomRightX - topLeftX;
@@ -29,7 +30,7 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
 
   // Handle click navigation
   const handleClick = () => {
-    navigate(`/link/${ID}`);
+    navigate(`/link/${id}`);
   };
 
   const shadowSize = 10 * scaleFactor;
@@ -56,7 +57,7 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
         cursor: "pointer", // Indicate it's clickable
         transition: "background-color 0.3s, transform 0.2s", // Smooth hover effects
       }}
-      title={description} // Tooltip with the description
+      title={symbolDescription} // Tooltip with the description
       onMouseOver={(e) => {
         e.currentTarget.style.backgroundColor = theme.palette.action.hover; // Highlight on hover
         e.currentTarget.style.transform = "scale(1.02)"; // Slight enlargement

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import SliceOverlay from "./SliceOverlay";
-import { SlicePacket } from "../../utils/sharedTypes";
+import { SlicePacket, emptySlicePacket } from "../../utils/sharedTypes";
 import { calcPanningAndScale } from "../../utils/imageHelpers";
 
 interface SlicePreviewProps {
@@ -79,20 +79,12 @@ const SlicePreview = ({
     containerSize
   );
 
-  const slicePacket: SlicePacket = {
-    ID: textureID,
-    sliceID: 0,
-    textureID: 0,
-    topLeft: sliceSpace.topLeft,
-    bottomRight: sliceSpace.bottomRight,
-    localDescription: "Default description",
-    confidence: 0,
-    linkUserID: 0,
-    sliceName: "Default Slice",
-    globalDescription: "Default global description",
-    sliceUserID: 0,
-    textureSubtypeBase: "_n",
-  };
+  const slicePacket = emptySlicePacket;
+
+  slicePacket.slice.topLeft = sliceSpace.topLeft;
+  slicePacket.slice.bottomRight = sliceSpace.bottomRight;
+  slicePacket.slice.textureId = textureID;
+  slicePacket.slice.textureSubtypeBase = "_n";
 
   return (
     <>
@@ -126,7 +118,7 @@ const SlicePreview = ({
               transformOrigin: "top left",
             }}
           />
-          <SliceOverlay sliceData={slicePacket} scaleFactor={1} />
+          <SliceOverlay slicePacket={slicePacket} scaleFactor={1} />
         </div>
       </Box>
     </>

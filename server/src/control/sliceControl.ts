@@ -3,19 +3,19 @@ import { Database as TDatabase } from "better-sqlite3";
 
 import { SlicePacket } from "../util/sharedTypes.js";
 import {
+  addSymbol,
   addSlice,
-  addSliceLink,
   getSlicesByTextureId,
-  getSliceNamesByPartiaName,
-  getSlicePacketsBySliceName,
-  getLinkByID,
-  editSliceLink,
-  SliceTextureLinkRow,
-  markSliceLinkAsDeleted,
+  getSymbolNamesByPartiaName,
+  getSlicePacketsBySymbolName,
+  getSliceByID,
+  editSlice,
+  SlicesRow,
   markSliceAsDeleted,
+  markSymbolAsDeleted,
 } from "../service/slices.js";
 
-export const getSliceControl = (req: Request, res: Response): void => {
+export const getSlicesControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const { texture_ids } = req.params;
@@ -34,42 +34,43 @@ export const getSliceControl = (req: Request, res: Response): void => {
   }
 };
 
-export const addNewSliceControl = (req: Request, res: Response): void => {
+export const addSliceAndSymbolControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const validUserID: number = res.locals.validUserID;
     const slicePacket: SlicePacket = req.body;
 
-    // Add the new slice and get its ID
-    const generatedSliceID = addSlice(db, {
-      name: slicePacket.sliceName,
-      globalDescription: slicePacket.globalDescription,
+    // Add the new symbol and get its ID
+    const generatedSymbolID = addSymbol(db, {
+      name: slicePacket.symbol.name,
+      globalDescription: slicePacket.symbol.description,
       userID: validUserID,
     });
 
-    if (!generatedSliceID) {
-      res.status(400).json({ error: "Failed to add slice" });
+    if (!generatedSymbolID) {
+      res.status(400).json({ error: "Failed to add symbol" });
       return;
     }
 
-    const generatedLinkID = addSliceLink(db, {
-      sliceID: generatedSliceID,
-      textureID: slicePacket.textureID,
-      topLeftX: slicePacket.topLeft.x,
-      topLeftY: slicePacket.topLeft.y,
-      bottomRightX: slicePacket.bottomRight.x,
-      bottomRightY: slicePacket.bottomRight.y,
-      localDescription: slicePacket.localDescription,
-      confidence: slicePacket.confidence,
-      userID: validUserID,
-      textureSubtypeBase: slicePacket.textureSubtypeBase,
+    // Add the new slice link and get its ID
+    const generatedLinkID = addSlice(db, {
+      symbolId: generatedSymbolID,
+      textureId: slicePacket.slice.textureId,
+      topLeftX: slicePacket.slice.topLeft.x,
+      topLeftY: slicePacket.slice.topLeft.y,
+      bottomRightX: slicePacket.slice.bottomRight.x,
+      bottomRightY: slicePacket.slice.bottomRight.y,
+      localDescription: slicePacket.slice.description,
+      confidence: slicePacket.slice.confidence,
+      userId: validUserID,
+      textureSubtypeBase: slicePacket.slice.textureSubtypeBase,
     });
 
     if (generatedLinkID != null) {
       res.status(201).json({
-        message: "Slice and association added successfully",
-        sliceID: generatedSliceID,
-        SliceLinkID: generatedLinkID,
+        message: "Symbol and slice added successfully",
+        symbolId: generatedSymbolID,
+        sliceLinkId: generatedLinkID,
       });
     } else {
       res.status(400).json({ error: "Failed to add association" });
@@ -80,27 +81,24 @@ export const addNewSliceControl = (req: Request, res: Response): void => {
   }
 };
 
-export const addSliceAssociationControl = (
-  req: Request,
-  res: Response
-): void => {
+export const addSliceControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const validUserID: number = res.locals.validUserID;
     const slicePacket: SlicePacket = req.body;
 
-    // Call addAssociation with the extracted data
-    const result = addSliceLink(db, {
-      sliceID: slicePacket.sliceID,
-      textureID: slicePacket.textureID,
-      topLeftX: slicePacket.topLeft.x,
-      topLeftY: slicePacket.topLeft.y,
-      bottomRightX: slicePacket.bottomRight.x,
-      bottomRightY: slicePacket.bottomRight.y,
-      localDescription: slicePacket.localDescription,
-      confidence: slicePacket.confidence,
-      userID: validUserID,
-      textureSubtypeBase: slicePacket.textureSubtypeBase,
+    // Call addSliceLink with the extracted data
+    const result = addSlice(db, {
+      symbolId: slicePacket.slice.symbolId,
+      textureId: slicePacket.slice.textureId,
+      topLeftX: slicePacket.slice.topLeft.x,
+      topLeftY: slicePacket.slice.topLeft.y,
+      bottomRightX: slicePacket.slice.bottomRight.x,
+      bottomRightY: slicePacket.slice.bottomRight.y,
+      localDescription: slicePacket.slice.description,
+      confidence: slicePacket.slice.confidence,
+      userId: validUserID,
+      textureSubtypeBase: slicePacket.slice.textureSubtypeBase,
     });
 
     if (result != null) {
@@ -126,8 +124,8 @@ export const getAutocompleteNamesControl = (
     const userID: number = res.locals.validUserID;
     const { partial_name } = req.params;
 
-    const sliceNames = getSliceNamesByPartiaName(db, partial_name, userID);
-    res.json({ sliceNames });
+    const symbolNames = getSymbolNamesByPartiaName(db, partial_name, userID);
+    res.json({ symbolNames });
   } catch (err) {
     console.error("Database error:", (err as Error).message);
     res.status(500).json({ error: "Database error occurred" });
@@ -135,7 +133,7 @@ export const getAutocompleteNamesControl = (
 };
 
 // grabs an array of SlicePacket from the DB
-export const getSliceNamesByPartialNameControl = (
+export const getSlicesByPartialNameControl = (
   req: Request,
   res: Response
 ): void => {
@@ -145,7 +143,7 @@ export const getSliceNamesByPartialNameControl = (
     const { slice_name, confidence_threshold } = req.params;
 
     // Pass parameters to the service function
-    const slices = getSlicePacketsBySliceName(
+    const slices = getSlicePacketsBySymbolName(
       db,
       slice_name,
       parseFloat(confidence_threshold),
@@ -159,14 +157,14 @@ export const getSliceNamesByPartialNameControl = (
   }
 };
 
-export const getLinkByIDControl = (req: Request, res: Response): void => {
+export const getSliceByIDControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
-    const { link_id } = req.params;
-    const linkID: number = Number(link_id);
-    const userID: number = res.locals.validUserID;
+    const { slice_id } = req.params;
+    const sliceId: number = Number(slice_id);
+    const userId: number = res.locals.validUserID;
 
-    const slicePacket = getLinkByID(db, linkID, 101, userID);
+    const slicePacket = getSliceByID(db, sliceId, 101, userId);
 
     if (slicePacket) {
       res.json({ slicePacket });
@@ -179,7 +177,7 @@ export const getLinkByIDControl = (req: Request, res: Response): void => {
   }
 };
 
-export const getLinksQueryControl = (req: Request, res: Response): void => {
+export const getSlicesUseQueryControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const userID: number = res.locals.validUserID;
@@ -192,10 +190,10 @@ export const getLinksQueryControl = (req: Request, res: Response): void => {
     if (id) {
       // Fetch by ID and confidence
       const parsedId = parseInt(id as string, 10);
-      links = getLinkByID(db, parsedId, parsedConfidence, userID);
+      links = getSliceByID(db, parsedId, parsedConfidence, userID);
     } else if (name) {
       // Fetch by name and confidence
-      links = getSlicePacketsBySliceName(
+      links = getSlicePacketsBySymbolName(
         db,
         name as string,
         parsedConfidence,
@@ -209,58 +207,32 @@ export const getLinksQueryControl = (req: Request, res: Response): void => {
   }
 };
 
-export const editSliceLinkControl = (req: Request, res: Response): void => {
+export const editSliceControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const validUserID: number = res.locals.validUserID;
     const slicePacket: SlicePacket = req.body;
 
-    const sliceLinkRow: SliceTextureLinkRow = {
-      id: slicePacket.ID,
-      slice_id: slicePacket.sliceID,
-      texture_id: slicePacket.textureID,
-      top_left_x: slicePacket.topLeft.x,
-      top_left_y: slicePacket.topLeft.y,
-      bottom_right_x: slicePacket.bottomRight.x,
-      bottom_right_y: slicePacket.bottomRight.y,
-      local_description: slicePacket.localDescription || null,
-      confidence: slicePacket.confidence,
+    const sliceLinkRow: SlicesRow = {
+      id: slicePacket.slice.id,
+      symbol_id: slicePacket.slice.symbolId,
+      texture_id: slicePacket.slice.textureId,
+      top_left_x: slicePacket.slice.topLeft.x,
+      top_left_y: slicePacket.slice.topLeft.y,
+      bottom_right_x: slicePacket.slice.bottomRight.x,
+      bottom_right_y: slicePacket.slice.bottomRight.y,
+      description: slicePacket.slice.description,
+      confidence: slicePacket.slice.confidence,
       user_id: validUserID,
-      subtype_base: slicePacket.textureSubtypeBase || null,
+      subtype_base: slicePacket.slice.textureSubtypeBase,
     };
 
-    const updateResult = editSliceLink(db, sliceLinkRow);
+    const updateResult = editSlice(db, sliceLinkRow);
 
     if (updateResult) {
       res.status(200).json({ message: "Link updated successfully" });
     } else {
       res.status(400).json({ error: "Failed to update link" });
-    }
-  } catch (err) {
-    console.error("Error:", (err as Error).message);
-    res.status(500).json({ error: "An error occurred" });
-  }
-};
-
-export const markSliceLinkAsDeletedControl = (
-  req: Request,
-  res: Response
-): void => {
-  try {
-    const db: TDatabase = res.locals.db;
-    const validUserID: number = res.locals.validUserID;
-    const { link_id } = req.params; // Extract link ID from params
-
-    const linkID: number = Number(link_id);
-
-    const result = markSliceLinkAsDeleted(db, linkID, validUserID);
-
-    if (result) {
-      res
-        .status(200)
-        .json({ message: "Slice link marked as deleted successfully" });
-    } else {
-      res.status(400).json({ error: "Failed to mark slice link as deleted" });
     }
   } catch (err) {
     console.error("Error:", (err as Error).message);
@@ -275,9 +247,35 @@ export const markSliceAsDeletedControl = (
   try {
     const db: TDatabase = res.locals.db;
     const validUserID: number = res.locals.validUserID;
-    const { slice_id } = req.params; // Extract link ID from params
+    const { slice_id } = req.params;
 
-    const result = markSliceAsDeleted(db, Number(slice_id), validUserID);
+    const sliceId: number = Number(slice_id);
+
+    const result = markSliceAsDeleted(db, sliceId, validUserID);
+
+    if (result) {
+      res
+        .status(200)
+        .json({ message: "Slice link marked as deleted successfully" });
+    } else {
+      res.status(400).json({ error: "Failed to mark slice link as deleted" });
+    }
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const markSymbolAsDeletedControl = (
+  req: Request,
+  res: Response
+): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const validUserID: number = res.locals.validUserID;
+    const { symbol_id } = req.params;
+
+    const result = markSymbolAsDeleted(db, Number(symbol_id), validUserID);
 
     if (result) {
       res.status(200).json({ message: "Slice marked as deleted successfully" });
@@ -300,13 +298,13 @@ export const getSlicePacketsByPartialNameControl = (
     const { partial_name } = req.params;
 
     // Step 1: Get all slice names matching the partial name
-    const sliceNames = getSliceNamesByPartiaName(db, partial_name, userID);
+    const sliceNames = getSymbolNamesByPartiaName(db, partial_name, userID);
 
     // Step 2: Fetch SlicePackets for each slice name
     const allSlicePackets: SlicePacket[] = [];
     sliceNames.forEach((sliceName) => {
       try {
-        const slicePackets = getSlicePacketsBySliceName(
+        const slicePackets = getSlicePacketsBySymbolName(
           db,
           sliceName,
           101,

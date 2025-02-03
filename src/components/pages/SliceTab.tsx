@@ -3,7 +3,7 @@ import SliceGalleryView from "../features/SliceGalleryView";
 import SliceSearch from "../features/SliceSearch";
 import { Slider, Box, Typography } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
-import { getSlicesByName } from "../../api/requestSliceData";
+import * as API from "../../api/slices.api";
 
 const SliceTab: React.FC = () => {
   console.log("-- SLICE TAB RENDERING --");
@@ -14,7 +14,7 @@ const SliceTab: React.FC = () => {
   // Server request to fetch slices
   const fetchSlices = async (sliceName: string) => {
     try {
-      const data = await getSlicesByName(sliceName, confidenceThreshold); // API call
+      const data = await API.getSlicesByName(sliceName, confidenceThreshold); // API call
       console.log("Fetched slices:", data);
       setSlices(data); // Set slices to the state
     } catch (error) {

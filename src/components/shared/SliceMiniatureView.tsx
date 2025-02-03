@@ -3,11 +3,14 @@ import { SlicePacket } from "../../utils/sharedTypes";
 import { calcPanningAndScale } from "../../utils/imageHelpers";
 
 interface SliceMiniatureViewProps {
-  slice: SlicePacket;
+  slicePacket: SlicePacket;
   imgURL: string;
 }
 
-const SliceMiniatureView = ({ slice, imgURL }: SliceMiniatureViewProps) => {
+const SliceMiniatureView = ({
+  slicePacket,
+  imgURL,
+}: SliceMiniatureViewProps) => {
   const [imageDimensions, setImageDimensions] = useState<{
     width: number;
     height: number;
@@ -30,8 +33,8 @@ const SliceMiniatureView = ({ slice, imgURL }: SliceMiniatureViewProps) => {
 
   const sliceSpace = calcPanningAndScale(
     imageDimensions,
-    slice.topLeft,
-    slice.bottomRight,
+    slicePacket.slice.topLeft,
+    slicePacket.slice.bottomRight,
     { width: cardMediaSize, height: cardMediaSize } // Fixed container size
   );
 

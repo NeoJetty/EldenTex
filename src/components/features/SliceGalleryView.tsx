@@ -7,12 +7,12 @@ import { buildJPGPathFixSubtype } from "../../utils/urlPath";
 import SliceMiniatureView from "../shared/SliceMiniatureView";
 
 interface SliceGalleryViewProps {
-  slices: SlicePacket[];
+  slicePackets: SlicePacket[];
   sliceIDCallback?: (sliceID: number) => void; // Make the callback optional
 }
 
 const SliceGalleryView: React.FC<SliceGalleryViewProps> = ({
-  slices,
+  slicePackets,
   sliceIDCallback,
 }) => {
   console.log("-- SLICE GALLERY VIEW RENDERING --");
@@ -28,9 +28,11 @@ const SliceGalleryView: React.FC<SliceGalleryViewProps> = ({
   const [urlPaths, setUrlPaths] = React.useState<string[]>([]);
 
   useEffect(() => {
-    if (slices.length === 0) return;
+    if (slicePackets.length === 0) return;
 
-    const textureIDs = slices.map((slice) => slice.textureID);
+    const textureIDs = slicePackets.map(
+      (slicePacket) => slicePacket.slice.textureId
+    );
 
     API.getMultipleTextures(textureIDs)
       .then((textures: API.ITextureData[]) => {
@@ -38,29 +40,34 @@ const SliceGalleryView: React.FC<SliceGalleryViewProps> = ({
           (texture: API.ITextureData, index: number) =>
             buildJPGPathFixSubtype(
               texture.name,
-              slices[index].textureSubtypeBase
+              slicePackets[index].slice.textureSubtypeBase
             )
         );
         setUrlPaths(newUrlPaths); // ✅ Triggers re-render
       })
       .catch((error) => console.error("Error fetching textures:", error));
-  }, [slices]);
+  }, [slicePackets]);
 
   return (
     <Grid container spacing={3}>
-      {slices.map((slice, index) => (
-        <Grid item xs={12} sm={6} md={4} key={slice.ID}>
-          <Tooltip title={slice.globalDescription} placement="top-end">
+      {slicePackets.map((slicePacket, index) => (
+        <Grid item xs={12} sm={6} md={4} key={slicePacket.slice.id}>
+          <Tooltip title={slicePacket.symbol.description} placement="top-end">
             <div
               style={{ cursor: "pointer", textDecoration: "none" }}
-              onClick={() => handleCardClick(slice.ID)}
+              onClick={() => handleCardClick(slicePacket.slice.id)}
             >
               <Card>
-                <SliceMiniatureView slice={slice} imgURL={urlPaths[index]} />
+                <SliceMiniatureView
+                  slicePacket={slicePacket}
+                  imgURL={urlPaths[index]}
+                />
                 <CardContent>
-                  <Typography variant="h6">{slice.sliceName}</Typography>
+                  <Typography variant="h6">
+                    {slicePacket.symbol.name}
+                  </Typography>
                   <Typography variant="body2" color="textSecondary">
-                    Texture Type: {slice.textureSubtypeBase}
+                    Texture Type: {slicePacket.slice.textureSubtypeBase}
                   </Typography>
                 </CardContent>
               </Card>

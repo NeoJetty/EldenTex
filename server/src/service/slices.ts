@@ -1,64 +1,64 @@
 import { Database as TDatabase } from "better-sqlite3";
 import { SlicePacket } from "../util/sharedTypes.js";
 
-export interface SliceRow {
+export interface SymbolsRow {
   id: number;
   name: string;
-  global_description: string;
+  description: string;
   user_id: number;
 }
 
-export interface SliceTextureLinkRow {
+export interface SlicesRow {
   id: number;
   texture_id: number;
-  slice_id: number;
+  symbol_id: number;
   top_left_x: number;
   top_left_y: number;
   bottom_right_x: number;
   bottom_right_y: number;
-  local_description: string | null;
+  description: string;
   confidence: number;
   user_id: number;
-  subtype_base: string | null;
+  subtype_base: string;
 }
 
-export const addSliceLink = (
+export const addSlice = (
   db: TDatabase,
   linkData: {
-    sliceID: number;
-    textureID: number;
+    symbolId: number;
+    textureId: number;
     topLeftX: number;
     topLeftY: number;
     bottomRightX: number;
     bottomRightY: number;
     localDescription: string;
     confidence: number;
-    userID: number;
+    userId: number;
     textureSubtypeBase: string;
   }
 ): number | null => {
   try {
     const sqlQuery = `
-      INSERT INTO slice_texture_links 
-      (texture_id, slice_id, top_left_x, top_left_y, bottom_right_x, bottom_right_y, local_description, confidence, user_id, subtype_base) 
-      VALUES (@textureID, @sliceID, @topLeftX, @topLeftY, @bottomRightX, @bottomRightY, @localDescription, @confidence, @userID, @textureSubtypeBase);
+      INSERT INTO slices 
+      (texture_id, symbol_id, top_left_x, top_left_y, bottom_right_x, bottom_right_y, local_description, confidence, user_id, subtype_base) 
+      VALUES (@textureId, @symbolId, @topLeftX, @topLeftY, @bottomRightX, @bottomRightY, @localDescription, @confidence, @userId, @textureSubtypeBase);
     `;
 
     const result = db.prepare(sqlQuery).run(linkData);
-    return result.lastInsertRowid as number; // Return the sliceID for further use
+    return result.lastInsertRowid as number;
   } catch (err) {
     console.error("Database error:", err);
-    return null; // Return null on failure
+    return null;
   }
 };
 
-export const addSlice = (
+export const addSymbol = (
   db: TDatabase,
   sliceData: { name: string; globalDescription: string; userID: number }
 ): number | null => {
   try {
     const sqlQuery = `
-      INSERT INTO slices (name, global_description, user_id) 
+      INSERT INTO symbols (name, global_description, user_id) 
       VALUES (@name, @globalDescription, @userID);
     `;
     const result = db.prepare(sqlQuery).run(sliceData);
@@ -71,61 +71,62 @@ export const addSlice = (
   }
 };
 
+// Define a type for the combined row as userID and description are in both tables
+interface CombinedRow extends SlicesRow, SymbolsRow {
+  slice_user_id: number;
+  symbol_user_id: number;
+  local_description: string;
+  global_description: string;
+}
+
 export const getSlicesByTextureId = (
   db: TDatabase,
   textureIds: number[]
 ): SlicePacket[] => {
   try {
     const sqlQuery = `
-  SELECT
-    LINK.id AS id,
-    LINK.slice_id AS slice_id,
-    LINK.texture_id AS texture_id,
-    LINK.user_id AS user_id,
-    LINK.top_left_x AS top_left_x,
-    LINK.top_left_y AS top_left_y,
-    LINK.bottom_right_x AS bottom_right_x,
-    LINK.bottom_right_y AS bottom_right_y,
-    LINK.local_description AS local_description,
-    LINK.confidence AS confidence,
-    LINK.subtype_base AS subtype_base,
-    SLICE.id AS slice_id,
-    SLICE.name AS name,
-    SLICE.global_description AS global_description,
-    SLICE.user_id AS user_id
-  FROM slice_texture_links AS LINK
-  JOIN slices AS SLICE ON LINK.slice_id = SLICE.id
-  WHERE LINK.texture_id IN (${textureIds.map(() => "?").join(",")})
-    AND LINK.deleted_at IS NULL;
-`;
+    SELECT
+      LINK.id AS id,
+      LINK.texture_id AS texture_id,
+      LINK.symbol_id AS symbol_id,
+      LINK.user_id AS slice_user_id,
+      LINK.top_left_x AS top_left_x,
+      LINK.top_left_y AS top_left_y,
+      LINK.bottom_right_x AS bottom_right_x,
+      LINK.bottom_right_y AS bottom_right_y,
+      LINK.local_description AS local_description,
+      LINK.confidence AS confidence,
+      LINK.subtype_base AS subtype_base,
+      SLICE.id AS symbol_id,
+      SLICE.name AS name,
+      SLICE.global_description AS global_description,
+      SLICE.user_id AS symbol_user_id
+    FROM slices AS LINK
+    JOIN symbols AS SLICE ON LINK.symbol_id = SLICE.id
+    WHERE LINK.texture_id IN (${textureIds.map(() => "?").join(",")})
+      AND LINK.deleted_at IS NULL;
+    `;
 
-    // Fetch rows with proper type assertion
-    const rows = db.prepare(sqlQuery).all(textureIds) as (SliceTextureLinkRow &
-      SliceRow)[];
+    const rows = db.prepare(sqlQuery).all(textureIds) as CombinedRow[];
 
-    // Map rows into SlicePacket
     return rows.map((row) => ({
-      // Fields from `slice_texture_links`
-      ID: row.id,
-      sliceID: row.slice_id,
-      textureID: row.texture_id,
-      linkUserID: row.user_id,
-      topLeft: {
-        x: row.top_left_x,
-        y: row.top_left_y,
+      slice: {
+        id: row.id,
+        symbolId: row.symbol_id,
+        textureId: row.texture_id,
+        topLeft: { x: row.top_left_x, y: row.top_left_y },
+        bottomRight: { x: row.bottom_right_x, y: row.bottom_right_y },
+        description: row.local_description,
+        confidence: row.confidence,
+        userId: row.slice_user_id,
+        textureSubtypeBase: row.subtype_base,
       },
-      bottomRight: {
-        x: row.bottom_right_x,
-        y: row.bottom_right_y,
+      symbol: {
+        id: row.symbol_id,
+        name: row.name,
+        description: row.global_description,
+        userId: row.symbol_user_id,
       },
-      localDescription: row.local_description || "",
-      confidence: row.confidence,
-      textureSubtypeBase: row.subtype_base || "",
-
-      // Fields from `slices`
-      sliceName: row.name,
-      globalDescription: row.global_description,
-      sliceUserID: row.user_id,
     }));
   } catch (err) {
     console.error("Database error:", err);
@@ -135,14 +136,14 @@ export const getSlicesByTextureId = (
 
 export type AutocompleteNameResult = { name: string }[];
 
-export const getSliceNamesByPartiaName = (
+export const getSymbolNamesByPartiaName = (
   db: TDatabase,
   partialName: string,
   userID: number
 ): string[] => {
   try {
     const sqlQuery = `
-      SELECT name FROM slices WHERE name LIKE '%${partialName}%' AND user_id = @userID AND deleted_at IS NULL;
+      SELECT name FROM symbols WHERE name LIKE '%${partialName}%' AND user_id = @userID AND deleted_at IS NULL;
     `;
     const result = db
       .prepare(sqlQuery)
@@ -156,78 +157,74 @@ export const getSliceNamesByPartiaName = (
   }
 };
 
-export const getSlicePacketsBySliceName = (
+export const getSlicePacketsBySymbolName = (
   db: TDatabase,
   sliceName: string,
   confidenceThreshold: number,
   userID: number
 ): SlicePacket[] => {
-  // Step 1: Query `slices` table and cast result to `SliceRow`
   const sliceQuery = `
     SELECT *
-    FROM slices
+    FROM symbols
     WHERE name = ?
       AND user_id = ? AND deleted_at IS NULL
   `;
 
   console.log(userID, sliceName);
-  const slice = db.prepare(sliceQuery).get(sliceName, userID) as
-    | SliceRow
-    | undefined;
-
-  if (!slice) {
+  const symbol = db.prepare(sliceQuery).get(sliceName, userID) as SymbolsRow;
+  if (!symbol) {
     throw new Error("Slice not found");
   }
 
-  // Step 2: Query `slice_texture_links` table and cast results to `SliceTextureLinkRow[]`
   const linksQuery = `
     SELECT *
-    FROM slice_texture_links
-    WHERE slice_id = ?
-      AND confidence >= ?
+    FROM slices
+    WHERE symbol_id = ? AND confidence >= ?
   `;
 
   const links = db
     .prepare(linksQuery)
-    .all(slice.id, confidenceThreshold) as SliceTextureLinkRow[];
+    .all(symbol.id, confidenceThreshold) as SlicesRow[];
 
   // Step 3: Map rows to SlicePacket
-  return links.map((link) => ({
-    // slice_texture_links fields
-    ID: link.id,
-    sliceID: link.slice_id,
-    textureID: link.texture_id,
-    topLeft: { x: link.top_left_x, y: link.top_left_y },
-    bottomRight: { x: link.bottom_right_x, y: link.bottom_right_y },
-    localDescription: link.local_description || "",
-    confidence: link.confidence,
-    linkUserID: link.user_id,
-
-    // slices fields (shared across all SlicePackets for this slice)
-    sliceName: slice.name,
-    globalDescription: slice.global_description,
-    sliceUserID: slice.user_id,
-    textureSubtypeBase: link.subtype_base || "",
+  return links.map((slice) => ({
+    slice: {
+      id: slice.id,
+      symbolId: slice.symbol_id,
+      textureId: slice.texture_id,
+      topLeft: { x: slice.top_left_x, y: slice.top_left_y },
+      bottomRight: { x: slice.bottom_right_x, y: slice.bottom_right_y },
+      description: slice.description,
+      confidence: slice.confidence,
+      userId: slice.user_id,
+      textureSubtypeBase: slice.subtype_base,
+    },
+    symbol: {
+      id: symbol.id,
+      name: symbol.name,
+      description: symbol.description,
+      userId: symbol.user_id,
+    },
   }));
 };
 
-export const getLinkByID = (
+export const getSliceByID = (
   db: TDatabase,
-  linkID: number,
+  sliceId: number,
   confidence: number,
-  userID: number
+  userId: number
 ): SlicePacket[] => {
   try {
-    console.log("linkID", linkID, "confidence", confidence, "userID", userID);
+    console.log("linkId", sliceId, "confidence", confidence, "userId", userId);
     // Query for the slice texture link data with filters for confidence and userID
-    const linkQuery = `
+    const sliceQuery = `
       SELECT *
-      FROM slice_texture_links
+      FROM slices
       WHERE id = ? AND confidence >= ? AND user_id = ? AND deleted_at IS NULL
     `;
     const links = db
-      .prepare(linkQuery)
-      .all(linkID, confidence, userID) as SliceTextureLinkRow[];
+      .prepare(sliceQuery)
+      .all(sliceId, confidence, userId) as SlicesRow[];
 
     // If no links found, return an empty array
     if (!links.length) {
@@ -235,32 +232,34 @@ export const getLinkByID = (
     }
 
     // Query for the corresponding slice data for each link
-    const sliceQuery = `
+    const symbolQuery = `
       SELECT *
-      FROM slices
+      FROM symbols
       WHERE id = ?
     `;
 
-    return links.map((link) => {
-      const slice = db.prepare(sliceQuery).get(link.slice_id) as SliceRow;
+    return links.map((slice) => {
+      const symbol = db.prepare(symbolQuery).get(slice.symbol_id) as SymbolsRow;
 
       // Combine data into a SlicePacket
       return {
-        // slice_texture_links fields
-        ID: link.id,
-        sliceID: link.slice_id,
-        textureID: link.texture_id,
-        topLeft: { x: link.top_left_x, y: link.top_left_y },
-        bottomRight: { x: link.bottom_right_x, y: link.bottom_right_y },
-        localDescription: link.local_description || "",
-        confidence: link.confidence,
-        linkUserID: link.user_id,
-
-        // slices fields
-        sliceName: slice.name,
-        globalDescription: slice.global_description,
-        sliceUserID: slice.user_id,
-        textureSubtypeBase: link.subtype_base || "",
+        slice: {
+          id: slice.id,
+          symbolId: slice.symbol_id,
+          textureId: slice.texture_id,
+          topLeft: { x: slice.top_left_x, y: slice.top_left_y },
+          bottomRight: { x: slice.bottom_right_x, y: slice.bottom_right_y },
+          description: slice.description,
+          confidence: slice.confidence,
+          userId: slice.user_id,
+          textureSubtypeBase: slice.subtype_base,
+        },
+        symbol: {
+          id: symbol.id,
+          name: symbol.name,
+          description: symbol.description,
+          userId: symbol.user_id,
+        },
       };
     });
   } catch (err) {
@@ -269,13 +268,10 @@ export const getLinkByID = (
   }
 };
 
-export const editSliceLink = (
-  db: TDatabase,
-  linkData: SliceTextureLinkRow
-): boolean => {
+export const editSlice = (db: TDatabase, linkData: SlicesRow): boolean => {
   try {
     const sqlQuery = `
-      UPDATE slice_texture_links
+      UPDATE slices
       SET 
         texture_id = @texture_id,
         top_left_x = @top_left_x,
@@ -285,7 +281,7 @@ export const editSliceLink = (
         local_description = @local_description,
         confidence = @confidence,
         subtype_base = @subtype_base
-      WHERE id = @id AND user_id = @user_id AND slice_id = @slice_id;
+      WHERE id = @id AND user_id = @user_id AND symbol_id = @symbol_id;
     `;
 
     const result = db.prepare(sqlQuery).run({
@@ -298,19 +294,19 @@ export const editSliceLink = (
   }
 };
 
-export const markSliceLinkAsDeleted = (
+export const markSliceAsDeleted = (
   db: TDatabase,
-  linkID: number,
-  userID: number
+  linkId: number,
+  userId: number
 ): boolean => {
   try {
     const sqlQuery = `
-      UPDATE slice_texture_links
+      UPDATE slices
       SET deleted_at = CURRENT_TIMESTAMP
-      WHERE id = @linkID AND user_id = @userID;
+      WHERE id = @linkId AND user_id = @userId;
     `;
 
-    const result = db.prepare(sqlQuery).run({ linkID, userID });
+    const result = db.prepare(sqlQuery).run({ linkID: linkId, userId });
     return result.changes > 0; // Return true if a row was updated
   } catch (err) {
     console.error("Database error:", err);
@@ -318,21 +314,23 @@ export const markSliceLinkAsDeleted = (
   }
 };
 
-export const markSliceAsDeleted = (
+export const markSymbolAsDeleted = (
   db: TDatabase,
   sliceId: number,
-  userID: number
+  userId: number
 ): boolean => {
   try {
     db.transaction(() => {
       // Mark the slice as deleted
       const deleteSliceQuery = `
-        UPDATE slices
+        UPDATE symbols
         SET deleted_at = CURRENT_TIMESTAMP
-        WHERE id = @sliceId AND user_id = @userID;
+        WHERE id = @sliceId AND user_id = @userId;
       `;
 
-      const sliceResult = db.prepare(deleteSliceQuery).run({ sliceId, userID });
+      const sliceResult = db
+        .prepare(deleteSliceQuery)
+        .run({ sliceId, userID: userId });
 
       // If no slice was marked as deleted, skip link deletion
       if (sliceResult.changes === 0) {
@@ -341,12 +339,12 @@ export const markSliceAsDeleted = (
 
       // Mark all related links as deleted
       const deleteLinksQuery = `
-        UPDATE slice_texture_links
+        UPDATE slices
         SET deleted_at = CURRENT_TIMESTAMP
-        WHERE slice_id = @sliceId AND user_id = @userID;
+        WHERE symbol_id = @sliceId AND user_id = @userId;
       `;
 
-      db.prepare(deleteLinksQuery).run({ sliceId, userID });
+      db.prepare(deleteLinksQuery).run({ sliceId, userId });
     })();
 
     return true; // Transaction completed successfully

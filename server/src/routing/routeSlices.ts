@@ -1,16 +1,16 @@
 import { Application } from "express";
 // Import controllers
 import {
-  addNewSliceControl,
-  addSliceAssociationControl,
-  getSliceControl,
+  addSliceAndSymbolControl,
+  addSliceControl,
+  getSlicesControl,
   getAutocompleteNamesControl,
-  getSliceNamesByPartialNameControl,
-  getLinksQueryControl,
-  getLinkByIDControl,
-  editSliceLinkControl,
-  markSliceLinkAsDeletedControl,
+  getSlicesByPartialNameControl,
+  getSlicesUseQueryControl,
+  getSliceByIDControl,
+  editSliceControl,
   markSliceAsDeletedControl,
+  markSymbolAsDeletedControl,
   getSlicePacketsByPartialNameControl,
 } from "../control/sliceControl.js";
 
@@ -24,61 +24,63 @@ import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
 import { linksQuerySchema } from "../middleware/validationSchemas/links/links.schema.js";
 
 function routeSlices(app: Application): void {
-  // Route for adding a new slice with link (2 operations)
+  // Route for adding a new symbol with slice (2 operations)
   app.post(
-    "/api/slices/slice",
+    "/api/symbols",
     validateResource(emptySchema),
-    addNewSliceControl
+    addSliceAndSymbolControl
   );
 
-  app.post(
-    "/api/links",
+  app.post("/api/slices", validateResource(emptySchema), addSliceControl);
+
+  app.get(
+    "/api/slices/byTexture/:texture_ids",
     validateResource(emptySchema),
-    addSliceAssociationControl
+    getSlicesControl
   );
 
   app.get(
-    "/api/slices/:texture_ids",
-    validateResource(emptySchema),
-    getSliceControl
-  );
-
-  app.get(
-    "/api/slices/autocompleteNames/:partial_name",
+    "/api/symbolNames/autocomplete/:partial_name",
     validateResource(emptySchema),
     getAutocompleteNamesControl
   );
 
   app.get(
-    "/api/links/:link_id",
+    "/api/slices/:slice_id",
     validateResource(emptySchema),
-    getLinkByIDControl
+    getSliceByIDControl
   );
 
   app.get(
     "/api/slices/:slice_name/:confidence_threshold",
     validateResource(emptySchema),
-    getSliceNamesByPartialNameControl
+    getSlicesByPartialNameControl
   );
 
   app.get(
-    "/api/slicePacketsByAutocomplete/:partial_name",
+    "/api/slicePackets/autocomplete/:partial_name",
     validateResource(emptySchema),
     getSlicePacketsByPartialNameControl
   );
 
   // { id, name, confidence } query params
-  app.get("/api/links", validateQuery(linksQuerySchema), getLinksQueryControl);
-  app.put("/api/links", validateBody(emptySchema), editSliceLinkControl);
-  app.delete(
-    "/api/links/:link_id",
-    validateResource(emptySchema), // Add appropriate validation here
-    markSliceLinkAsDeletedControl
+  app.get(
+    "/api/slices",
+    validateQuery(linksQuerySchema),
+    getSlicesUseQueryControl
   );
+
+  app.put("/api/slices", validateBody(emptySchema), editSliceControl);
+
   app.delete(
     "/api/slices/:slice_id",
     validateResource(emptySchema), // Add appropriate validation here
     markSliceAsDeletedControl
+  );
+  app.delete(
+    "/api/symbols/:symbol_id",
+    validateResource(emptySchema), // Add appropriate validation here
+    markSymbolAsDeletedControl
   );
 }
 

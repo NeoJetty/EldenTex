@@ -44,33 +44,9 @@ export interface TagVote {
   vote: boolean;
 }
 
-export interface SlicePacket {
-  // slice_texture_associations
-  ID: number;
-  sliceID: number;
-  textureID: number;
-  topLeft: {
-    x: number;
-    y: number;
-  };
-  bottomRight: {
-    x: number;
-    y: number;
-  };
-  localDescription: string;
-  confidence: number;
-  linkUserID: number;
-
-  // slices
-  sliceName: string;
-  globalDescription: string;
-  sliceUserID: number; // is it possible to link to another users slice? probably
-  textureSubtypeBase: string;
-}
-
 export interface Slice {
   id: number;
-  sliceId: number;
+  symbolId: number;
   textureId: number;
   topLeft: {
     x: number;
@@ -80,44 +56,44 @@ export interface Slice {
     x: number;
     y: number;
   };
-  localDescription: string;
+  description: string;
   confidence: number;
-  linkUserId: number;
+  userId: number;
   textureSubtypeBase: string;
 }
 
 export const emptySlice: Slice = {
   id: -1,
-  sliceId: -1,
+  symbolId: -1,
   textureId: -1,
   topLeft: { x: 0, y: 0 },
   bottomRight: { x: 0, y: 0 },
-  localDescription: "",
+  description: "",
   confidence: -1,
-  linkUserId: -1,
+  userId: -1,
   textureSubtypeBase: "",
 };
 
 export interface Symbol {
   id: number;
-  sliceName: string;
-  globalDescription: string;
-  sliceUserId: number; // is it possible to link to another users slice? or always copy the slice to your own userID?
+  name: string;
+  description: string;
+  userId: number; // is it possible to link to another users slice? or always copy the slice to your own userID?
 }
 
 export const emptySymbol: Symbol = {
   id: -1,
-  sliceName: "",
-  globalDescription: "",
-  sliceUserId: -1,
+  name: "",
+  description: "",
+  userId: -1,
 };
 
-export interface SlicePacket2 {
+export interface SlicePacket {
   slice: Slice;
   symbol: Symbol;
 }
 
-export const emptySlicePacket: SlicePacket2 = {
+export const emptySlicePacket: SlicePacket = {
   slice: emptySlice,
   symbol: emptySymbol,
 };

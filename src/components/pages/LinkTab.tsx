@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+// MUI
 import {
   Box,
   Typography,
@@ -8,13 +7,16 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
+// libs
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+// project
 import SlicePreview from "../shared/SlicePreview";
 import { SlicePacket } from "../../utils/sharedTypes";
 import { buildJPGPathFixSubtype } from "../../utils/urlPath";
 import * as APITex from "../../api/textures.api";
 import * as APISlice from "../../api/slices.api";
 import SliceLinkEnumeration from "../features/SliceLinkEnumeration";
-import NewSliceFormModal from "../shared/NewSliceFormModal";
 import EditLinkFormModal from "../shared/EditLinkFormModal";
 
 const LinkTab: React.FC = () => {
@@ -33,12 +35,14 @@ const LinkTab: React.FC = () => {
   useEffect(() => {
     const fetchSlicePacket = async () => {
       try {
-        const response = await APISlice.getLinkData(Number(link_id), 0);
+        const response = await APISlice.getSlices(Number(link_id), 0);
         const slicePacket = response.links[0] as SlicePacket;
 
         setSlicePacket(slicePacket);
         // Fetch textureName using textureID
-        const textureData = await APITex.getTexture(slicePacket.textureID);
+        const textureData = await APITex.getTexture(
+          slicePacket.slice.textureId
+        );
 
         setTextureName(textureData[0].name); // Set textureName
         // Generate image URL based on textureName
@@ -75,8 +79,8 @@ const LinkTab: React.FC = () => {
       {/* Left Panel for Slice Preview */}
       <Box sx={{ flex: 1, marginRight: 4 }}>
         <SlicePreview
-          topLeft={slicePacket.topLeft}
-          bottomRight={slicePacket.bottomRight}
+          topLeft={slicePacket.slice.topLeft}
+          bottomRight={slicePacket.slice.bottomRight}
           imgURL={imgURL} // Pass dynamically generated image URL
         />
       </Box>
@@ -92,78 +96,79 @@ const LinkTab: React.FC = () => {
               {/* Basic Details */}
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Link ID:</Typography>
-                <Typography>{slicePacket.ID}</Typography>
+                <Typography>{slicePacket.slice.id}</Typography>
               </Grid>
               <Grid
                 item
                 xs={6}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                onClick={() => navigate(`/slice/${slicePacket.sliceID}`)}
+                onClick={() => navigate(`/slice/${slicePacket.symbol.id}`)}
                 style={{ cursor: "pointer", position: "relative" }}
               >
                 <Typography variant="subtitle1">Slice ID:</Typography>
-                <Typography>{slicePacket.sliceID}</Typography>
+                <Typography>{slicePacket.symbol.id}</Typography>
 
                 {hovered && (
-                  <SliceLinkEnumeration sliceID={slicePacket.sliceID} />
+                  <SliceLinkEnumeration sliceID={slicePacket.symbol.id} />
                 )}
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Texture ID:</Typography>
-                <Typography>{slicePacket.textureID}</Typography>
+                <Typography>{slicePacket.slice.textureId}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Texture Name:</Typography>
                 <Typography>{textureName}</Typography> {/* Show textureName */}
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="subtitle1">Link User ID:</Typography>
-                <Typography>{slicePacket.linkUserID}</Typography>
+                <Typography variant="subtitle1">Slice User ID:</Typography>
+                <Typography>{slicePacket.slice.userId}</Typography>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="subtitle1">Slice User ID:</Typography>
-                <Typography>{slicePacket.sliceUserID}</Typography>
+                <Typography variant="subtitle1">Symbol User ID:</Typography>
+                <Typography>{slicePacket.symbol.userId}</Typography>
               </Grid>
 
               {/* Coordinates */}
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Top Left:</Typography>
                 <Typography>
-                  ({slicePacket.topLeft.x}, {slicePacket.topLeft.y})
+                  ({slicePacket.slice.topLeft.x}, {slicePacket.slice.topLeft.y})
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Bottom Right:</Typography>
                 <Typography>
-                  ({slicePacket.bottomRight.x}, {slicePacket.bottomRight.y})
+                  ({slicePacket.slice.bottomRight.x},{" "}
+                  {slicePacket.slice.bottomRight.y})
                 </Typography>
               </Grid>
 
               {/* Descriptions */}
               <Grid item xs={12}>
                 <Typography variant="subtitle1">Slice Name:</Typography>
-                <Typography>{slicePacket.sliceName}</Typography>
+                <Typography>{slicePacket.symbol.name}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">Local Description:</Typography>
-                <Typography>{slicePacket.localDescription}</Typography>
+                <Typography variant="subtitle1">Slice Description:</Typography>
+                <Typography>{slicePacket.slice.description}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">Global Description:</Typography>
-                <Typography>{slicePacket.globalDescription}</Typography>
+                <Typography variant="subtitle1">Symbol Description:</Typography>
+                <Typography>{slicePacket.symbol.description}</Typography>
               </Grid>
 
               {/* Other Details */}
               <Grid item xs={6}>
                 <Typography variant="subtitle1">Confidence:</Typography>
-                <Typography>{slicePacket.confidence}</Typography>
+                <Typography>{slicePacket.slice.confidence}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography variant="subtitle1">
                   Texture Subtype Base:
                 </Typography>
-                <Typography>{slicePacket.textureSubtypeBase}</Typography>
+                <Typography>{slicePacket.slice.textureSubtypeBase}</Typography>
               </Grid>
             </Grid>
             <Button
@@ -185,8 +190,11 @@ const LinkTab: React.FC = () => {
           onClose={handleCloseModal}
           initialData={{
             ...slicePacket,
-            topLeft: slicePacket.topLeft,
-            bottomRight: slicePacket.bottomRight,
+            slice: {
+              ...slicePacket.slice,
+              topLeft: { ...slicePacket.slice.topLeft },
+              bottomRight: { ...slicePacket.slice.bottomRight },
+            },
           }}
           setParentSlicePacket={setSlicePacket}
           imgURL={imgURL}

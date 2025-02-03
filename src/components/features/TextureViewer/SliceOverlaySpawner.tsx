@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { requestSliceData } from "../../../api/requestSliceData.js";
+import * as API from "../../../api/slices.api.js";
 import SliceOverlay from "../../shared/SliceOverlay.js";
 import { SlicePacket } from "../../../utils/sharedTypes.js";
 
@@ -14,7 +14,7 @@ const SliceOverlaySpawner: React.FC<SliceOverlaySpawnerProps> = ({
 
   useEffect(() => {
     console.log("Texture ID changed:", textureID);
-    requestSliceData([textureID])
+    API.getSlicesByTexture([textureID])
       .then((data) => {
         setSlices(data);
       }) // Save fetched data to local state
@@ -23,10 +23,10 @@ const SliceOverlaySpawner: React.FC<SliceOverlaySpawnerProps> = ({
 
   return (
     <>
-      {slices.map((slice) => (
+      {slices.map((slicePacket) => (
         <SliceOverlay
-          key={slice.ID} // Use id directly from SlicePacket
-          sliceData={slice}
+          key={slicePacket.slice.id} // Use id directly from SlicePacket
+          slicePacket={slicePacket}
           scaleFactor={4}
         />
       ))}

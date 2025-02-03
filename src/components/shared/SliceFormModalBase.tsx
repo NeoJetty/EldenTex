@@ -21,7 +21,7 @@ interface SliceFormModalBaseProps {
   formData: SlicePacket;
   setFormData: (data: SlicePacket) => void;
   onSubmit: () => void;
-  onDelete?: (id: number) => void; // Optional delete callback
+  onDelete?: (id: number) => void;
   imgURL: string;
 }
 
@@ -37,34 +37,56 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
 
   const changeCoordinates =
-    (field: keyof SlicePacket) => (x: number, y: number) => {
-      setFormData({ ...formData, [field]: { x, y } });
+    (field: "topLeft" | "bottomRight") => (x: number, y: number) => {
+      setFormData({
+        ...formData,
+        slice: {
+          ...formData.slice,
+          [field]: { x, y },
+        },
+      });
     };
 
   const handleSliceIDChange = (chosenSliceID: number): void => {
-    setFormData({ ...formData, sliceID: chosenSliceID });
+    setFormData({
+      ...formData,
+      slice: { ...formData.slice, id: chosenSliceID },
+    });
+    // TODO fill or deactivate symbol description and symbol name
   };
 
-  const handleChange =
-    (field: keyof SlicePacket) =>
+  const handleSliceChange =
+    (field: keyof SlicePacket["slice"]) =>
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setFormData({ ...formData, [field]: event.target.value });
+      setFormData({
+        ...formData,
+        slice: {
+          ...formData.slice,
+          [field]: event.target.value,
+        },
+      });
     };
 
-  const handleDeleteClick = () => {
-    setConfirmDeleteOpen(true);
-  };
+  const handleSymbolChange =
+    (field: keyof SlicePacket["symbol"]) =>
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData({
+        ...formData,
+        symbol: {
+          ...formData.symbol,
+          [field]: event.target.value,
+        },
+      });
+    };
 
+  const handleDeleteClick = () => setConfirmDeleteOpen(true);
   const confirmDelete = () => {
     setConfirmDeleteOpen(false);
     if (onDelete) {
-      onDelete(formData.ID); // Pass the slice ID to the delete callback
+      onDelete(formData.slice.id);
     }
   };
-
-  const cancelDelete = () => {
-    setConfirmDeleteOpen(false);
-  };
+  const cancelDelete = () => setConfirmDeleteOpen(false);
 
   return (
     <>
@@ -86,31 +108,19 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
             maxWidth: "1000px",
           }}
         >
-          {/* Image Section */}
           <SlicePreview
-            topLeft={formData.topLeft}
-            bottomRight={formData.bottomRight}
+            topLeft={formData.slice.topLeft}
+            bottomRight={formData.slice.bottomRight}
             imgURL={imgURL}
           />
 
-          {/* Form Section */}
           <Box sx={{ flex: 1 }}>
-            {/* ID Fields */}
             <Grid container spacing={1} marginBottom={0}>
               <Grid size={2}>
                 <TextField
-                  label="Link ID"
-                  value={formData.ID || ""}
-                  disabled
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-              <Grid size={2}>
-                <TextField
-                  label="Link uID"
+                  label="Slice ID"
                   type="number"
-                  value={formData.linkUserID || ""}
+                  value={formData.slice.id || ""}
                   disabled
                   fullWidth
                   margin="normal"
@@ -118,76 +128,25 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
               </Grid>
               <Grid size={2}>
                 <TextField
-                  label="Texture ID"
-                  value={formData.textureID || ""}
-                  disabled
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-              <Grid size={2}>
-                <Box
-                  onClick={() =>
-                    (window.location.href = `/slice/${formData.sliceID}`)
-                  }
-                  sx={{
-                    cursor: "pointer",
-                    display: "inline-block",
-                    width: "100%",
-                  }}
-                >
-                  <TextField
-                    label="Slice ID"
-                    type="number"
-                    value={formData.sliceID || ""}
-                    disabled
-                    fullWidth
-                    margin="normal"
-                  />
-                </Box>
-              </Grid>
-
-              <Grid size={2}>
-                <TextField
-                  label="Slice uID"
+                  label="User ID"
                   type="number"
-                  value={formData.sliceUserID || ""}
+                  value={formData.slice.userId || ""}
                   disabled
                   fullWidth
                   margin="normal"
                 />
               </Grid>
-            </Grid>
-            {/* Coordinates */}
-            <Grid container spacing={1} marginBottom={0}>
-              <Grid size={2}></Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Top Left Y"
-                  type="number"
-                  value={formData.topLeft?.y || ""}
-                  onChange={(event) =>
-                    changeCoordinates("topLeft")(
-                      formData.topLeft?.x || 0,
-                      parseFloat(event.target.value)
-                    )
-                  }
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-              <Grid size={2}></Grid>
             </Grid>
             <Grid container spacing={1} marginBottom={0}>
               <Grid size={4}>
                 <TextField
                   label="Top Left X"
                   type="number"
-                  value={formData.topLeft?.x || ""}
+                  value={formData.slice.topLeft.x || ""}
                   onChange={(event) =>
                     changeCoordinates("topLeft")(
                       parseFloat(event.target.value),
-                      formData.topLeft?.y || 0
+                      formData.slice.topLeft.y
                     )
                   }
                   fullWidth
@@ -198,30 +157,11 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
                 <TextField
                   label="Bottom Right X"
                   type="number"
-                  value={formData.bottomRight?.x || ""}
+                  value={formData.slice.bottomRight.x || ""}
                   onChange={(event) =>
                     changeCoordinates("bottomRight")(
                       parseFloat(event.target.value),
-                      formData.bottomRight?.y || 0
-                    )
-                  }
-                  fullWidth
-                  margin="normal"
-                />
-              </Grid>
-              <Grid size={2}></Grid>
-            </Grid>
-            <Grid container spacing={1} marginBottom={0}>
-              <Grid size={2}></Grid>
-              <Grid size={4}>
-                <TextField
-                  label="Bottom Right Y"
-                  type="number"
-                  value={formData.bottomRight?.y || ""}
-                  onChange={(event) =>
-                    changeCoordinates("bottomRight")(
-                      formData.bottomRight?.x || 0,
-                      parseFloat(event.target.value)
+                      formData.slice.bottomRight.y
                     )
                   }
                   fullWidth
@@ -229,13 +169,12 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
                 />
               </Grid>
             </Grid>
-            {/* Descriptions */}
             <Grid container spacing={1} marginBottom={0}>
               <Grid size={4}>
                 <TextField
-                  label="Slice Name"
-                  value={formData.sliceName || ""}
-                  onChange={handleChange("sliceName")}
+                  label="Symbol Name"
+                  value={formData.symbol.name || ""}
+                  onChange={handleSymbolChange("name")}
                   fullWidth
                   margin="normal"
                 />
@@ -245,31 +184,20 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
               </Grid>
             </Grid>
             <TextField
-              label="Local Description"
-              value={formData.localDescription || ""}
-              onChange={handleChange("localDescription")}
+              label="Symbol Description"
+              value={formData.slice.description || ""}
+              onChange={handleSymbolChange("description")}
               multiline
               rows={3}
               fullWidth
               margin="normal"
             />
-            <TextField
-              label="Global Description"
-              value={formData.globalDescription || ""}
-              onChange={handleChange("globalDescription")}
-              multiline
-              rows={3}
-              fullWidth
-              margin="normal"
-            />
-            {/* Confidence */}
             <TextField
               label="Confidence"
               type="number"
-              value={formData.confidence || ""}
-              onChange={handleChange("confidence")}
-              fullWidth
+              value={formData.slice.confidence || ""}
               disabled
+              fullWidth
               margin="normal"
             />
             <Button
@@ -281,8 +209,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
             >
               Submit
             </Button>
-
-            {/* Delete Button */}
             {onDelete && (
               <Button
                 onClick={handleDeleteClick}
@@ -298,7 +224,6 @@ const SliceFormModalBase: React.FC<SliceFormModalBaseProps> = ({
         </Box>
       </Modal>
 
-      {/* Confirmation Dialog */}
       <Dialog open={confirmDeleteOpen} onClose={cancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>

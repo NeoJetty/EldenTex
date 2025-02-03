@@ -21,13 +21,13 @@ const EditLinkFormModal: React.FC<EditLinkFormModalProps> = ({
   const [formData, setFormData] = useState<SlicePacket>(initialData);
 
   const handleSubmit = () => {
-    API.updateLink(formData); // PUT request to server
+    API.updateSlice(formData); // PUT request to server
     setParentSlicePacket(formData);
     onClose();
   };
 
   const onDelete = () => {
-    API.deleteLink(formData.ID); // DELETE request to server
+    API.deleteSlice(formData.slice.id); // DELETE request to server
     onClose();
   };
 

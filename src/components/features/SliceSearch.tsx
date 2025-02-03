@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { StoreTypes } from "../../redux/store";
-import { autocompleteSliceNames } from "../../api/requestSliceData";
+import * as API from "../../api/slices.api";
 
 interface SliceSearchProps {
   fetchSlices: (sliceName: string, confidenceThreshold: number) => void;
@@ -38,7 +38,7 @@ const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
   useEffect(() => {
     if (searchInput.trim()) {
       setIsLoading(true);
-      autocompleteSliceNames(searchInput).then((results) => {
+      API.getSymbolNamesAutocomplete(searchInput).then((results) => {
         setSuggestions(results);
         setIsLoading(false);
       });
@@ -52,7 +52,7 @@ const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
 
     // Show suggestions only when typing
     if (e.target.value.trim()) {
-      autocompleteSliceNames(e.target.value).then((results) => {
+      API.getSymbolNamesAutocomplete(e.target.value).then((results) => {
         setSuggestions(results);
         setIsLoading(false);
       });
