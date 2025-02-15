@@ -8,7 +8,8 @@ import {
   getSlicesByTextureId,
   getSymbolNamesByPartiaName,
   getSlicePacketsBySymbolName,
-  getSliceByID,
+  getSlicePacketsBySymbolId,
+  getSliceById,
   editSlice,
   SlicesRow,
   markSliceAsDeleted,
@@ -133,24 +134,63 @@ export const getAutocompleteNamesControl = (
 };
 
 // grabs an array of SlicePacket from the DB
-export const getSlicesByPartialNameControl = (
+export const getSymbolSlicesBySymbolNameControl = (
   req: Request,
   res: Response
 ): void => {
   try {
     const db: TDatabase = res.locals.db;
     const userID: number = res.locals.validUserID;
-    const { slice_name, confidence_threshold } = req.params;
+    const { symbol_name, confidence_threshold } = req.params;
 
     // Pass parameters to the service function
     const slices = getSlicePacketsBySymbolName(
       db,
-      slice_name,
+      symbol_name,
       parseFloat(confidence_threshold),
       userID
     );
 
     res.json({ slices });
+  } catch (err) {
+    console.error("Error:", (err as Error).message);
+    res.status(500).json({ error: "An error occurred" });
+  }
+};
+
+export const getSymbolSlicesControl = (req: Request, res: Response): void => {
+  try {
+    const db: TDatabase = res.locals.db;
+    const userId: number = res.locals.validUserID;
+    const { name, id, confidence_threshold } = req.query;
+
+    const threshold: number = parseInt(confidence_threshold as string);
+
+    // If 'name' is provided, call getSlicePacketsBySymbolName
+    if (name) {
+      const symbolName: string = name as string;
+
+      // Call service function with name
+      const slices = getSlicePacketsBySymbolName(
+        db,
+        symbolName,
+        threshold,
+        userId
+      );
+
+      res.json({ slices });
+    }
+    // If 'id' is provided, call another service function
+    else if (id) {
+      const symbolId: number = parseInt(id as string, 10);
+
+      // Call a different service function (not yet implemented)
+      const slices = getSlicePacketsBySymbolId(db, symbolId, threshold, userId);
+
+      res.json({ slices });
+    } else {
+      res.status(400).json({ error: "Either 'name' or 'id' must be provided" });
+    }
   } catch (err) {
     console.error("Error:", (err as Error).message);
     res.status(500).json({ error: "An error occurred" });
@@ -164,12 +204,12 @@ export const getSliceByIDControl = (req: Request, res: Response): void => {
     const sliceId: number = Number(slice_id);
     const userId: number = res.locals.validUserID;
 
-    const slicePacket = getSliceByID(db, sliceId, 101, userId);
+    const slicePacket = getSliceById(db, sliceId, 101, userId);
 
     if (slicePacket) {
       res.json({ slicePacket });
     } else {
-      res.status(404).json({ error: "Link not found" });
+      res.status(404).json({ error: "Slices not found" });
     }
   } catch (err) {
     console.error("Error:", (err as Error).message);
@@ -190,7 +230,7 @@ export const getSlicesUseQueryControl = (req: Request, res: Response): void => {
     if (id) {
       // Fetch by ID and confidence
       const parsedId = parseInt(id as string, 10);
-      links = getSliceByID(db, parsedId, parsedConfidence, userID);
+      links = getSliceById(db, parsedId, parsedConfidence, userID);
     } else if (name) {
       // Fetch by name and confidence
       links = getSlicePacketsBySymbolName(

@@ -10,6 +10,7 @@ import routeSlices from "./routing/routeSlices.js";
 import routeUsers from "./routing/routeUsers.js";
 import validateUser from "./middleware/validateUser.js";
 import routeMaps from "./routing/routeMaps.js";
+import routeSymbols from "./routing/routeSymbols.js";
 
 const app: Application = express();
 const port: number = 3030;
@@ -25,6 +26,7 @@ async function registerRoutes(): Promise<void> {
   routeFilter(app);
   routeFilteredTextures(app);
   routeTextureTagging(app);
+  routeSymbols(app);
   routeSlices(app);
   routeUsers(app);
   routeMaps(app);

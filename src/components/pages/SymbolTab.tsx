@@ -1,24 +1,30 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import SymbolGalleryView from "../features/SymbolGalleryView";
 import SliceSearch from "../features/SliceSearch";
 import { Slider, Box, Typography } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
 import * as API from "../../api/slices.api";
+import { logError } from "../../utils/logging";
 
 const SymbolTab: React.FC = () => {
-  console.log("-- SLICE TAB RENDERING --");
+  console.log("-- SYMBOL TAB RENDERING --");
 
   const [slices, setSlices] = useState<SlicePacket[]>([]); // State for SlicePacket array
   const [confidenceThreshold, setConfidenceThreshold] = useState<number>(0.5); // Default confidence threshold
+  const { symbol_id } = useParams<{ symbol_id: string }>();
 
   // Server request to fetch slices
-  const fetchSlices = async (sliceName: string) => {
+  const fetchSymbolSlicesByName = async (sliceName: string) => {
     try {
-      const data = await API.getSlicesByName(sliceName, confidenceThreshold); // API call
-      console.log("Fetched slices:", data);
+      const data = await API.getSymbolSlicesByName(
+        sliceName,
+        confidenceThreshold
+      ); // API call
       setSlices(data); // Set slices to the state
     } catch (error) {
       console.error("Error fetching slices:", error);
+      logError("" + error);
     }
   };
 
@@ -50,7 +56,7 @@ const SymbolTab: React.FC = () => {
       </Box>
 
       {/* Pass fetchSlices function and slices state down to child components */}
-      <SliceSearch fetchSlices={fetchSlices} />
+      <SliceSearch fetchSlices={fetchSymbolSlicesByName} />
       {slices && <SymbolGalleryView slicePackets={slices} />}
     </div>
   );

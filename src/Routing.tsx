@@ -20,7 +20,8 @@ const Routing: React.FC = () => {
       <Route path="analysis/:texture/" element={<AnalysisTab />} />
       <Route path="analysis" element={<AnalysisTab />} />
       <Route path="slice/:slice_id" element={<SliceTab />} />
-
+      <Route path="slice" element={<SliceTab />} />
+      <Route path="symbol/:symbol_id" element={<SymbolTab />} />
       <Route path="symbol" element={<SymbolTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />

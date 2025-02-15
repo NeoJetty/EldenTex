@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const linksQuerySchema = z
+export const slicesQuerySchema = z
   .object({
     id: z.string().regex(/^\d+$/, "id must be a positive integer").optional(),
     name: z.string().min(1, "name cannot be empty").optional(),

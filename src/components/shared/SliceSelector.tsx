@@ -16,9 +16,7 @@ const SliceSelector: React.FC<SliceSelectorProps> = ({ sliceIDCallback }) => {
   const fetchSlices = async (partialName: string) => {
     if (partialName != "") {
       try {
-        const slices = await API.getSymbolsAndTheirOriginByAutocomplete(
-          partialName
-        );
+        const slices = await API.getSymbolOriginByAutocomplete(partialName);
         setSlices(slices); // Set slices to the state
       } catch (error) {
         console.error("Error fetching slices:", error);

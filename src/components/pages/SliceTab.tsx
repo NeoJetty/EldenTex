@@ -20,7 +20,7 @@ import SliceLinkEnumeration from "../features/SliceLinkEnumeration";
 import EditLinkFormModal from "../shared/EditLinkFormModal";
 
 const SliceTab: React.FC = () => {
-  console.log("-- LINK TAB RENDERING --");
+  console.log("-- SLICE TAB RENDERING --");
 
   const { slice_id } = useParams<{ slice_id: string }>();
   const [slicePacket, setSlicePacket] = useState<SlicePacket | null>(null);

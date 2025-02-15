@@ -208,7 +208,58 @@ export const getSlicePacketsBySymbolName = (
   }));
 };
 
-export const getSliceByID = (
+export const getSlicePacketsBySymbolId = (
+  db: TDatabase,
+  symbolId: number,
+  confidenceThreshold: number,
+  userId: number
+): SlicePacket[] => {
+  const symbolQuery = `
+    SELECT *
+    FROM symbols
+    WHERE id = ? 
+      AND user_id = ? AND deleted_at IS NULL
+  `;
+
+  console.log(userId, symbolId);
+  const symbol = db.prepare(symbolQuery).get(symbolId, userId) as SymbolsRow;
+  if (!symbol) {
+    throw new Error("Symbol not found");
+  }
+
+  const slicesQuery = `
+    SELECT *
+    FROM slices
+    WHERE symbol_id = ? AND confidence >= ?
+  `;
+
+  const slices = db
+    .prepare(slicesQuery)
+    .all(symbol.id, confidenceThreshold) as SlicesRow[];
+
+  // Map rows to SlicePacket
+  return slices.map((slice) => ({
+    slice: {
+      id: slice.id,
+      symbolId: slice.symbol_id,
+      textureId: slice.texture_id,
+      topLeft: { x: slice.top_left_x, y: slice.top_left_y },
+      bottomRight: { x: slice.bottom_right_x, y: slice.bottom_right_y },
+      description: slice.description,
+      confidence: slice.confidence,
+      userId: slice.user_id,
+      textureSubtypeBase: slice.subtype_base,
+    },
+    symbol: {
+      id: symbol.id,
+      name: symbol.name,
+      description: symbol.description,
+      userId: symbol.user_id,
+    },
+  }));
+};
+
+export const getSliceById = (
   db: TDatabase,
   sliceId: number,
   confidence: number,

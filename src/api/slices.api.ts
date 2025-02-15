@@ -44,7 +44,7 @@ export function getSymbolNamesAutocomplete(
     .then((response) => response.data.symbolNames as string[]);
 }
 
-export function getSymbolsAndTheirOriginByAutocomplete(
+export function getSymbolOriginByAutocomplete(
   partialName: string
 ): Promise<SlicePacket[]> {
   const endpoint = `/slicePackets/autocomplete/${partialName}`;
@@ -54,7 +54,7 @@ export function getSymbolsAndTheirOriginByAutocomplete(
     .then((response) => response.data.slicePackets as SlicePacket[]);
 }
 
-export function getSlicesByName(
+export function getSymbolSlicesByName(
   sliceName: string,
   confidenceThreshold: number
 ): Promise<SlicePacket[]> {

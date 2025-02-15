@@ -1,17 +1,17 @@
 import { Application } from "express";
 // Import controllers
 import {
-  addSliceAndSymbolControl,
   addSliceControl,
   getSlicesControl,
   getAutocompleteNamesControl,
-  getSlicesByPartialNameControl,
+  getSymbolSlicesBySymbolNameControl,
   getSlicesUseQueryControl,
   getSliceByIDControl,
   editSliceControl,
   markSliceAsDeletedControl,
   markSymbolAsDeletedControl,
   getSlicePacketsByPartialNameControl,
+  getSymbolSlicesControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema
@@ -21,16 +21,13 @@ import {
   validateResource,
 } from "../middleware/validateResource.js";
 import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
-import { linksQuerySchema } from "../middleware/validationSchemas/links/links.schema.js";
+import { slicesQuerySchema } from "../middleware/validationSchemas/slices/slices.schema.js";
 
+/* Route requests around symbols and slices where the request is slice-first. Most routes will still
+interact with both they symbols and the slices tables. 
+This means mainly requests by slice_id or texture but also admin requests around slices
+These will often return SlicePackets, but the symbol aspect of these routes is always secondary */
 function routeSlices(app: Application): void {
-  // Route for adding a new symbol with slice (2 operations)
-  app.post(
-    "/api/symbols",
-    validateResource(emptySchema),
-    addSliceAndSymbolControl
-  );
-
   app.post("/api/slices", validateResource(emptySchema), addSliceControl);
 
   app.get(
@@ -40,33 +37,15 @@ function routeSlices(app: Application): void {
   );
 
   app.get(
-    "/api/symbolNames/autocomplete/:partial_name",
-    validateResource(emptySchema),
-    getAutocompleteNamesControl
-  );
-
-  app.get(
     "/api/slices/:slice_id",
     validateResource(emptySchema),
     getSliceByIDControl
   );
 
-  app.get(
-    "/api/slices/:slice_name/:confidence_threshold",
-    validateResource(emptySchema),
-    getSlicesByPartialNameControl
-  );
-
-  app.get(
-    "/api/slicePackets/autocomplete/:partial_name",
-    validateResource(emptySchema),
-    getSlicePacketsByPartialNameControl
-  );
-
   // { id, name, confidence } query params
   app.get(
     "/api/slices",
-    validateQuery(linksQuerySchema),
+    validateQuery(slicesQuerySchema),
     getSlicesUseQueryControl
   );
 
@@ -76,11 +55,6 @@ function routeSlices(app: Application): void {
     "/api/slices/:slice_id",
     validateResource(emptySchema), // Add appropriate validation here
     markSliceAsDeletedControl
-  );
-  app.delete(
-    "/api/symbols/:symbol_id",
-    validateResource(emptySchema), // Add appropriate validation here
-    markSymbolAsDeletedControl
   );
 }
 
