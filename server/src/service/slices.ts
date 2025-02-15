@@ -163,31 +163,33 @@ export const getSlicePacketsBySymbolName = (
   confidenceThreshold: number,
   userID: number
 ): SlicePacket[] => {
-  const sliceQuery = `
+  const SymbolQuery = `
     SELECT *
     FROM symbols
     WHERE name = ?
       AND user_id = ? AND deleted_at IS NULL
   `;
 
-  console.log(userID, sliceName);
-  const symbol = db.prepare(sliceQuery).get(sliceName, userID) as SymbolsRow;
+  console.log(userID, sliceName, confidenceThreshold);
+  const symbol = db.prepare(SymbolQuery).get(sliceName, userID) as SymbolsRow;
   if (!symbol) {
     throw new Error("Slice not found");
   }
 
-  const linksQuery = `
+  console.log(symbol);
+
+  const sliceQuery = `
     SELECT *
     FROM slices
     WHERE symbol_id = ? AND confidence >= ?
   `;
 
-  const links = db
-    .prepare(linksQuery)
+  const slices = db
+    .prepare(sliceQuery)
     .all(symbol.id, confidenceThreshold) as SlicesRow[];
 
   // Step 3: Map rows to SlicePacket
-  return links.map((slice) => ({
+  return slices.map((slice) => ({
     slice: {
       id: slice.id,
       symbolId: slice.symbol_id,

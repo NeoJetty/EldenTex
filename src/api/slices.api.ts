@@ -35,7 +35,7 @@ export function getSlices(
   sliceId: number,
   confidence: number = 0
 ): Promise<any> {
-  const endpoint = `/slices?id=${sliceId}&confidence=${confidence}`;
+  const endpoint = `/slices?id=${sliceId}&confidence_threshold=${confidence}`;
 
   return axiosApi
     .get(endpoint)

@@ -36,7 +36,7 @@ const SliceTab: React.FC = () => {
     const fetchSlicePacket = async () => {
       try {
         const response = await APISlice.getSlices(Number(slice_id), 0);
-        const slicePacket = response.links[0] as SlicePacket;
+        const slicePacket = response.slices[0] as SlicePacket;
 
         setSlicePacket(slicePacket);
         // Fetch textureName using textureID
@@ -88,7 +88,7 @@ const SliceTab: React.FC = () => {
       {/* Right Panel for Details */}
       <Box sx={{ flex: 2 }}>
         <Typography variant="h4" gutterBottom>
-          Link Details
+          Slice Details
         </Typography>
         <Card sx={{ marginTop: 2 }}>
           <CardContent>

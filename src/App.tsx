@@ -8,6 +8,7 @@ import MainNavBar from "./components/layout/MainNavBar.tsx";
 import Routing from "./Routing.tsx";
 import Logger from "./components/features/Logger.tsx";
 import LoggedInHeartbeat from "./components/features/LoggedInHeartbeat.tsx";
+import ModalManager from "./components/features/ModalManager.tsx";
 
 export const themeOptions: ThemeOptions = {
   palette: {
@@ -52,6 +53,7 @@ function App() {
         <MainNavBar />
       </div>
       <Routing /> {/* Routing for different pages */}
+      <ModalManager />
       <Logger /> {/* Modal for logging / showing messages for the user */}
       <LoggedInHeartbeat /> {/* Heartbeat to keep user logged in */}
     </ThemeProvider>

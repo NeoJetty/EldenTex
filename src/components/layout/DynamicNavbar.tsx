@@ -13,8 +13,8 @@ const DynamicNavbar: React.FC = () => {
 
   return (
     <>
-      {isFilterActive && (
-        <Tab
+      {
+        /*isFilterActive && */ <Tab
           sx={{
             margin: 0,
             padding: "4px 8px",
@@ -43,7 +43,7 @@ const DynamicNavbar: React.FC = () => {
           }
           iconPosition="end"
         />
-      )}
+      }
     </>
   );
 };

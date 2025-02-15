@@ -3,15 +3,10 @@ import { Application } from "express";
 import {
   addSliceControl,
   getSlicesControl,
-  getAutocompleteNamesControl,
-  getSymbolSlicesBySymbolNameControl,
   getSlicesUseQueryControl,
   getSliceByIDControl,
   editSliceControl,
   markSliceAsDeletedControl,
-  markSymbolAsDeletedControl,
-  getSlicePacketsByPartialNameControl,
-  getSymbolSlicesControl,
 } from "../control/sliceControl.js";
 
 // Import validation middleware and schema

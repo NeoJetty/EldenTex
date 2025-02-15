@@ -2,13 +2,8 @@ import { Application } from "express";
 // Import controllers
 import {
   addSliceAndSymbolControl,
-  getSlicesControl,
   getAutocompleteNamesControl,
   getSymbolSlicesBySymbolNameControl,
-  getSlicesUseQueryControl,
-  getSliceByIDControl,
-  editSliceControl,
-  markSliceAsDeletedControl,
   markSymbolAsDeletedControl,
   getSlicePacketsByPartialNameControl,
   getSymbolSlicesControl,

@@ -38,7 +38,18 @@ export function getSymbolSlicesByName(
   sliceName: string,
   confidenceThreshold: number
 ): Promise<SlicePacket[]> {
-  const endpoint = `/slices/${sliceName}/${confidenceThreshold}`;
+  const endpoint = `/symbols?name=${sliceName}&confidence_threshold=${confidenceThreshold}`;
+
+  return axiosApi
+    .get(endpoint)
+    .then((response) => response.data.slices as SlicePacket[]);
+}
+
+export function getSymbolSlicesByID(
+  sliceId: number,
+  confidenceThreshold: number
+): Promise<SlicePacket[]> {
+  const endpoint = `/symbols?id=${sliceId}&confidence_threshold=${confidenceThreshold}`;
 
   return axiosApi
     .get(endpoint)

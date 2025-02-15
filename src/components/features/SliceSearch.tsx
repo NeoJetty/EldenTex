@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+// MUI
 import {
   Box,
   MenuItem,
@@ -14,68 +14,58 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
+// libs
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+// project
 import { StoreTypes } from "../../redux/store";
-import * as API from "../../api/slices.api";
+import * as API from "../../api/symbols.api";
 
 interface SliceSearchProps {
   fetchSlices: (sliceName: string, confidenceThreshold: number) => void;
 }
 
 const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
-  const [selectedTagID, setSelectedTagID] = useState<number>(3); // Default tagID
+  const [selectedTagID, setSelectedTagID] = useState<number>(3);
   const [searchInput, setSearchInput] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const tags = useSelector((state: StoreTypes) => state.tagManagement.allTags);
 
-  // Handle the change of selected tag in dropdown
   const handleTagChange = (event: SelectChangeEvent<number>) => {
     setSelectedTagID(event.target.value as number);
   };
 
-  // Fetch autocomplete suggestions on search input change
   useEffect(() => {
-    if (searchInput.trim()) {
-      setIsLoading(true);
-      API.getSymbolNamesAutocomplete(searchInput).then((results) => {
-        setSuggestions(results);
-        setIsLoading(false);
-      });
-    } else {
+    if (!searchInput.trim()) {
       setSuggestions([]);
+      return;
     }
+
+    setIsLoading(true);
+    API.getSymbolNamesAutocomplete(searchInput).then((results) => {
+      setSuggestions(results);
+      setIsLoading(false);
+    });
   }, [searchInput]);
 
   const handleLiveSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
-
-    // Show suggestions only when typing
-    if (e.target.value.trim()) {
-      API.getSymbolNamesAutocomplete(e.target.value).then((results) => {
-        setSuggestions(results);
-        setIsLoading(false);
-      });
-    } else {
-      setSuggestions([]);
-    }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
     setSearchInput(suggestion);
-    setSuggestions([]); // Hide the suggestions after clicking
-    // Fetch slices when a suggestion is clicked
-    fetchSlices(suggestion, 0.5); // Example confidenceThreshold = 0.5
+    setSuggestions([]);
+    fetchSlices(suggestion, 0.5);
   };
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetchSlices(searchInput, 0.5); // Fetch slices on form submit
+    fetchSlices(searchInput, 0.5);
   };
 
   return (
     <Box>
-      {/* Dropdown for selecting a tag */}
       <FormControl style={{ width: "20%" }} margin="normal">
         <InputLabel>Tag</InputLabel>
         <Select
@@ -84,7 +74,7 @@ const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
           label="Single Tag"
         >
           {tags.length === 0 ? (
-            <MenuItem disabled>Loading...</MenuItem> // Show loading if tags are being fetched
+            <MenuItem disabled>Loading...</MenuItem>
           ) : (
             tags.map((tag) => (
               <MenuItem key={tag.id} value={tag.id}>
@@ -95,8 +85,7 @@ const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
         </Select>
       </FormControl>
 
-      {/* Autocomplete-enabled text field */}
-      <form onSubmit={handleSearchSubmit}>
+      <form onSubmit={handleSearchSubmit} style={{ position: "relative" }}>
         <TextField
           label="Search"
           type="text"
@@ -104,14 +93,17 @@ const SliceSearch: React.FC<SliceSearchProps> = ({ fetchSlices }) => {
           onChange={handleLiveSearchChange}
           fullWidth
           margin="normal"
+          autoComplete="off"
           InputProps={{
             endAdornment: isLoading ? <CircularProgress size={20} /> : null,
           }}
         />
 
-        {/* Autocomplete suggestions dropdown */}
         {suggestions.length > 0 && (
-          <Paper elevation={3} style={{ position: "absolute", zIndex: 1 }}>
+          <Paper
+            elevation={3}
+            style={{ position: "absolute", zIndex: 1, width: "100%" }}
+          >
             <List>
               {suggestions.map((suggestion, index) => (
                 <ListItem

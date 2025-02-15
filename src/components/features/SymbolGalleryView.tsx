@@ -8,6 +8,7 @@ import { SlicePacket } from "../../utils/sharedTypes";
 import * as API from "../../api/textures.api";
 import { buildJPGPathFixSubtype } from "../../utils/urlPath";
 import SliceMiniatureView from "../shared/SliceMiniatureView";
+import { logMessage } from "../../redux/slices/loggingSlice";
 
 interface SymbolGalleryViewProps {
   slicePackets: SlicePacket[];
@@ -19,12 +20,14 @@ const SymbolGalleryView: React.FC<SymbolGalleryViewProps> = ({
   sliceIDCallback,
 }) => {
   console.log("-- SYMBOL GALLERY VIEW RENDERING --");
+  const navigate = useNavigate();
+
   const handleCardClick = (sliceID: number) => {
+    logMessage("Selected slice ID: " + sliceID);
     if (sliceIDCallback) {
       sliceIDCallback(sliceID); // If callback is passed, call it with sliceID
     } else {
-      const navigate = useNavigate();
-      navigate(`/link/${sliceID}`);
+      navigate(`/slice/${sliceID}`);
     }
   };
 

@@ -31,6 +31,16 @@ const SymbolTab: React.FC = () => {
     }
   };
 
+  const fetchSymbolSlicesByID = async (sliceID: number) => {
+    try {
+      const data = await API.getSymbolSlicesByID(sliceID, confidenceThreshold); // API call
+      setSlices(data); // Set slices to the state
+    } catch (error) {
+      console.error("Error fetching slices:", error);
+      logError("" + error);
+    }
+  };
+
   // Handle confidence threshold change
   const handleConfidenceChange = (
     event: Event,
