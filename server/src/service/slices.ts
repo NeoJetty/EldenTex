@@ -262,20 +262,17 @@ export const getSlicePacketsBySymbolId = (
 export const getSliceById = (
   db: TDatabase,
   sliceId: number,
-  confidence: number,
   userId: number
 ): SlicePacket[] => {
   try {
-    console.log("linkId", sliceId, "confidence", confidence, "userId", userId);
+    console.log("linkId", sliceId, "userId", userId);
     // Query for the slice texture link data with filters for confidence and userID
     const sliceQuery = `
       SELECT *
       FROM slices
-      WHERE id = ? AND confidence >= ? AND user_id = ? AND deleted_at IS NULL
+      WHERE id = ? AND user_id = ? AND deleted_at IS NULL
     `;
-    const links = db
-      .prepare(sliceQuery)
-      .all(sliceId, confidence, userId) as SlicesRow[];
+    const links = db.prepare(sliceQuery).all(sliceId, userId) as SlicesRow[];
 
     // If no links found, return an empty array
     if (!links.length) {

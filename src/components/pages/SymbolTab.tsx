@@ -1,10 +1,13 @@
+// MUI
+import { Slider, Box, Typography } from "@mui/material";
+// libs
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+// project
 import SymbolGalleryView from "../features/SymbolGalleryView";
 import SliceSearch from "../features/SliceSearch";
-import { Slider, Box, Typography } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
-import * as API from "../../api/slices.api";
+import * as API from "../../api/symbols.api";
 import { logError } from "../../utils/logging";
 
 const SymbolTab: React.FC = () => {

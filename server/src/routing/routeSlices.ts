@@ -28,8 +28,6 @@ interact with both they symbols and the slices tables.
 This means mainly requests by slice_id or texture but also admin requests around slices
 These will often return SlicePackets, but the symbol aspect of these routes is always secondary */
 function routeSlices(app: Application): void {
-  app.post("/api/slices", validateResource(emptySchema), addSliceControl);
-
   app.get(
     "/api/slices/byTexture/:texture_ids",
     validateResource(emptySchema),
@@ -48,6 +46,8 @@ function routeSlices(app: Application): void {
     validateQuery(slicesQuerySchema),
     getSlicesUseQueryControl
   );
+
+  app.post("/api/slices", validateResource(emptySchema), addSliceControl);
 
   app.put("/api/slices", validateBody(emptySchema), editSliceControl);
 

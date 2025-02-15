@@ -204,7 +204,7 @@ export const getSliceByIDControl = (req: Request, res: Response): void => {
     const sliceId: number = Number(slice_id);
     const userId: number = res.locals.validUserID;
 
-    const slicePacket = getSliceById(db, sliceId, 101, userId);
+    const slicePacket = getSliceById(db, sliceId, userId);
 
     if (slicePacket) {
       res.json({ slicePacket });
@@ -221,26 +221,16 @@ export const getSlicesUseQueryControl = (req: Request, res: Response): void => {
   try {
     const db: TDatabase = res.locals.db;
     const userID: number = res.locals.validUserID;
-    const { id, name, confidence } = req.query;
+    const { id, confidence } = req.query;
 
     const parsedConfidence = parseFloat(confidence as string);
 
-    let links = [] as SlicePacket[];
+    let slices = [] as SlicePacket[];
 
-    if (id) {
-      // Fetch by ID and confidence
-      const parsedId = parseInt(id as string, 10);
-      links = getSliceById(db, parsedId, parsedConfidence, userID);
-    } else if (name) {
-      // Fetch by name and confidence
-      links = getSlicePacketsBySymbolName(
-        db,
-        name as string,
-        parsedConfidence,
-        userID
-      );
-    }
-    res.json({ links });
+    // Fetch by ID and confidence
+    const parsedId = parseInt(id as string, 10);
+    slices = getSliceById(db, parsedId, userID);
+    res.json({ slices: slices });
   } catch (err) {
     console.error("Error:", (err as Error).message);
     res.status(500).json({ error: "An error occurred" });
