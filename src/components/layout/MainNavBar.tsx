@@ -4,6 +4,8 @@ import { NavLink, useLocation } from "react-router-dom";
 import { AppBar, Tabs, Tab, Box } from "@mui/material";
 import DebugDropdown from "./DebugDropdown";
 import { StoreTypes } from "../../redux/store";
+import { useDispatch } from "react-redux";
+import DynamicNavbar from "./DynamicNavbar";
 
 const MainNavBar: React.FC = () => {
   // useLocation to get the current pathname
@@ -13,8 +15,8 @@ const MainNavBar: React.FC = () => {
   // Determine the current tab value based on pathname patterns
   const getCurrentTabValue = (pathname: string) => {
     if (pathname.startsWith("/analysis")) return "Texture Analysis";
+    if (pathname.startsWith("/symbol")) return "Symbol";
     if (pathname.startsWith("/slice")) return "Slice";
-    if (pathname.startsWith("/link")) return "Link";
     if (pathname.startsWith("/voting")) return "Community Voting";
     if (pathname.startsWith("/filter")) return "Filter Voting";
     if (pathname.startsWith("/gallery")) return "Gallery";
@@ -48,8 +50,8 @@ const MainNavBar: React.FC = () => {
             component={NavLink}
             to="analysis/4158"
           />
+          <Tab label="Symbol" value="Symbol" component={NavLink} to="symbol" />
           <Tab label="Slice" value="Slice" component={NavLink} to="slice" />
-          <Tab label="Link" value="Link" component={NavLink} to="link" />
           <Tab
             label="Filter Voting"
             value="Filter Voting"
@@ -63,6 +65,7 @@ const MainNavBar: React.FC = () => {
             component={NavLink}
             to="gallery"
           />
+          <DynamicNavbar />
         </Tabs>
 
         <DebugDropdown />

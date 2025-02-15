@@ -7,8 +7,8 @@ import GalleryTab from "./components/pages/GalleryTab.tsx";
 import AnalysisTab from "./components/pages/AnalysisTab.tsx";
 import Login from "./components/features/Login.tsx";
 import Register from "./components/features/Register.tsx";
-import LinkTab from "./components/pages/LinkTab.tsx";
 import SliceTab from "./components/pages/SliceTab.tsx";
+import SymbolTab from "./components/pages/SymbolTab.tsx";
 import ForceRemount from "./components/pages/ForceRefresh.tsx";
 
 const Routing: React.FC = () => {
@@ -19,9 +19,9 @@ const Routing: React.FC = () => {
       <Route path="voting" element={<VotingTab />} />
       <Route path="analysis/:texture/" element={<AnalysisTab />} />
       <Route path="analysis" element={<AnalysisTab />} />
-      <Route path="link/:link_id" element={<LinkTab />} />
+      <Route path="slice/:slice_id" element={<SliceTab />} />
 
-      <Route path="slice" element={<SliceTab />} />
+      <Route path="symbol" element={<SymbolTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
       <Route path="force_refresh/:path/*" element={<ForceRemount />} />

@@ -1,5 +1,6 @@
-import { logToUser } from "../utils/logging";
+import { logInfo } from "../utils/logging";
 import axiosApi from "./API";
+import { TagVote } from "../utils/sharedTypes";
 
 /**
  * Fetches untagged texture data for a specific user and tag combination.
@@ -19,12 +20,12 @@ export function getTexture(textureIdentifier: number | string): Promise<any> {
     : `/textureDataByName/${textureIdentifier}`;
 
   return axiosApi.get(endpoint).then((response) => {
-    logToUser("Fetched Texture: " + textureIdentifier);
+    logInfo("Fetched Texture: " + textureIdentifier);
     return response.data;
   });
 }
 
-export interface ITextureData {
+export interface TextureData {
   id: number;
   name: string;
   textureTypes: string[];
@@ -32,7 +33,7 @@ export interface ITextureData {
 
 export function getMultipleTextures(
   textureIDs: number[]
-): Promise<ITextureData[]> {
+): Promise<TextureData[]> {
   const endpoint = `/textureData/${textureIDs.join(",")}`;
   return axiosApi.get(endpoint).then((response) => response.data);
 }
@@ -42,9 +43,7 @@ export function getMultipleTextures(
  * @param filterData - An object containing the selected tags and their votes.
  * @returns Promise resolving to the filtered texture data.
  */
-export function getFilteredTextures(filterData: {
-  tags: { tag_id: number; vote: boolean }[];
-}): Promise<any[]> {
+export function getFilteredTextures(filterData: TagVote[]): Promise<any[]> {
   const endpoint = `/serveTexturesByMultipleTags`;
 
   return axiosApi.post(endpoint, filterData).then((response) => response.data);

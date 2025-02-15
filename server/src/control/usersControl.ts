@@ -65,7 +65,6 @@ export async function loggedInCheckControl(
   res: Response
 ): Promise<void> {
   if (res.locals.validUserID != null) {
-    console.log(res.locals.validUserID);
     // Check if it's defined and not null
     res.status(200).json({ message: "User is logged in." });
   } else {

@@ -11,11 +11,6 @@ import {
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 // project
-import {
-  addTagToTexture,
-  deleteTagFromTexture,
-} from "../../api/requestTagRelatedData";
-
 import * as API from "../../api/tags.api";
 import { Tag } from "../../utils/sharedTypes";
 import Toggle, { ToggleState } from "../shared/Toogle";

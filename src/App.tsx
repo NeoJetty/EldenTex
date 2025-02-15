@@ -1,12 +1,14 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
+// MUI
+import { ThemeOptions, ThemeProvider, createTheme } from "@mui/material/styles";
+// libs
+import { useEffect } from "react";
+// project
+import { preloadAppData } from "./api/preload.ts";
 import MainNavBar from "./components/layout/MainNavBar.tsx";
 import Routing from "./Routing.tsx";
 import Logger from "./components/features/Logger.tsx";
-import { ThemeOptions } from "@mui/material/styles";
-import { useEffect } from "react";
-import { preloadAppData } from "./api/preload.ts";
+import LoggedInHeartbeat from "./components/features/LoggedInHeartbeat.tsx";
 
-// Define theme options
 export const themeOptions: ThemeOptions = {
   palette: {
     mode: "dark", // Explicitly type as "dark"
@@ -31,7 +33,6 @@ export const themeOptions: ThemeOptions = {
   },
 };
 
-// Create the theme using `createTheme`
 const theme = createTheme(themeOptions);
 
 function App() {
@@ -50,8 +51,9 @@ function App() {
       <div className="navbar">
         <MainNavBar />
       </div>
-      <Routing />
-      <Logger />
+      <Routing /> {/* Routing for different pages */}
+      <Logger /> {/* Modal for logging / showing messages for the user */}
+      <LoggedInHeartbeat /> {/* Heartbeat to keep user logged in */}
     </ThemeProvider>
   );
 }

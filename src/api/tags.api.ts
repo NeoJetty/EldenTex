@@ -1,4 +1,4 @@
-import { logToUser } from "../utils/logging.js";
+import { logSuccess } from "../utils/logging.js";
 import { Tag, TagVote } from "../utils/sharedTypes.js";
 import axiosApi from "./API"; // Import the custom API instance
 
@@ -61,7 +61,7 @@ export function upsertTagToTexture(
   axiosApi
     .post(url, data)
     .then(() => {
-      logToUser(`Tag ${tagID} set to ${vote ? "yes" : "no"}.`);
+      logSuccess(`Tag ${tagID} set to ${vote ? "yes" : "no"}.`);
     })
     .catch((error) => {
       console.error("Error updating tag:", error.response || error.message);
@@ -79,7 +79,7 @@ export function deleteTagFromTexture(tagID: number, textureID: number): void {
   axiosApi
     .delete(url, { data: requestBody })
     .then(() => {
-      logToUser(`Tag ${tagID} set to neutral.`);
+      logSuccess(`Tag ${tagID} set to neutral.`);
     })
     .catch((error) => {
       console.error("Error removing tag:", error.response || error.message);

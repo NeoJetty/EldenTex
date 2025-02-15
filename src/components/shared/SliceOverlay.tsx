@@ -30,7 +30,7 @@ const SliceOverlay: React.FC<SliceOverlayProps> = ({
 
   // Handle click navigation
   const handleClick = () => {
-    navigate(`/link/${id}`);
+    navigate(`/slice/${id}`);
   };
 
   const shadowSize = 10 * scaleFactor;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SliceGalleryView from "../features/SliceGalleryView";
+import SymbolGalleryView from "../features/SymbolGalleryView";
 import { Box, Button, TextField, Modal } from "@mui/material";
 import { SlicePacket } from "../../utils/sharedTypes";
 import * as API from "../../api/slices.api";
@@ -62,7 +62,7 @@ const SliceSelector: React.FC<SliceSelectorProps> = ({ sliceIDCallback }) => {
             fullWidth
           />
           {slices && (
-            <SliceGalleryView
+            <SymbolGalleryView
               slices={slices}
               sliceIDCallback={sliceIDCallback}
             />

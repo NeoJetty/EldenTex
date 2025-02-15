@@ -39,6 +39,11 @@ export interface Tag {
   category: string;
 }
 
+export interface CategorizedTag {
+  id: number;
+  name: string;
+}
+
 export interface TagVote {
   tag_id: number;
   vote: boolean;

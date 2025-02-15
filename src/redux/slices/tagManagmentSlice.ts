@@ -1,12 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Tag } from "../../data/utils/sharedTypes";
+import { Tag, CategorizedTag } from "../../utils/sharedTypes";
 
 interface TagsManagementState {
   allTags: Tag[];
+  categories: Category;
+}
+
+interface Category {
+  [key: string]: CategorizedTag[];
 }
 
 const initialState: TagsManagementState = {
   allTags: [],
+  categories: {},
 };
 
 const tagManagementSlice = createSlice({
@@ -15,6 +21,14 @@ const tagManagementSlice = createSlice({
   reducers: {
     setAllTags(state, action: PayloadAction<Tag[]>): void {
       state.allTags = action.payload;
+      // Initialize categories immediately
+      state.categories = {};
+      state.allTags.forEach(({ category, ...tag }) => {
+        if (!state.categories[category]) {
+          state.categories[category] = [];
+        }
+        state.categories[category].push(tag);
+      });
     },
   },
 });

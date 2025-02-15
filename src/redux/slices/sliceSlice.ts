@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SlicePacket } from "../../data/utils/sharedTypes";
+import { SlicePacket } from "../../utils/sharedTypes";
 
 export interface SliceState {
   slices: SlicePacket[];

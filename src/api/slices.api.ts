@@ -1,4 +1,4 @@
-import { logToUser } from "../utils/logging";
+import { logSuccess } from "../utils/logging";
 import { SlicePacket } from "../utils/sharedTypes";
 import axiosApi from "./API"; // Import the custom API instance
 
@@ -18,7 +18,7 @@ export function createSymbolAndSlice(
   const endpoint = `/symbols`;
 
   return axiosApi.post(endpoint, sliceData).then((response) => {
-    logToUser("Created slice " + sliceData.symbol.name);
+    logSuccess("Created slice " + sliceData.symbol.name);
 
     return response.data as SlicePacket;
   });
@@ -28,7 +28,7 @@ export function createSlice(sliceData: SlicePacket): Promise<SlicePacket> {
   const endpoint = `/slices`;
 
   return axiosApi.post(endpoint, sliceData).then((response) => {
-    logToUser("Created slice for " + sliceData.symbol.name);
+    logSuccess("Created slice for " + sliceData.symbol.name);
 
     return response.data as SlicePacket;
   });
@@ -69,7 +69,7 @@ export function updateSlice(sliceData: SlicePacket): Promise<SlicePacket> {
   const endpoint = `/slices`;
 
   return axiosApi.put(endpoint, sliceData).then((response) => {
-    logToUser("Updated slice " + sliceData.symbol.name);
+    logSuccess("Updated slice " + sliceData.symbol.name);
     return response.data as SlicePacket;
   });
 }
@@ -94,7 +94,7 @@ export function deleteSlice(sliceId: number): Promise<void> {
   const endpoint = `/links/${sliceId}`;
 
   return axiosApi.delete(endpoint).then((response) => {
-    logToUser("Deleted slice: " + sliceId);
+    logSuccess("Deleted slice: " + sliceId);
     return response.data.message;
   });
 }
