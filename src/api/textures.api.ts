@@ -1,6 +1,8 @@
 import { logInfo } from "../utils/logging";
 import axiosApi from "./API";
 import { TagVote } from "../utils/sharedTypes";
+import store, { StoreTypes } from "../redux/store";
+import { ToggleState } from "../components/shared/Toogle";
 
 /**
  * Fetches untagged texture data for a specific user and tag combination.
@@ -43,8 +45,51 @@ export function getMultipleTextures(
  * @param filterData - An object containing the selected tags and their votes.
  * @returns Promise resolving to the filtered texture data.
  */
-export function getFilteredTextures(filterData: TagVote[]): Promise<any[]> {
+export function getFilteredTexturesOld(filterData: TagVote[]): Promise<any[]> {
   const endpoint = `/serveTexturesByMultipleTags`;
 
   return axiosApi.post(endpoint, filterData).then((response) => response.data);
+}
+
+/**
+ * Extracts and transforms filter data from the Redux store.
+ * @returns Transformed filter data as an array of { tag_id, vote } objects.
+ */
+function getFilterDataForApi(): TagVote[] {
+  const frontendFilter = store.getState().filter.namedStateTags;
+  return frontendFilter.flatMap(({ tags }) =>
+    tags
+      .filter(({ state }) => state !== ToggleState.NEUTRAL) // Exclude neutral tags
+      .map(({ id, state }) => ({
+        tag_id: id,
+        vote: state === ToggleState.ON,
+      }))
+  );
+}
+
+/**
+ * Fetches filtered texture data based on selected tags.
+ * @param tagIds - Array of tag IDs for query parameters.
+ * @param page - Page number for pagination.
+ * @param limit - Number of items per page.
+ * @returns Promise resolving to the filtered texture data.
+ */
+export function getFilteredTextures(
+  ids: number[],
+  page: number,
+  limit: number
+): Promise<any[]> {
+  const endpoint = `/textures`;
+
+  const query = {
+    ids: ids.join(","), // Serialize array for query string
+    page,
+    limit,
+  };
+
+  const filterTags = getFilterDataForApi();
+
+  return axiosApi
+    .post(endpoint, { filterTags }, { params: query }) // Send as query parameters
+    .then((response) => response.data);
 }

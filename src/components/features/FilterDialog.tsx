@@ -1,98 +1,101 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
+  Button,
+  IconButton,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import Toggle, { ToggleState } from "../shared/Toogle";
+import { useDispatch, useSelector } from "react-redux";
 import { StoreTypes } from "../../redux/store";
-import { CategorizedTag } from "../../utils/sharedTypes";
-
-interface TagState {
-  id: number;
-  state: ToggleState;
-}
+import { ToggleState } from "../shared/Toogle";
+import {
+  hideFilterModal,
+  setFilterTags,
+  CategoryWithTags,
+} from "../../redux/slices/filterSlice";
+import FilterAccordionWrapper from "./FilterAccordionWrapper";
 
 const FilterDialog: React.FC = () => {
-  const categories = useSelector(
-    (state: StoreTypes) => state.tagManagement.categories
+  const dispatch = useDispatch();
+  const storeTags = useSelector(
+    (state: StoreTypes) => state.filter.namedStateTags
   );
-  const [tagsState, setTagsState] = useState<TagState[]>([]);
-  const [expandedCategory, setExpandedCategory] = useState<string | false>(
-    false
+  const isDialogVisible = useSelector(
+    (state: StoreTypes) => state.filter.isFilterModalVisible
   );
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [localTagState, setLocalTagState] = useState<CategoryWithTags[]>([]); // Local state for dialog interaction
 
   useEffect(() => {
-    if (Object.keys(categories).length > 0) {
-      const initialState: TagState[] = [];
-      Object.values(categories).forEach((tags) => {
-        tags.forEach((tag: CategorizedTag) => {
-          initialState.push({ id: tag.id, state: ToggleState.NEUTRAL });
-        });
-      });
-      setTagsState(initialState);
-      setIsLoading(false);
+    if (storeTags.length > 0) {
+      setLocalTagState(
+        storeTags.map(({ category, tags }) => ({
+          category,
+          tags: tags.map((tag) => ({ ...tag })),
+        }))
+      );
     }
-  }, [categories]);
+  }, [storeTags]);
 
-  const handleToggleChange = (tagID: number, newState: ToggleState) => {
-    setTagsState((prevState) =>
-      prevState.map((tag) =>
-        tag.id === tagID ? { ...tag, state: newState } : tag
-      )
+  const onTagChange = (id: number, state: ToggleState) => {
+    setLocalTagState((prev) =>
+      prev.map(({ category, tags }) => ({
+        category,
+        tags: tags.map((tag) => (tag.id === id ? { ...tag, state } : tag)),
+      }))
     );
   };
 
+  const handleCancel = () => {
+    dispatch(hideFilterModal()); // Close the dialog without saving changes
+  };
+
+  const handleUpdateFilter = () => {
+    dispatch(setFilterTags(localTagState)); // Update Redux filter state
+    dispatch(hideFilterModal()); // Close modal
+  };
+
   return (
-    <Dialog open={true} fullWidth maxWidth="sm">
-      <DialogTitle>Filter</DialogTitle>
+    <Dialog
+      open={isDialogVisible}
+      onClose={handleCancel}
+      fullWidth
+      maxWidth="sm"
+    >
+      <DialogTitle>
+        Filter
+        <IconButton
+          aria-label="close"
+          onClick={handleCancel}
+          sx={{ position: "absolute", right: 8, top: 8 }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
       <DialogContent dividers>
-        {isLoading ? (
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
-            <CircularProgress />
-            <Typography>Loading tags...</Typography>
-          </div>
-        ) : (
-          Object.entries(categories).map(([category, tags]) => (
-            <Accordion
-              key={category}
-              expanded={expandedCategory === category}
-              onChange={() =>
-                setExpandedCategory(
-                  expandedCategory === category ? false : category
-                )
-              }
-            >
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{category}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {tags.map((tag) => (
-                  <Toggle
-                    key={tag.id}
-                    name={tag.name}
-                    state={
-                      tagsState.find((t) => t.id === tag.id)?.state ||
-                      ToggleState.NEUTRAL
-                    }
-                    onChange={(newState) =>
-                      handleToggleChange(tag.id, newState)
-                    }
-                  />
-                ))}
-              </AccordionDetails>
-            </Accordion>
-          ))
-        )}
+        {localTagState.map(({ category, tags }) => (
+          <FilterAccordionWrapper
+            key={category}
+            category={category}
+            tags={tags} // Pass local state to the accordion
+            onTagChange={onTagChange} // Handle tag state change
+          />
+        ))}
       </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancel} color="secondary">
+          Cancel
+        </Button>
+        <Button
+          onClick={handleUpdateFilter}
+          color="primary"
+          variant="contained"
+        >
+          Update Filter
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

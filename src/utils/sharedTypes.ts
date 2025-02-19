@@ -1,3 +1,5 @@
+import { ToggleState } from "../components/shared/Toogle";
+
 export interface TextureSubtypes {
   [key: string]: boolean;
   _a: boolean;

@@ -8,7 +8,7 @@ const DynamicNavbar: React.FC = () => {
   const dispatch = useDispatch();
 
   const isFilterActive = useSelector(
-    (state: StoreTypes) => state.filter.tags.length > 0
+    (state: StoreTypes) => state.filter.namedStateTags.length > 0
   );
 
   return (

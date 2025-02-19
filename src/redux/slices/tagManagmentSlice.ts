@@ -3,16 +3,17 @@ import { Tag, CategorizedTag } from "../../utils/sharedTypes";
 
 interface TagsManagementState {
   allTags: Tag[];
-  categories: Category;
+  sortedTags: TagCategory[];
 }
 
-interface Category {
-  [key: string]: CategorizedTag[];
+export interface TagCategory {
+  category: string;
+  tags: CategorizedTag[];
 }
 
 const initialState: TagsManagementState = {
   allTags: [],
-  categories: {},
+  sortedTags: [],
 };
 
 const tagManagementSlice = createSlice({
@@ -21,13 +22,24 @@ const tagManagementSlice = createSlice({
   reducers: {
     setAllTags(state, action: PayloadAction<Tag[]>): void {
       state.allTags = action.payload;
-      // Initialize categories immediately
-      state.categories = {};
-      state.allTags.forEach(({ category, ...tag }) => {
-        if (!state.categories[category]) {
-          state.categories[category] = [];
+
+      // Convert tags into categorized structure
+      state.sortedTags = [];
+
+      action.payload.forEach(({ category, id, name }) => {
+        // Find the category in sortedTags
+        let categoryEntry = state.sortedTags.find(
+          (c) => c.category === category
+        );
+
+        // If not found, create a new category entry
+        if (!categoryEntry) {
+          categoryEntry = { category, tags: [] };
+          state.sortedTags.push(categoryEntry);
         }
-        state.categories[category].push(tag);
+
+        // Add the tag with an initial state
+        categoryEntry.tags.push({ id, name });
       });
     },
   },

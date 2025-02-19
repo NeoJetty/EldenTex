@@ -52,13 +52,7 @@ const MainNavBar: React.FC = () => {
           />
           <Tab label="Symbol" value="Symbol" component={NavLink} to="symbol" />
           <Tab label="Slice" value="Slice" component={NavLink} to="slice" />
-          <Tab
-            label="Filter Voting"
-            value="Filter Voting"
-            component={NavLink}
-            to="filter"
-            disabled={true}
-          />
+          <Tab label="Browse" value="Browse" component={NavLink} to="browse" />
           <Tab
             label="Gallery"
             value="Gallery"

@@ -10,6 +10,7 @@ import Register from "./components/features/Register.tsx";
 import SliceTab from "./components/pages/SliceTab.tsx";
 import SymbolTab from "./components/pages/SymbolTab.tsx";
 import ForceRemount from "./components/pages/ForceRefresh.tsx";
+import BrowseTab from "./components/pages/BrowseTab.tsx";
 
 const Routing: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const Routing: React.FC = () => {
       <Route path="slice" element={<SliceTab />} />
       <Route path="symbol/:symbol_id" element={<SymbolTab />} />
       <Route path="symbol" element={<SymbolTab />} />
+      <Route path="browse" element={<BrowseTab />} />
       <Route path="filter" element={<FilterTab />} />
       <Route path="gallery" element={<GalleryTab />} />
       <Route path="force_refresh/:path/*" element={<ForceRemount />} />

@@ -7,6 +7,7 @@ import { emptySchema } from "../middleware/validationSchemas/emptySchema.js";
 import {
   getTextureByIdControl,
   getTextureByNameControl,
+  getTexturesByQueryControl,
 } from "../control/textures.control.js";
 
 function routeTextures(app: Application): void {
@@ -20,6 +21,11 @@ function routeTextures(app: Application): void {
     "/api/textureDataByName/:texture_name",
     validateResource(emptySchema),
     getTextureByNameControl
+  );
+  app.post(
+    "/api/textures",
+    validateResource(emptySchema),
+    getTexturesByQueryControl
   );
 }
 

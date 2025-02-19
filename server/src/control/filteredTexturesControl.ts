@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getTextureIDsFromFilter } from "../service/filteredTextures.js";
-import { fetchTexturesDataByIds } from "../service/textures.js";
+import { fetchTexturesDataByIds } from "../service/textures.service.js";
 import { fetchTrueSubtypesForIds } from "../service/subTypes.js";
 import { TextureData } from "../util/sharedTypes.js";
 

@@ -45,7 +45,7 @@ const Toggle: React.FC<ToggleProps> = ({ name, state, onChange }) => {
           alt={`${name} toggle`}
         />
       </div>
-      <label style={{ fontSize: "20px" }}>{name}</label>
+      <label style={{ fontSize: "16px" }}>{name}</label>
     </div>
   );
 };
